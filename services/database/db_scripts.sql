@@ -1,0 +1,10 @@
+﻿TRUNCATE TABLE payment_details;
+TRUNCATE TABLE balance_fees;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE students;
+TRUNCATE TABLE student_classes;
+TRUNCATE TABLE school_classes;
+TRUNCATE TABLE school_classe_fees;
+TRUNCATE TABLE school_classe_fees_details;
+TRUNCATE TABLE mail_verifications;
+TRUNCATE TABLE schools;

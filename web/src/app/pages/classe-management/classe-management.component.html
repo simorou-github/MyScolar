@@ -1,0 +1,344 @@
+<div class="container-fluid">
+  <app-page-title title="Liste des classes | {{schoolName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm">
+              <div class="d-inline-block">
+                <div class="position-relative">
+                  <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
+                    (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
+                  </a>
+                  <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
+                    (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-auto">
+              <div>
+                <a class="btn btn-info" (click)="infoOnModelUpload.show()" target="_self"
+                  href="{{domain_url}}/service/public/storage/modeles/ModelListeEleve.xlsx"><span
+                    class="mdi mdi-playlist-edit"></span>Modèle</a>
+              </div>
+            </div>
+
+            <div class="col-sm-auto">
+              <div class="text-sm-end">
+                <a class="btn btn-success" id="addClasse" (click)="displayAddClasseModal(addModal)"><i
+                    class="fa fa-plus me-1"></i> Ajouter Classe
+                </a>
+              </div>
+            </div>
+            <!-- end col -->
+          </div>
+          <!-- end row -->
+
+          <div *ngIf="isSearchForm" class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-4">Recherche avancée</h5>
+
+                <form class="row gy-2 gx-3 align-items-center">
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Code</label>
+                    <select class="form-select" id="autoSizingSelect">
+                      <option selected>Frais</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Libellé</label>
+                    <select class="form-select" id="autoSizingSelect">
+                      <option selected>Classe</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+
+                  <div class="col-sm-3">
+                    <label class="visually-hidden" for="autoSizingSelect">Groupe</label>
+                    <select class="form-select" id="autoSizingSelect">
+                      <option selected>Apprenant</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+
+                  <div class="col-sm-1" style="margin-top: -2%;">
+                    <button type="button" class="btn btn-primary">
+                      <i class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- end card body -->
+            </div>
+            <!-- end card -->
+          </div>
+
+          <div>
+            <!--app-my-own-loader *ngIf="isProcessing"></app-my-own-loader-->
+            <div class="row ht-2">
+              <div class="col-md-12 h5">Liste des classes : ({{schoolClasses?.length}}) </div>
+            </div>
+            <div class="table-responsive" >
+              <table class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                id="projectList-table" ngxUiLoaderBlurred [loaderId]="'loader-class'" >
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" style="width: 8%">#</th>
+                    <th scope="col" style="width: 20%">Code</th>
+                    <th scope="col" style="width: 40%">Libellé</th>
+                    <th scope="col" style="width: 15%">Groupe</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="isProcessing" class="text-center">
+                    <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
+                  </tr>
+                  <tr *ngIf="schoolClasses?.length == 0" class="text-center">
+                    <td colspan="10">Aucune donnée trouvée !</td>
+                  </tr>
+                  <ng-container *ngIf="!isProcessing">
+                    <tr
+                      *ngFor="let schoolClasse of schoolClasses | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                      <td style="width: 8%">{{i+1}}</td>
+                      <td style="width: 20%">{{schoolClasse.classe?.code}}</td>
+                      <td style="width: 40%">{{schoolClasse.classe?.label}}</td>
+                      <td style="width: 15%">{{schoolClasse.groupe?.code}}</td>
+                      <td class="text-center">
+                        <div class="dropdown" dropdown placement="bottom-right">
+                            <a href="javascript: void(0);" class="dropdown-toggle card-drop"
+                                dropdownToggle>
+                                <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                                <a class="dropdown-item" href="javascript: void(0);" [routerLink]="['/espace/gestion-classe/list-apprenant', schoolClasse?.id]"><i class="mdi mdi-account-group font-size-7 text-secondary align-middle me-2"></i> Liste élèves</a>
+                                <a class="dropdown-item" href="javascript: void(0);" (click)="openViewUploadModal(schoolClasse, modalUploadStudent)"><i class="mdi mdi-playlist-edit font-size-7 text-info align-middle me-2"></i> Charger</a>
+                                <a class="dropdown-item" href="javascript: void(0);" (click)="ConfirmClasseDelete(DeleteModalSchoolClasse, schoolClasse.classe)"><i class="mdi mdi-close text-danger font-size-7 align-middle me-2"></i> Retirer</a>
+                            </div>
+                        </div>
+                    </td>                                          
+   
+                    
+
+                    </tr>
+                  </ng-container>
+                </tbody>
+
+              </table>
+
+              <div class="pagination-style">
+                <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                  (pageChange)="p = $event"></pagination-controls>
+
+              </div>
+
+              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-class'"></ngx-ui-loader>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+      <div class="row">
+        <div class="col-lg-12">
+
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+  </div>
+</div>
+
+
+<!--Start Add Classe Modal -->
+<ng-template #addModal let-modal>
+  <div class="modal-header">
+    <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
+      <span class="sr-only pull-right">Loading...</span>
+    </div>
+    <h5 class="modal-title" id="myMiddleModalLabel"> <i class="fas fa-plus-circle text-success"></i> Nouvelle Classe
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="closeAddClasseModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form novalidate [formGroup]="schoolClasseForm" (ngSubmit)="addSchoolClasse()">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="mb-3">
+            <label for="">Sélectionner une classe <span class="required_color">*</span></label>
+            <select class="form-select mb-2" formControlName="classe_id" id="classe_id"
+              [ngClass]="{ 'is-invalid': schoolClasseForm.get('classe_id')?.touched && !schoolClasseForm.get('classe_id')?.valid }">
+              <option disabled value="" selected>Selectionnez</option>
+              <option *ngFor="let classe of classes" value="{{ classe?.id }}">{{
+                classe?.code
+                }} - {{
+                classe?.label }}</option>
+            </select>
+            <div class="space-between-validator"
+              *ngIf="schoolClasseForm.get('classe_id')?.touched && schoolClasseForm.get('classe_id').hasError('required')">
+              <span class="required_color">Sélectionner une classe.</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="">Sélectionner un groupe</label>
+            <select class="form-select mb-2" formControlName="groupe_id" id="groupe_id">
+              <option disabled value="" selected>Selectionnez</option>
+              <option *ngFor="let groupe of groupes" value="{{ groupe?.id }}">{{
+                groupe?.code
+                }} </option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="hstack gap-2 justify-content-end">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+            (click)="closeAddClasseModal()">Fermer</button>
+          <button type="submit" class="btn btn-success" [disabled]="!schoolClasseForm.valid || isProcessing"
+            id="add-btn">Ajouter</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</ng-template>
+
+
+<!--Start modal to add list students -->
+<ng-template #modalUploadStudent role="document" let-modal>
+  <div class="modal-header">
+    <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
+      <span class="sr-only pull-right">Loading...</span>
+    </div>
+    <h5 class="modal-title mt-0" id="uploadStudentForm">Ajouter liste d'apprenants - Classe : <span
+        style="color: blue;">{{currentClasseCode}}</span></h5>
+    <button type="button" class="btn-close" (click)="closeUploadModal()" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <form (ngSubmit)="addStudentListToClasse()" [formGroup]="uploadForm">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <input type="hidden" formControlName="classe_id">
+          <input type="hidden" formControlName="school_id">
+          <input type="hidden" formControlName="academic_year">
+          <div class="mt-3">
+            <label for="file_upload" class="form-label">Liste d'apprenants</label>
+            <input class="form-control" type="file" id="file_upload" formControlName="file_upload"
+              (input)="onFileChange($event)" class="custom-file-input"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="closeUploadModal()">Fermer</button>
+        <button type="submit" class="btn btn-success" id="add-btn"
+          [disabled]="!uploadForm.valid || isProcessing">Ajouter</button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!--Start modal to add one class to school space -->
+
+<div>
+  <div bsModal #infoOnModelUpload="bs-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Informations sur le modèle téléchargé (fichier Excel)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="infoOnModelUpload?.hide()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Veuillez renommer le fichier pour une identification des données qu'il contiendra
+            suivant la classe. De même, renseigner le nom de la classe une fois le fichier ouvert
+            pour votre propre suivi.
+          </p>
+          <p>Remplir les champs en insérant les informations des apprenants dans la colonne adéquate.</p>
+          <p>Suivre le format de date (jour/mois/année) et insérer dans le champ sexe, M ou F pour respectivement
+            Masculin ou Féminin.
+          </p>
+          <p class="mb-0">Laisser vide l'email et le numéro de téléphone si l'apprenant n'en disposent pas.
+          </p>
+          <p><span style="font-weight: bold;">NB: </span><span style="color: red;">Ne pas laisser des lignes vides dans
+              le remplissage des informations.</span></p>
+        </div>
+      </div><!-- /.modal -->
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<ng-template #DeleteModalSchoolClasse let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-info-circleg text-warning fa-1x"></i>
+      Confirmation
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body text-center">
+    <p class="h5 text-danger">Voulez-vous vraiment retirer la classe : {{ currentClasseCode }} ?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="modalRef?.hide()">Non</button>
+    <button type="button" class="btn btn-danger" (click)="retireClasse()">Supprimer</button>
+  </div>
+</ng-template>
+
+
+<!-- View Students Existed When List Uploaded Modal -->
+<ng-template #modalExistedStudent role="document" let-modal>
+  <div class="modal-header">
+    <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
+      <span class="sr-only pull-right">Loading...</span>
+    </div>
+    <h5 class="modal-title mt-0" id="uploadStudentForm">Rapport Du Chargement - Classe : <span
+        style="color: blue;">{{currentClasseCode}}</span></h5>
+    <button type="button" class="btn-close" (click)="closeExistedStudentModal()" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <p>Le chargement du fichier s'est terminé avec succès. <br>
+          Les apprenants ci-dessous existaient déjà dans le système. Il s'agit de : </p>
+          <ul>
+            <li *ngFor="let student of existed_students"><b>{{ student.student }}</b> (ligne {{student.line}} du fichier excel)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="closeExistedStudentModal()">Fermer</button>
+      </div>
+    </div>
+</ng-template>
+<!-- View Students Existed When List Uploaded Modal -->

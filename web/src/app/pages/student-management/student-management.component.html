@@ -1,0 +1,410 @@
+<div class="container-fluid">
+  <app-page-title title="Liste des Apprenants | {{schoolName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm">
+              <div class="d-inline-block">
+                <div class="position-relative">
+                  <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
+                    (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
+                  </a>
+                  <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
+                    (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-auto">
+              <div>
+                <a class="btn btn-info" (click)="generatePDF()"><i class="fa fa-file-pdf me-1"></i> PDF
+                </a>
+              </div>
+            </div>
+            <!-- end col -->
+            <div class="col-sm-auto">
+              <div class="text-sm-end">
+                <a *ngIf="!isSearchForm" class="btn btn-success" id="addClasse"
+                  (click)="openViewModalStudent(modalStudent)"><i class="fa fa-plus me-1"></i> Nouvel apprenant
+                </a>
+              </div>
+            </div>
+            <!-- end col -->
+          </div>
+          <!-- end row -->
+
+          <div *ngIf="isSearchForm" class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-4">Recherche avancée</h5>
+
+                <form class="row gy-2 gx-3 align-items-center" [formGroup]="searchForm" (ngSubmit)="getListStudents()">
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Code Scolar</label>
+                    <input type="text" id="code_scolar" class="form-control" formControlName="code_scolar"
+                      placeholder="Code Scolar" />
+                  </div>
+
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Nom</label>
+                    <input type="text" id="last_name" class="form-control" formControlName="last_name"
+                      placeholder="Nom" />
+                  </div>
+
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Prénom</label>
+                    <input type="text" id="first_name" class="form-control" formControlName="first_name"
+                      placeholder="Prénom" />
+                  </div>
+
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Classe</label>
+                    <select class="form-select" id="autoSizingSelect" formControlName="classe_id">
+                      <option selected value="">Classe</option>
+                      <option *ngFor="let schoolClasse of schoolClasses" value="{{schoolClasse.classe?.id}}">
+                        {{schoolClasse.classe?.label}}</option>
+                    </select>
+                  </div>
+
+                  <div class="col-sm-1">
+                    <label class="visually-hidden" for="autoSizingSelect">Sexe</label>
+                    <select class="form-select" id="autoSizingSelect" formControlName="sex">
+                      <option selected value="">Sexe</option>
+                      <option value="M">M</option>
+                      <option value="F">F</option>
+                    </select>
+                  </div>
+
+                  <div class="col-sm-2">
+                    <label class="visually-hidden" for="autoSizingSelect">Année de naissance</label>
+                    <input type="text" class="form-control" placeholder="jj/mm/aaaa" formControlName="birthday"
+                      mask="00/00/0000">
+                  </div>
+
+                  <div class="col-sm-1" style="margin-top: -2%;">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- end card body -->
+            </div>
+            <!-- end card -->
+          </div>
+
+          <div>
+            <!-- <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader> -->
+            <div class="row ht-2">
+              <div class="col-md-12 h5">Liste des apprenants : ({{students?.length}}) </div>
+            </div>
+            <div class="table-responsive">
+              <table ngxUiLoaderBlurred [loaderId]="'loader-spin'" class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                id="projectList-table">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" style="width: 50px">#</th>
+                    <th scope="col">N° Scolar</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénom(s)</th>
+                    <th scope="col">Matricule</th>
+                    <th scope="col">Classe</th>
+                    <th scope="col">Sexe</th>
+                    <th scope="col">Naissance</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="isProcessing" class="text-center">
+                    <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
+                  </tr>
+                  <tr *ngIf="students?.length == 0" class="text-center">
+                    <td colspan="10">Aucune donnée trouvée !</td>
+                  </tr>
+                  <tr *ngFor="let student of students | paginate: {id:'table1', itemsPerPage: 10, currentPage: p }; let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{student.student?.code_scolar}}</td>
+                    <td>{{student.student?.last_name}}</td>
+                    <td>{{student.student?.first_name}}</td>
+                    <td>{{student.student?.matricule}}</td>
+                    <td>{{student.classe?.classe?.code}} - {{student.classe?.groupe?.code}}</td>
+                    <td>{{student.student?.sex}}</td>
+                    <td>{{student.student?.birthday | date : 'dd/MM/yyyy'}}</td>
+                    <td class="text-center">
+                      <div class="d-flex gap-3 text-center">
+                        <ul class="list-unstyled hstack gap-1 mb-0">
+                          <li data-bs-toggle="tooltip" data-bs-placement="top" title="Détails">
+                            <a class="btn btn-sm btn-soft-info" (click)="displayDetailsModal(detailsModal, student)"><i
+                                class="mdi mdi-eye-outline"></i></a>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+              <div class="pagination-style">
+                <pagination-controls id="table1" previousLabel="Précédent" nextLabel="Suivant"
+                  (pageChange)="p = $event"></pagination-controls>
+              </div>
+              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-spin'"></ngx-ui-loader>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+      <div class="row">
+        <div class="col-lg-12">
+
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+  </div>
+</div>
+
+<!--Start Details Modal -->
+<ng-template #detailsModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"> <i class="fa fa-info-circle text-info"></i>
+      {{modalDetailsTitle}}
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="col-lg-12">
+      <tabset [justified]="true" class="nav-tabs nav-tabs-custom nav-justified">
+        <tab heading="Général">
+          <div class="row">
+            <div class="col-xl-5 col-md-5">
+              <div class="table-responsive mt-3">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <th scope="col">Code Scolar :</th>
+                      <td scope="col">{{curr_student?.student?.code_scolar}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Apprenant :</th>
+                      <td> {{curr_student.student?.last_name}} {{curr_student.student?.first_name}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Né(e) le :</th>
+                      <td>{{curr_student.student?.birthday | date:'dd/MM/yyy'}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Inscription :</th>
+                      <td>{{curr_student.classe?.classe?.code}} - {{curr_student.classe?.groupe?.code}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Statut</th>
+                      <td>
+                        <span for="" class="bg-light p-1 w-100" *ngIf="curr_student.student?.sex == 'M'">Masculin</span>
+                        <span for="" class="bg-light p-1 w-100" *ngIf="curr_student.student?.sex == 'F'">Féminin</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-xl-7 col-md-7 mt-2">
+              <div class="card jobs-categories">
+                <div class="card-body">
+                  <h5>Frais à Collecter</h5>
+                  <label class="text-info" *ngIf="isProcessing">Chargement en cours ...</label>
+                  <ng-container *ngIf="!isProcessing">
+                    <a *ngFor="let balance of studentBalances | paginate: {id:'table2',  itemsPerPage: 5, currentPage: p2 }; let i = index;"
+                      href="javascript:void(0);"
+                      class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2">{{balance.type_fees?.label}}
+                      {{balance.fees_label}}
+                      <span *ngIf="balance.balance == 0" class="badge text-bg-success float-end bg-opacity-100 p-1 m-1"
+                        title="Reste">{{balance.balance | currency:'XOF'}}</span>
+                      <span *ngIf="balance.balance > 0" class="badge text-bg-danger float-end bg-opacity-100 p-1 m-1"
+                        title="Reste">{{balance.balance | currency:'XOF'}}</span>
+                      <span class="badge text-bg-info float-end bg-opacity-100 p-1 m-1"
+                        title="Montant à payer">{{balance.fees_amount | currency:'XOF'}}</span>
+                    </a>
+                  </ng-container>
+                </div>
+                <div class="pagination-style">
+                  <pagination-controls id="table2" previousLabel="Précédent" nextLabel="Suivant"
+                    (pageChange)="p2 = $event"></pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="Transactions">
+          <div class="row">
+            <div class="col-xl-12 col-md-12">
+
+              <div class="card">
+                <div class="card-body" *ngIf="!isProcessing">
+                  <h5 class="mb-3">Transactions reçues</h5>
+                  <p class="text-muted"> </p>
+                  <ul class="verti-timeline list-unstyled"
+                    *ngFor="let transaction of details_transactions  | paginate: {id:'table3', itemsPerPage: 5, currentPage: p3 }; let i = index;">
+                    <li class="event-list">
+                      <div class="event-timeline-dot">
+                        <i class="bx bx-right-arrow-circle"></i>
+                      </div>
+                      <div class="d-flex">
+                        <div class="flex-grow-1">
+                          <div>
+                            <h6 class="font-size-14 mb-1"><span class="text-warning">N°
+                                {{transaction.payment?.transaction_id }} du {{transaction.payment?.created_at |
+                                date:'dd/MM/yyyy HH:MM:ss'}}</span></h6>
+                            <p class="text-muted">
+                              {{transaction.type_fees?.label}} - {{transaction.balance_fees?.fees_label}}
+                              <b>({{transaction.academic_year}})</b>
+                              &nbsp; Montant payé : <b> {{transaction.fees_amount | currency:'XOF'}}</b>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pagination-style">
+                <pagination-controls id="table3" previousLabel="Précédent" nextLabel="Suivant"
+                  (pageChange)="p3 = $event"></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</ng-template>
+
+
+<!--Start modal to add one student to classe -->
+<ng-template #modalStudent role="document" let-modal>
+  <div class="modal-header">
+    <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
+        <span class="sr-only pull-right">Loading...</span>
+    </div>
+    <h5 class="modal-title" id="addStud"> <i
+            class="fas fa-plus-circle text-success"></i>
+        Création apprenant
+    </h5>
+    <button type="button" class="btn-close" (click)="closeModalStudent()" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"></span>
+    </button>
+</div>
+
+ 
+  <form [formGroup]="studentForm" (ngSubmit)="addStudentForm()">
+    <div class="modal-body">
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="last_name">Nom <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="last_name" formControlName="last_name" placeholder="Ex: LALO"
+              [ngClass]="{ 'is-invalid': studentForm.get('last_name')?.touched && !studentForm.get('last_name')?.valid }">
+            <div *ngIf="studentForm.get('last_name')?.touched && studentForm.get('last_name').hasError('required')">
+              <span class="text-danger" class="text-danger">Entrer le nom de l'apprenant.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="first_name">Prénom (s) <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="first_name" formControlName="first_name" placeholder="Ex: Pipi"
+              [ngClass]="{ 'is-invalid': studentForm.get('first_name')?.touched && !studentForm.get('first_name')?.valid }" />
+            <div *ngIf="studentForm.get('first_name')?.touched && studentForm.get('first_name').hasError('required')">
+              <span class="text-danger" class="text-danger">Entrer le prénom de l'apprenant.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="matricule">Matricule <span class="text-danger"></span></label>
+            <input type="text" class="form-control" id="matricule" formControlName="matricule" placeholder="Ex: P230"
+              [ngClass]="{ 'is-invalid': studentForm.get('matricule')?.touched && !studentForm.get('matricule')?.valid }">
+            <div *ngIf="studentForm.get('matricule')?.touched && studentForm.get('matricule').hasError('required')">
+              <span class="text-danger" class="text-danger">Entrer le nom de l'apprenant.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="birthday">Date de naissance <span class="text-danger">*</span></label>
+            <input type="date" max="{{today | date:'yyyy-MM-dd'}}" class="form-control" id="birthday"
+              formControlName="birthday" placeholder="Ex: LALO"
+              [ngClass]="{ 'is-invalid': studentForm.get('birthday')?.touched && !studentForm.get('birthday')?.valid }" />
+            <div *ngIf="studentForm.get('birthday')?.touched && studentForm.get('birthday').hasError('required')">
+              <span class="text-danger" class="text-danger">Entrer la date de naissance de l'apprenant.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="sex">Sexe <span class="text-danger">*</span></label>
+            <select class="form-select" id="sex" formControlName="sex"
+              [ngClass]="{ 'is-invalid': studentForm.get('sex')?.touched && !studentForm.get('sex')?.valid }">
+              <option selected value="">Sélectionner</option>
+              <option value="M">Masculin</option>
+              <option value="F">Féminin</option>
+            </select>
+            <div *ngIf="studentForm.get('sex')?.touched && studentForm.get('sex').hasError('required')">
+              <span class="text-danger" class="text-danger">Entrer le sexe de l'apprenant.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="phone">Télphone</label>
+            <input type="number" formControlName="phone" placeholder="Ex: +22960000000" class="form-control"
+              id="phone" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="classe_id">Classe <span class="text-danger">*</span> <button type="button"
+                class="btn btn-soft-info btn-rounded" style="margin-left: 20px !important;">Nouveau</button></label>
+            <select class="form-select" id="classe_id" formControlName="classe_id"
+              [ngClass]="{ 'is-invalid': studentForm.get('classe_id')?.touched && !studentForm.get('classe_id')?.valid }">
+              <option selected value="">Sélectionner</option>
+              <option *ngFor="let classe of classes" value="{{classe.id}}"><b>{{classe.classe.code}} {{classe.groupe ? '-' : ''}}
+                  {{classe.groupe?.code}}</b> </option>
+            </select>
+            <div *ngIf="studentForm.get('classe_id')?.touched && studentForm.get('classe_id').hasError('required')">
+              <span class="text-danger" class="text-danger">Entrer la classe de l'apprenant.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3 mt-2">
+            <label for="email">Adresse mail</label>
+            <input type="email" formControlName="email" placeholder="Ex: monemail@gmail.com" class="form-control mt-1"
+              id="email" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+          (click)="closeModalStudent()">Fermer</button>
+        <button type="submit" class="btn btn-success" [disabled]="!studentForm.valid || isProcessing" id="add-btn">{{
+          btnFormTitle }}</button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!--Start modal to add one student to classe  -->
