@@ -65,6 +65,7 @@ export class PaymentHistoryComponent implements OnInit {
           this.message = v.message;
           if (v.status == 200) {
             this.payments = v.data;
+           // console.log(this.payments)
             this.totalAmount = v.amount;
             this.ngxLoader.stopLoader('loader-spin');
           } else {

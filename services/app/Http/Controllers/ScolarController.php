@@ -36,12 +36,11 @@ class ScolarController extends Controller
         if ($request->academic_year) {
             $params[] = ['academic_year', '=', $request->academic_year];
         }
-        
-        if ($request->school_id)
-            $_data = PaymentDetail::with(['type_fees'])
-                ->where($params)
-                ->groupBy('type_fees_id')
-                ->selectRaw('sum(fees_amount) as sum, sum(scolar_commission) as scolar_com, type_fees_id')->get();
+
+        $_data = PaymentDetail::with(['type_fees'])
+            ->where($params)
+            ->groupBy('type_fees_id')
+            ->selectRaw('sum(fees_amount) as sum, sum(scolar_commission) as scolar_com, type_fees_id')->get();
 
         $total = $_data->sum('sum');
         $total_com = $_data->sum('scolar_com');
@@ -90,10 +89,10 @@ class ScolarController extends Controller
             ->selectRaw('sum(fees_amount) as sum, sum(scolar_commission) as scolar_com, MONTH(created_at) month, type_fees_id')
             ->groupBy('month', 'type_fees_id')
             ->get();
-        
+
         if ($request->school_id)
             $listFees = TypeFees::where('school_id', $request->school_id)->orderBy('created_at', 'desc')->get();
-        else 
+        else
             $listFees = TypeFees::orderBy('created_at', 'desc')->get();
 
         $general_data = [];
@@ -112,8 +111,8 @@ class ScolarController extends Controller
 
         $max_amount = 0;
         $max_com = 0;
-        foreach($_data as $fee){
-            if($fee->sum > $max_amount){
+        foreach ($_data as $fee) {
+            if ($fee->sum > $max_amount) {
                 $max_amount = $fee->sum;
                 $max_com = $fee->scolar_com;
             }

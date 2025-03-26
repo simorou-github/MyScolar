@@ -110,7 +110,8 @@ class SchoolController extends Controller
                 $params[] = ['school_id', '=', $request->input('school_id')];
             }
 
-            $data = SchoolClasse::with(['school', 'classe', 'groupe'])->where($params)->orderBy('id', 'desc')->get();
+            $data = SchoolClasse::with(['school', 'classe', 'groupe'])->where($params)
+            ->orderByRaw('(SELECT rank FROM classes WHERE classes.id = school_classes.classe_id) ASC')->get();
 
             return response()->json([
                 'data' => $data,
@@ -215,7 +216,10 @@ class SchoolController extends Controller
 
             $res = SchoolClasse::create([
                 'id' => generateDBTableId('10', 'App\Models\SchoolClasse'),
-                'school_id' => $school_id, 'classe_id' => $classe_id, 'school_classe_id' => $classe_id, 'groupe_id' => $groupe_id
+                'school_id' => $school_id,
+                'classe_id' => $classe_id,
+                'school_classe_id' => $classe_id,
+                'groupe_id' => $groupe_id
             ]);
             if ($res) {
                 return response()->json([
@@ -1024,8 +1028,8 @@ class SchoolController extends Controller
         }
 
         $max_amount = 0;
-        foreach($_data as $fee){
-            if($fee->sum > $max_amount){
+        foreach ($_data as $fee) {
+            if ($fee->sum > $max_amount) {
                 $max_amount = $fee->sum;
             }
         }

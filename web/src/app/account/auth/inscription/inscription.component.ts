@@ -219,6 +219,8 @@ export class InscriptionComponent {
   onSubmit() {
     // const formData = new FormData();
     // formData.append('document', this.file);
+    this.isProcessing = true;
+    this.loading = true;
     var myFormData = new FormData();
     myFormData.append('document', this.filedata);
     myFormData.append('email', this.registerForm.get('email').value);

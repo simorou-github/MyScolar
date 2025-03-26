@@ -41,7 +41,7 @@ export class PaiementScolaireComponent {
       balance: ['', [Validators.required]],
       amount: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"), Validators.required]],
       details: [],
     });
   }

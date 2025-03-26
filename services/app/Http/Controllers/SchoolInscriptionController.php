@@ -396,7 +396,7 @@ class SchoolInscriptionController extends Controller
                     sendMail(
                         [
                             env("ADMIN_MAIL_1"),
-                            env("ADMIN_MAIL_2"),
+                           // env("ADMIN_MAIL_2"),
                             $request->email
                         ],
                         ['code' => $code],

@@ -221,7 +221,7 @@ export class ClasseManagementComponent {
             this.showSuccess(this.message);
             this.isProcessing = false;
             this.initUploadListForm();
-            console.log(v.data);
+            
             if(v.data?.length > 0){
               this.displayExistedStudentModal(v.data);
             }
