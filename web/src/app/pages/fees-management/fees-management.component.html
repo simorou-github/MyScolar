@@ -8,11 +8,11 @@
             <div class="col-sm">
               <div class="d-inline-block">
                 <div class="position-relative">
-                  <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
-                    (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
+                  <a *ngIf="!isSearchForm" class="btn btn-primary" id="search-btn"
+                    (click)="displaySearchForm();"><i class="fa fa-search me-1"></i> Rechercher
                   </a>
-                  <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
-                    (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
+                  <a *ngIf="isSearchForm" class="btn btn-danger" id="close-btn"
+                    (click)="displaySearchForm();"><i class="fa fa-times me-1"></i> Fermer
                   </a>
                 </div>
               </div>
@@ -158,7 +158,7 @@
     <div class="modal-footer">
       <div class="hstack gap-2 justify-content-end">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeModal()">Fermer</button>
-        <button type="submit" class="btn btn-success" id="add-btn"
+        <button type="submit" class="btn btn-warning" id="add-btn"
           [disabled]="!feesTypeForm.valid">{{btnFormTitle}}</button>
       </div>
     </div>
