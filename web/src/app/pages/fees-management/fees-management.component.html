@@ -76,7 +76,8 @@
                   <tr *ngIf="typeFees?.length == 0" class="text-center">
                     <td colspan="5">Aucune donnée trouvée !</td>
                   </tr>
-                  <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                  <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;"
+                  class="hover-item">
                     <td>{{i+1}}</td>
                     <td>{{typefee.label}}</td>
                     <td>{{typefee.created_at | date : 'dd/MM/yyyy HH:mm:ss'}}</td>                                   
