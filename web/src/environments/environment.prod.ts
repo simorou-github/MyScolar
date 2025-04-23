@@ -1,9 +1,17 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://scolarplus.innovagrou.in/service/public/api',  
-  baseUrl: 'https://scolarplus.innovagrou.in',
-  // IMPORTANT to download model file
-  domainUrl: 'https://scolarplus.innovagrou.in',
+  apiUrl: 'https://scolar.coopdicpa.com/service/public/api',
+  domainUrl: 'https://scolar.coopdicpa.com',
+  baseUrl: 'https://scolar.coopdicpa.com/web/',
+  // apiUrl: 'https://coopstats.coopdicpa.com/scolar_service/public/api',
+  // domainUrl: 'https://coopstats.coopdicpa.com',
+  // baseUrl: 'https://scolar-web.coopdicpa.com/web/',
+  // apiUrl: 'https://scolar-plus.coopdicpa.com/service/public/api',  
+  // //apiUrl: 'https://scolar-web.coopdicpa.com/service/public/api',  
+  // baseUrl: 'https://scolar-plus.coopdicpa.com',
+  // //baseUrl: 'https://scolar-web.coopdicpa.com',
+  // // IMPORTANT to download model file
+  // domainUrl: 'https://scolar-plus.coopdicpa.com',
   // IMPORTANT
   //apiUrl: 'http://127.0.0.1:8000/api',
   //domainUrl: 'http://127.0.0.1:8000',

@@ -29,11 +29,8 @@ export class FeesManagementComponent {
     ngOnInit() {
         this.breadCrumbItems = [{ label: 'Espace Ecole' }, { label: 'Types Frais', active: true }];
         this.scName = this.tokenService.getSocialReasonSchool;
-        this.searchForm = this.fb.group({
-            label: ['',],
-            school_id: [this.tokenService.getSchoolId, [Validators.required]],
-        });
 
+        this.initForm();
         this.feesTypeForm = this.fb.group({
             id: [],
             label: ['', [Validators.required]],
@@ -43,6 +40,13 @@ export class FeesManagementComponent {
 
         this.typeFeesList(this.feesTypeForm.value);
 
+    }
+
+    initForm() {
+        this.searchForm = this.fb.group({
+            label: ['',],
+            school_id: [this.tokenService.getSchoolId, [Validators.required]],
+        });
     }
 
     typeFeesList(param: any = this.feesTypeForm.value) {
@@ -147,8 +151,12 @@ export class FeesManagementComponent {
     }
 
 
-    displaySearchForm(status: boolean) {
-        this.isSearchForm = status;
+    displaySearchForm() {
+        if (this.isSearchForm) {
+            this.initForm();
+            this.typeFeesList(this.searchForm.value);
+        }
+        this.isSearchForm = !this.isSearchForm;
     }
 
     ConfirmDeleteModal(StaticDeleteModal: any, typfee: any) {

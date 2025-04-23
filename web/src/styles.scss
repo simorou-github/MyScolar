@@ -98,3 +98,13 @@ td{
   background-color: #F1F3F3;
 }
 
+.hover-item {
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.hover-item:hover {
+  background-color: #007bff;
+  transform: scale(1.01);
+  font-weight: bold !important;
+}

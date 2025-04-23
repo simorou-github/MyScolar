@@ -91,7 +91,7 @@
               <div class="col-md-12 h5">Liste des classes : ({{schoolClasses?.length}}) </div>
             </div>
             <div class="table-responsive" >
-              <table class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+              <table class="table table-striped"
                 id="projectList-table" ngxUiLoaderBlurred [loaderId]="'loader-class'" >
                 <thead class="table-light">
                   <tr>
@@ -110,7 +110,7 @@
                     <td colspan="10">Aucune donnée trouvée !</td>
                   </tr>
                   <ng-container *ngIf="!isProcessing">
-                    <tr
+                    <tr class="hover-item"
                       *ngFor="let schoolClasse of schoolClasses | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
                       <td style="width: 8%">{{i+1}}</td>
                       <td style="width: 20%">{{schoolClasse.classe?.code}}</td>

@@ -149,7 +149,7 @@
                     @if($data['status'] == "VALIDE")
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Cliquez <a href="https://scolarplus.innovagrou.in/web">ici</a> pour directement accéder à l'application.</p>
+                            <p style="margin: 0;">Cliquez <a href="https://scolar-web.coopdicpa.com/web">ici</a> pour directement accéder à l'application.</p>
                         </td>
                     </tr>
                     @endif
@@ -168,7 +168,7 @@
 
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Cliquez <a href="https://scolarplus.innovagrou.in/web/auth/inscription?sci={{$data['school_id']}}">ici</a> pour soumettre à nouveau votre inscription en prenant en compte le motif du rejet précédent.</p>
+                            <p style="margin: 0;">Cliquez <a href="https://scolar-web.coopdicpa.com/web/auth/inscription?sci={{$data['school_id']}}">ici</a> pour soumettre à nouveau votre inscription en prenant en compte le motif du rejet précédent.</p>
                         </td>
                     </tr>
                     @endif

@@ -192,22 +192,46 @@ class ParameterController extends Controller
                 if($request->input('action')=='delete')
                 { // Delete logicaly
                     $data = TypeFees::find($request->input('id'));
-                    $data->status = !$data->status;
-                    $data->save();
-                    return response()->json([
-                        'data' => null,
-                        'message' => 'Frais mis à jour avec succès.',
-                        'status' => 200
-                    ]); 
+                    if($data){
+                        $data->status = !$data->status;
+                        $data->save();
+                        return response()->json([
+                            'data' => null,
+                            'message' => 'Frais mis à jour avec succès.',
+                            'status' => 200
+                        ]); 
+                    }else{
+                        return response()->json([
+                            'data' => [],
+                            'message' => 'Aucune ligne trouvée à supprimer.',
+                            'status' => 500
+                        ]);
+                    }
+                    
                 } 
+
                 if($request->input('action')=='update') { //Update
                     $data = TypeFees::find($request->input('id'));
-                    $data->update($request->all());
-                    return response()->json([
-                        'data' => null,
-                        'message' => 'Frais mis à jour avec succès.',
-                        'status' => 200
-                    ]); 
+                    if($data){
+                        $verif = TypeFees::where('label', strtoupper($request->label))->
+                        where('school_id', $request->school_id)->get();
+                        if(count($verif) > 0){
+                            return response()->json([
+                                'data' => [],
+                                'message' => 'Un autre frais existe avec ce libellé.',
+                                'status' => 500
+                            ]);
+                        }else{
+                            $data->update($request->all());
+                            return response()->json([
+                                'data' => null,
+                                'message' => 'Frais mis à jour avec succès.',
+                                'status' => 200
+                            ]);
+                        }
+                    }
+
+                     
                 }
             }     
         }catch(Exception $e){

@@ -101,7 +101,7 @@
                                         <td colspan="5">Aucune donnée trouvée !</td>
                                     </tr>
                                     <ng-container *ngIf="!isProcessing">
-                                        <tr
+                                        <tr class="hover-item"
                                             *ngFor="let groupe of groupes | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
                                             <td style="width: 8%">{{i+1}}</td>
                                             <td style="width: 10%">{{groupe.code}}</td>

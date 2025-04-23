@@ -5,7 +5,7 @@ export const LAYOUT_HORIZONTAL = 'horizontal';
 
 export const LAYOUT_WIDTH = 'fluid';
 
-export const SIDEBAR_TYPE = 'light'; //dark par défaut dans le template original
+export const SIDEBAR_TYPE = 'dark'; //dark par défaut dans le template original
 
 export const TOPBAR = 'dark';
 
