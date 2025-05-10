@@ -37,7 +37,7 @@ class CountrySeeder extends Seeder
             ["name" => "Belarus", "code" => "BY", "phone_code" => "", "masking" => ""],
             ["name" => "Belgique", "code" => "BE", "phone_code" => "", "masking" => ""],
             ["name" => "Belize", "code" => "BZ", "phone_code" => "", "masking" => ""],*/
-            ["name" => "Bénin", "code" => "BJ", "phone_code" => "+229", "masking" => "99 99 99 99"],
+            ["name" => "Bénin", "code" => "BJ", "phone_code" => "+229", "masking" => "99 99 99 99 99"],
             /*["name" => "Bermudes", "code" => "BM", "phone_code" => "", "masking" => ""],
             ["name" => "Bhoutan", "code" => "BT", "phone_code" => "", "masking" => ""],
             ["name" => "Bolivie", "code" => "BO", "phone_code" => "", "masking" => ""],

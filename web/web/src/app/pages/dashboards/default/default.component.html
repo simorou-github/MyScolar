@@ -1,0 +1,269 @@
+<app-loader></app-loader>
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <h4 class="mb-0 font-size-18">TABLEAU DE BORD</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <ng-container>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Tableau de bord</a>
+                            </li>
+                        </ng-container>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mini-stats-wid">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-muted fw-medium">NOMBRE DE CLASSES</p>
+                                    <h4 class="mb-0">{{schoolClasses?.length }}</h4>
+                                </div>
+                                <div class="flex-shrink-0 align-self-center">
+                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                        <span class="avatar-title">
+                                            <i class="bx bx bxs-building font-size-24"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mini-stats-wid">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-muted fw-medium">NOMBRE DE FRAIS</p>
+                                    <h4 class="mb-0">{{typeFees?.length}}</h4>
+                                </div>
+                                <div class="flex-shrink-0 align-self-center">
+                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                        <span class="avatar-title">
+                                            <i class="bx bx bxs-wallet font-size-24"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mini-stats-wid">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-muted fw-medium">APPRENANTS</p>
+                                    <h4 class="mb-0"> {{ students?.length }} </h4>
+                                </div>
+                                <div class="flex-shrink-0 align-self-center">
+                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                        <span class="avatar-title">
+                                            <i class="bx bx bxs-group font-size-24"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mini-stats-wid">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-muted fw-medium">TRANSACTIONS</p>
+                                    <h4 class="mb-0">{{ payments?.length }}</h4>
+                                </div>
+                                <div class="flex-shrink-0 align-self-center">
+                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                        <span class="avatar-title">
+                                            <i class="bx bx bxs-dollar-circle font-size-24"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+
+    <!-- Début -->
+    <!-- Frais par classe -->
+    <!-- <div class="card">
+        <div class="card-body">
+            <div class="row ht-2">
+                <div class="col-md-12 h5">Liste des classes et frais </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                    id="projectList-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" style="width: 50px">#</th>
+                            <th scope="col">Libellé frais/Classes</th>
+                            <th *ngFor="let schoolClasse of schoolClasses" scope="col">{{ schoolClasse.classe?.code }}
+                                {{ (schoolClasse?.groupe) ? ("-") : ("") }} {{ schoolClasse?.groupe?.code }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="isProcessing" class="text-center">
+                            <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
+                        </tr>
+                        <tr *ngIf="typeFees?.length == 0" class="text-center">
+                            <td colspan="5">Aucune donnée trouvée !</td>
+                        </tr>
+
+                        <tr
+                            *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                            <td>{{i+1}}</td>
+                            <td>{{typefee.label}}</td>
+                            <ng-container *ngFor="let info of info_fees">
+
+                                <td *ngIf="info?.type_fees_id == typefee?.id">
+                            
+                                    <span
+                                    class="badge {{info?.type_fees_status == true ? 'bg-success' : 'bg-danger'}}"><i class="{{info?.type_fees_status == true ? 'mdi mdi-check' : 'mdi mdi-close'}}"></i></span>
+                                </td>
+
+                            </ng-container>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <div class="pagination-style">
+                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                        (pageChange)="p = $event"></pagination-controls>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
+
+    <!-- Fin -->
+
+    <!-- Liste des frais de l'école -->
+    <div class="card">
+        <div class="card-body">
+            <div class="row ht-2">
+                <div class="col-md-12 h5">Liste des frais à collecter : ({{typeFees?.length}}) </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                    id="projectList-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" style="width: 50px">#</th>
+                            <th scope="col">Libellé frais</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="isProcessing" class="text-center">
+                            <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
+                        </tr>
+                        <tr *ngIf="typeFees?.length == 0" class="text-center">
+                            <td colspan="5">Aucune donnée trouvée !</td>
+                        </tr>
+                        <tr
+                            *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                            <td>{{i+1}}</td>
+                            <td>{{typefee.label}}</td>
+                            <td>{{typefee.created_at | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>
+                                <span class="badge p-1" [ngClass]="{ 'bg-success': typefee?.status == '1',
+                        'bg-danger': typefee?.status == '0' }">{{typefee.status ? 'Activé' :
+                                    'Désactivé'}}</span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+                <div class="pagination-style">
+                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                        (pageChange)="p = $event"></pagination-controls>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <ng-template #notifDashboardModal role="document" let-modal>
+        <div class="modal-header">
+            <h3 class="modal-title" id="addClassForm"><b>Notification</b></h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="card">
+                <div class="card-body p-1">
+                    <div class="text-center">
+                        <div class="avatar-md mx-auto mb-4">
+                            <div class="avatar-title bg-light rounded-circle text-primary h1">
+                                <i class="mdi mdi-email-open"></i>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-xl-10 p-2">
+                                <h3 class="text-danger"><b>Attention !</b></h3>
+                                <p class="text-muted h5 mb-2">Il existe des frais non encore affectés et/ou des classes
+                                    sans auccun frais associé.</p>
+                                <div class="bg-light rounded p-2">
+                                    <table>
+                                        <tr *ngFor="let sc of scNotAssigned">
+                                            <td style="text-align: left !important;">
+                                                <span class="label">La classe <b>{{sc.classe?.code}} - {{sc.groupe?.code}}</b> n'a accun frais associé.</span>
+                                            </td>
+                                        </tr>
+                                        <tr *ngFor="let fees of feesNotAssigned">
+                                            <td style="text-align: left !important;">
+                                                <span class="label">Les <b>{{fees.label}}</b> ne sont affectés à aucune classe.</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>                                
+                                <p>
+                                    <span>Veuillez compléter les affectations nécessaires pour garantir le bon
+                                        fonctionnement de votre espace.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="closeModal()">Fermer</button>
+            </div>
+        </div>
+    </ng-template>
+</div>

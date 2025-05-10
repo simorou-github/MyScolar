@@ -1,0 +1,326 @@
+<div class="container-fluid">
+    <app-page-title title="Utilisateurs Ecole"
+        [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <div class="row" *ngIf="!isUserForm">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm">
+                            <div class="d-inline-block">
+                                <div class="position-relative">
+                                    <a *ngIf="!isSearchForm"
+                                        class="btn btn-primary"
+                                        id="addProject-btn"
+                                        (click)="displaySearchForm(true);"><i
+                                            class="fa fa-search me-1"></i>
+                                        Rechercher
+                                    </a>
+                                    <a *ngIf="isSearchForm"
+                                        class="btn btn-danger"
+                                        id="addProject-btn"
+                                        (click)="displaySearchForm(false);"><i
+                                            class="fa fa-times me-1"></i> Fermer
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div>
+
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-sm-auto">
+                            <div class="text-sm-end">
+                                <a class="btn btn-success"
+                                    (click)="displayModalUser(modalUser)"
+                                    id="addUser"><i
+                                        class="fa fa-plus me-1"></i> Nouveau
+                                </a>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                    <div *ngIf="isSearchForm" class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">Recherche
+                                    avancée</h5>
+
+                                <form class="row gy-2 gx-3 align-items-center">
+                                    <div class="col-sm-2">
+                                        <label class="visually-hidden"
+                                            for="autoSizingSelect">Frais</label>
+                                        <select class="form-select"
+                                            id="autoSizingSelect">
+                                            <option selected>Frais</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <label class="visually-hidden"
+                                            for="autoSizingSelect">Classe</label>
+                                        <select class="form-select"
+                                            id="autoSizingSelect">
+                                            <option selected>Classe</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <label class="visually-hidden"
+                                            for="autoSizingSelect">Apprenant</label>
+                                        <select class="form-select"
+                                            id="autoSizingSelect">
+                                            <option selected>Apprenant</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1"
+                                        style="margin-top: -2%;">
+                                        <button type="button"
+                                            class="btn btn-primary">
+                                            <i
+                                                class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- end card body -->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+                    <div>
+                        <div class="table-responsive">
+                            <table
+                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                                id="projectList-table" ngxUiLoaderBlurred
+                                [loaderId]="'loader-spin'">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Prénom</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Ecole</th>
+                                        <th scope="col">Statut</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isProcessing"
+                                        class="text-center">
+                                        <td colspan="7">Chargement en
+                                            cours...</td>
+                                    </tr>
+                                    <tr *ngIf="users?.length == 0"
+                                        class="text-center">
+                                        <td colspan="7">Aucune donnée trouvée
+                                            !</td>
+                                    </tr>
+                                    <ng-container *ngIf="!isProcessing">
+                                        <tr
+                                            *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                                            <td>{{i+1}}</td>
+                                            <td>{{user.last_name}}</td>
+                                            <td>{{user.first_name}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.school?.social_reason}}</td>
+                                            <td>
+                                                <span
+                                                    class="badge {{(user.status == 1) ? 'bg-success' : 'bg-danger'}}">{{(user.status
+                                                    == 1) ? 'Actif' :
+                                                    'Inactif'}}</span>
+                                            </td>
+
+                                            <td class="text-center">
+
+                                                <div class="dropdown" dropdown
+                                                    placement="bottom-right">
+                                                    <a
+                                                        href="javascript: void(0);"
+                                                        class="dropdown-toggle card-drop"
+                                                        dropdownToggle>
+                                                        <i
+                                                            class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                    </a>
+                                                    <div
+                                                        class="dropdown-menu dropdown-menu-end"
+                                                        *dropdownMenu>
+                                                        <a class="dropdown-item"
+                                                            href="javascript: void(0);"
+                                                            (click)="confirm(user)">
+                                                            <i
+                                                                class="{{user?.status ? 'mdi mdi-lock-remove-outline text-danger' : 'mdi mdi-lock-open-check-outline text-success'}}"></i>&nbsp;
+                                                            &nbsp;{{user?.status
+                                                            ? 'Désactiver' :
+                                                            'Activer'}}
+                                                        </a>
+                                                        <!--a class="dropdown-item"
+                                                            href="javascript: void(0);"
+                                                            (click)="update(modalUser, user)">
+                                                            <i
+                                                                class="mdi mdi-pencil font-size-7 text-primary align-middle me-2"></i>
+                                                            Modifier</a>
+                                                        <a class="dropdown-item"
+                                                            href="javascript: void(0);"
+                                                            (click)="confirmDeletingUser(user)">
+                                                            <i
+                                                                class="mdi mdi-trash-can-outline text-danger align-middle me-2"></i>
+                                                            Supprimer</a-->
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+
+                            </table>
+                            <ngx-ui-loader overlayColor="#ECF0F1"
+                                [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                                [loaderId]="'loader-spin'"></ngx-ui-loader>
+                            <div class="pagination-style">
+                                <pagination-controls previousLabel="Précédent"
+                                    nextLabel="Suivant"
+                                    (pageChange)="p = $event"></pagination-controls>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-lg-12">
+
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal to add user -->
+
+<div class="row" *ngIf="isUserForm">
+    <div class="col-lg-12" ngxUiLoaderBlurred [loaderId]="'loader-spin'">
+        <div class="card">
+            <div class="card-body">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form novalidate [formGroup]="userForm"
+                                (ngSubmit)="addUser()"
+                                class="row gy-2 gx-3 align-items-center">
+                                <div class="col-9">
+                                    <h5 class="mt-1 mb-1"> <i
+                                            class="fa fa-users text-primary"></i>
+                                        Informations de
+                                        l'utilisateur
+                                    </h5>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <button class="btn btn-primary pull-right"
+                                        style="margin-right: 10%"
+                                        type="submit"
+                                        [disabled]="!userForm.valid"><i
+                                            class="bx bx-check"></i>
+                                        Enregistrer</button>
+                                    <button class="btn btn-danger pull-right"
+                                        (click)="closeModalUser()"><i
+                                            class="bx bx-x"></i> Fermer</button>
+                                </div>
+                                <div class="col-3">
+                                    <label for>Nom<span
+                                            class="required_color">*</span></label>
+                                    <input type="text" class="form-control"
+                                        id="last_name"
+                                        formControlName="last_name"
+                                        placeholder="Ex: LALO"
+                                        [ngClass]="{ 'is-invalid': userForm.get('last_name')?.touched && !userForm.get('last_name')?.valid }">
+                                    <div
+                                        *ngIf="userForm.get('last_name')?.touched && userForm.get('last_name').hasError('required')">
+                                        <span class="text-danger"
+                                            class="text-danger">Entrer le nom de
+                                            l'utilisateur.</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-5">
+                                    <label for>Prénom (s)<span
+                                            class="required_color">*</span></label>
+                                    <input type="text" class="form-control"
+                                        id="first_name"
+                                        formControlName="first_name"
+                                        placeholder="Ex: Pipi"
+                                        [ngClass]="{ 'is-invalid': userForm.get('first_name')?.touched && !userForm.get('first_name')?.valid }" />
+                                    <div
+                                        *ngIf="userForm.get('first_name')?.touched && userForm.get('first_name').hasError('required')">
+                                        <span class="text-danger"
+                                            class="text-danger">Entrer
+                                            le prénom de
+                                            l'utilisateur.</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <label for="last_name">Adresse mail <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" formControlName="email"
+                                        placeholder="Ex: monemail@gmail.com"
+                                        class="form-control mt-1" id="email" />
+                                    <div
+                                        *ngIf="userForm.get('email')?.touched && userForm.get('email').hasError('required')">
+                                        <span class="text-danger"
+                                            class="text-danger">Entrer
+                                            l'adresse mail
+                                            de l'utilisateur.</span>
+                                    </div>
+                                </div>
+
+                                <hr>
+                                <h5 class="mt-2 mb-2"><i
+                                        class="fa fa-magic text-warning"></i>
+
+                                    Rôles</h5>
+
+                                <ng-container
+                                    *ngFor="let role of roles; let i = index;">
+                                    <div class="col-4">
+                                        <input class="form-check-input"
+                                            type="checkbox"
+                                            name="formRadio{{i}}"
+                                            id="formRadio{{i}}"
+                                            (change)="checkBox($event, role.name)">&nbsp;&nbsp;
+                                        <label class="form-check-label"
+                                            for="formRadio{{i}}">
+                                            {{role.description}}
+                                        </label>
+                                    </div>
+                                </ng-container>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3"
+            [fgsType]="'rectangle-bounce'"
+            [loaderId]="'loader-spin'"></ngx-ui-loader>
+    </div>
+</div>

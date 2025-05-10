@@ -1,0 +1,103 @@
+<div class="container-fluid">
+    <app-page-title title="STATISTIQUES | {{ schoolName }}"></app-page-title>
+
+    <div class="row" *ngIf="isProcessing">
+        <div class="col-lg-12">
+            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Graphique des Paiements reçus</h4>
+                    <apx-chart class="apex-charts" dir="ltr"
+                        [series]="simplePieChart?.series"
+                        [chart]="simplePieChart?.chart"
+                        [labels]="simplePieChart?.labels"
+                        [legend]="simplePieChart?.legend"
+                        [colors]="simplePieChart?.colors"
+                        [responsive]="simplePieChart?.responsive">
+                    </apx-chart>
+                </div>
+            </div>
+            <!--end card-->
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Total des Paiement Reçus &nbsp;
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b
+                            class="text-left text-primary">{{totalOfPaymentAggregationByTypeFeesData
+                            |
+                            currency:'XOF'}}</b></h4>
+                    <div class="table-responsive mt-3">
+                        <table
+                            class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                            id="projectList-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" style="width: 50px">#</th>
+                                    <th scope="col">Type de Frais Reçu</th>
+                                    <th scope="col">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isProcessing" class="text-center">
+                                    <td colspan="3">Chargement en cours.
+                                        Veuillez patienter !!!</td>
+                                </tr>
+                                <tr
+                                    *ngIf="paymentAggregationByTypeFeesData?.length == 0"
+                                    class="text-center">
+                                    <td colspan="3">Aucune donnée trouvée !</td>
+                                </tr>
+                                <tr
+                                    *ngFor="let aggregat of paymentAggregationByTypeFeesData | paginate: {id:'table1', itemsPerPage: 5, currentPage: p1 }; let i = index;">
+                                    <td>{{i+1}}</td>
+                                    <td><b>{{aggregat.type_fees?.label}}</b></td>
+                                    <td><b>{{aggregat.sum |
+                                            currency:'XOF'}}</b></td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <div class="pagination-style">
+                            <pagination-controls id="table1"
+                                previousLabel="Précédent" nextLabel="Suivant"
+                                (pageChange)="p1 = $event"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evolution des transactions par type de frais -->
+    <!-- <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <apx-chart class="apex-charts" dir="ltr"
+                        [series]="linewithDataChart.series"
+                        [chart]="linewithDataChart.chart"
+                        [colors]="linewithDataChart.colors"
+                        [stroke]="linewithDataChart.stroke"
+                        [dataLabels]="linewithDataChart.dataLabels"
+                        [title]="linewithDataChart.title"
+                        [responsive]="linewithDataChart.responsive"
+                        [legend]="linewithDataChart.legend"
+                        [xaxis]="linewithDataChart.xaxis"
+                        [yaxis]="linewithDataChart.yaxis"
+                        [stroke]="linewithDataChart.stroke"
+                        [markers]="linewithDataChart.markers">
+                    </apx-chart>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+</div>

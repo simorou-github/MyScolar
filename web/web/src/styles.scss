@@ -1,0 +1,110 @@
+/* Importing Bootstrap SCSS file. */
+// @import '~bootstrap/scss/bootstrap';
+
+/* You can add global styles to this file, and also import other style files */
+.modal-holder {
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+@keyframes example {
+  0% {
+    transform: scale(0.5)
+  }
+
+  100% {
+    transform: scale(1)
+  }
+}
+
+input{
+  height: 38px;
+  font-size: larger !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  margin-bottom: 25px !important;
+}
+
+select{
+  height: 38px !important;
+  font-size: larger !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  margin-bottom: 25px !important;
+}
+
+// button{
+//   height: 40px !important;
+//   font-size: medium !important;
+//   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+// }
+
+label{
+  font-size: larger !important;
+  font-weight: 400 !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif  !important;
+}
+
+.carousel-item {
+  transition: opacity 0.7s ease !important;
+  position: absolute !important;
+  display: block !important;
+  opacity: 0;
+}
+
+.carousel-item.active {
+  position: relative !important;
+  opacity: 1;
+}
+
+ngx-dropzone{
+  border:2px dashed var(--bs-border-color) !important;
+}
+
+ngx-dropzone-preview {
+  max-width: none !important;
+  justify-content: normal !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  background-image: none !important;
+  img {
+    opacity: 1 !important;
+  }
+
+  ngx-dropzone-label {
+    position: unset !important;
+  }
+}
+
+.pagination-style{
+  text-align: right !important;
+}
+
+.bg-disabled{
+  background-color: #F2F4F4 !important;
+}
+
+td{
+  color: black !important;
+}
+
+.required_color {
+  color: red;
+}
+
+.custom-table-sp:nth-child(even) {
+  background-color: red;
+}
+
+.custom-table-sp:hover {
+  background-color: #F1F3F3;
+}
+
+.hover-item {
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.hover-item:hover {
+  background-color: #007bff;
+  transform: scale(1.01);
+  font-weight: bold !important;
+}
