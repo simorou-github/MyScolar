@@ -157,6 +157,7 @@ Route::group(['prefix' => 'payment'], function () {
     Route::post('create-token', [MTNPaymentController::class, 'createAccessToken']);
     Route::post('process-unique-payment', [MTNPaymentController::class, 'requestToUniquePayment']);
     Route::post('process-batch-payment', [MTNPaymentController::class, 'requestToBatchPayment']);
+    Route::get('account-balance', [MTNPaymentController::class, 'requestToAccountBalance']);
 });
 
 //Scolar 

@@ -84,9 +84,9 @@
                                                 title="Saisir le code reçu dans votre email"></span>
                                             <input type="text" class="form-control" formControlName="code_verification"
                                                 id="code_verification" placeholder="Ex: E5D58D" (keyup)="verifyCode()" (cut)="DisableCut($event)" (copy)="DisableCopy($event)" (paste)="DisablePaste($event)">
-                                            <span *ngIf="isEmailSent"><button type="button" style="margin-top: -22px;"
-                                                    (click)="resendEmailVerificationCode()" class="btn btn-link text-warning"> Renvoyer
-                                                    le code </button></span>
+                                            <button *ngIf="isEmailSent" type="button" style="margin-top: -22px;"
+                                                    (click)="resendEmailVerificationCode()" class="btn text-warning"> <b class="h5">Renvoyer
+                                                        le code</b> </button>
     
                                         </div>
                                     </div>

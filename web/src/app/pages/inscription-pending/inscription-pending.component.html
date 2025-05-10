@@ -21,7 +21,7 @@
                         <!-- end col -->
                         <div class="col-sm-auto">
                             <div class="text-sm-end">
-                                <a class="btn btn-info" (click)="generatePDF()"><i class="fa fa-file-pdf me-1"></i> PDF
+                                <a class="btn btn-light" (click)="generatePDF()"><i class="fa fa-file-pdf me-1"></i> PDF
                                 </a>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                     <div>
                         <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
                         <div class="table-responsive">
-                            <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
+                            <table
                                 class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
                                 id="projectList-table">
                                 <thead class="table-light">
@@ -124,8 +124,7 @@
                                                 <div class="d-flex flex-wrap gap-2">
                                                     <button
                                                         *ngIf="data?.status === 'INITIE' || data?.status === 'REJETE'"
-                                                        type="button"
-                                                        title="Valider inscription"
+                                                        type="button" title="Valider inscription"
                                                         (click)="confirm(data?.id, 'VALIDE')"
                                                         class="btn btn-success btn-sm">
                                                         <i class="mdi mdi-check"></i>
@@ -162,9 +161,7 @@
                                     (pageChange)="p = $event"></pagination-controls>
 
                             </div>
-                            <ngx-ui-loader overlayColor="#ECF0F1"
-                                [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                                [loaderId]="'loader-spin'"></ngx-ui-loader>
+
                         </div>
                     </div>
                 </div>
@@ -180,6 +177,9 @@
     </div>
 
 </div>
+
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
 
 <!--  View file modal -->
 <ng-template #viewFileModal let-modal>

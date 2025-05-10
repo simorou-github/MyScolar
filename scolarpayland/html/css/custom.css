@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------------------
 * Author        : Awaiken
-* Template Name : Weebix - IT Service And Technology HTML Template
+* Template Name : Scolar Plus
 * File          : CSS File
 * Version       : 1.0
 * ---------------------------------------------------------------------------------------- */
@@ -34,12 +34,49 @@
 /************************************/
 /*** 	 01. Global Variables	  ***/
 /************************************/
+.primary-color{
+    color: #454b80 !important;
+}
+
+.success-color{
+    color: #0a7f5e !important;
+}
+
+.warning-color{
+    color: #f0a22d !important;
+}
+
+.second-color {
+    color:#3b78a9 !important;
+}
+
+.primary-bg{
+    background-color: #454b80 !important;
+}
+
+.second-bg {
+    background-color:#3b78a9 !important;
+}
+.warning-bg {
+    background-color: #f0a22d !important;
+}
+
+.center{
+    text-align: center !important;
+}
+
+.pay_button{
+    background-color: #f0a22d !important;
+    border-color: blanchedalmond !important; 
+    margin-left: 10px !important;
+}
 
 :root{
-	--primary-color		: #15161B;
+	/*--primary-color		: #15161B;*/
+	--primary-color		: #454b80;
 	--secondary-color	: #F7F8FD;
 	--text-color		: #9C9FA6;
-	--accent-color		: #5D56F1;
+	--accent-color		: #3b78a9;
 	--white-color		: #FFFFFF;
 	--divider-color		: #E1E4EB;
 	--error-color		: rgb(230, 87, 87);
@@ -334,6 +371,10 @@ body{
 	text-transform: capitalize;
 	color: var(--accent-color);
 	margin-bottom: 10px;
+}
+
+.text-danger{
+    color: red;
 }
 
 .section-title h1,

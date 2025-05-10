@@ -460,6 +460,60 @@ class MTNPaymentController extends Controller
         }
     }
 
+    //Account Balance 
+    public function requestToAccountBalance()
+    {
+        $access_token = $this->createAccessToken($request)->access_token;
+        $environment = 'sandbox';
+        $url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/account/balance";
+
+        //Set Header
+        $header = array(
+            'Authorization : Bearer ' . $access_token,
+            'X-Target-Environment: ' . $environment,
+        );
+
+        //Set the request body
+        $body = array();
+
+        //encode body ti json
+        $json_body = json_encode($body);
+
+        //initialize cURL
+        $curl = curl_init();
+
+        //set cURL options
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_POSTFIELDS => $json_body
+        ));
+
+        //Execute the cURL request
+        $response = curl_exec($curl);
+        Log::info($response);
+
+        //check for cURL error
+        if (curl_errno($curl)) {
+            Log::error(curl_error($curl));
+            return response()->json([
+                'data' => [],
+                'message' => 'Une erreur interne est survenue',
+                'status' => 500
+            ]);
+        }
+
+        //close cURL session
+        curl_close($curl);
+
+        //get http status code
+        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+    }
+
     public function generatePDFInvoice($id)
     {
         
