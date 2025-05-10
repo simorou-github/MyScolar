@@ -1,0 +1,28 @@
+#bg {
+    background-image: url('./pay3.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+label{
+    font-size: 13px !important;
+    //font-weight: lighter !important;
+}
+
+input, td, th{
+    font-size: 12px !important;
+    font-weight:200 !important;
+    color: black !important;
+}
+
+.text-warning{
+    color: #0a6ffd !important;
+}
+
+.btn-warning{
+    background-color: #0a6ffd !important;
+    border-color: #0a6ffd !important;
+}
+
+.h3, h4{
+    font-weight: lighter !important;
+}

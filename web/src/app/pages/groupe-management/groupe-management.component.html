@@ -1,0 +1,244 @@
+<div class="container-fluid">
+    <app-page-title title="Liste des groupes | {{schoolName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Début ligne avant tableau -->
+                    <div class="row mb-2">
+                        <div class="col-sm">
+                            <div class="d-inline-block">
+                                <div class="position-relative">
+                                    <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
+                                        (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
+                                    </a>
+                                    <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
+                                        (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div>
+
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-sm-auto">
+                            <div class="text-sm-end">
+                                <a class="btn btn-success" (click)="displayModalGroupe(modalGroupe)" id="addGroupe"><i
+                                        class="fa fa-plus me-1"></i> Nouveau
+                                </a>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <!-- Fin ligne avant tableau -->
+
+                    <!-- Début Formulaire recherche avancée -->
+                    <div *ngIf="isSearchForm" class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">Recherche avancée</h5>
+
+                                <form class="row gy-2 gx-3 align-items-center" [formGroup]="searchForm"
+                                    (ngSubmit)="groupeList()">
+                                    <div class="col-sm-2">
+                                        <label class="visually-hidden" for="autoSizingSelect">Code</label>
+                                        <input type="text" id="code" class="form-control" formControlName="code"
+                                            placeholder="Code" />
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <label class="visually-hidden" for="autoSizingSelect">Statut</label>
+                                        <select class="form-select" id="autoSizingSelect" formControlName="status">
+                                            <option selected value="">Statut</option>
+                                            <option value="1">Actif</option>
+                                            <option value="false">Inactif</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-sm-1" style="margin-top: -2%;">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- end card body -->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- Fin Formulaire recherche avancée -->
+
+                    <div>
+                        <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+                        <div class="row ht-2">
+                            <div class="col-md-12 h5">Liste des groupes : ({{groupes?.length}}) </div>
+                        </div>
+                        <div class="table-responsive">
+                            <!-- Début du tableau de la liste des groupes -->
+                            <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
+                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                                id="projectList-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" style="width: 8%">#</th>
+                                        <th scope="col" style="width: 10%">Code</th>
+                                        <th scope="col" style="width: 30%">Description</th>
+                                        <th scope="col" style="width: 10%">Statut</th>
+                                        <th style="width: 30%" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isProcessing" class="text-center">
+                                        <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
+                                    </tr>
+                                    <tr *ngIf="groupes?.length == 0" class="text-center">
+                                        <td colspan="5">Aucune donnée trouvée !</td>
+                                    </tr>
+                                    <ng-container *ngIf="!isProcessing">
+                                        <tr class="hover-item"
+                                            *ngFor="let groupe of groupes | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                                            <td style="width: 8%">{{i+1}}</td>
+                                            <td style="width: 10%">{{groupe.code}}</td>
+                                            <td style="width: 30%">{{(groupe.description == "" || groupe.description == NULL) ? "Aucune description" : groupe.description}}</td>
+                                            <td style="width: 10%">
+                                                <span class="badge {{(groupe.status == 1) ? 'bg-success' : 'bg-danger'}}">{{(groupe.status == 1) ? 'Actif' : 'Inactif'}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="dropdown" dropdown placement="bottom-right">
+                                                    <a href="javascript: void(0);" class="dropdown-toggle card-drop"
+                                                        dropdownToggle>
+                                                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                                                        <a class="dropdown-item" href="javascript: void(0);" (click)="confirm(groupe)"><i class="{{groupe?.status ? 'mdi mdi-lock-remove-outline' : 'mdi mdi-playlist-edit'}} font-size-7 {{groupe?.status ? 'text-danger' : 'text-success'}} align-middle me-2"></i> {{groupe?.status ?
+                                                            'Désactiver' : 'Activer'}}</a>
+                                                        <a class="dropdown-item" href="javascript: void(0);" (click)="update(modalGroupe, groupe)"><i class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i> Modifier</a>
+                                                        <a class="dropdown-item" href="javascript: void(0);" (click)="confirmDeletingGroupe(groupe)"><i class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i> Supprimer</a>
+                                                    </div>
+                                                </div>
+                                            </td>                                          
+                           
+
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+
+                            </table>
+                            <!-- Début du tableau de la liste des groupes -->
+
+                            <!-- Pagination -->
+                            <div class="pagination-style">
+                                <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                                    (pageChange)="p = $event"></pagination-controls>
+
+                            </div>
+                             <!-- Pagination -->
+                             
+                             <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                                [loaderId]="'loader-spin'"></ngx-ui-loader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-lg-12">
+
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+
+</div>
+
+<!--Start Classe Modal -->
+<ng-template #modalGroupe role="document" let-modal>
+    <div class="modal-header">
+        <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
+            <span class="sr-only pull-right">Loading...</span>
+        </div>
+        <h5 class="modal-title" id="addGroupe"> <i
+                class="fas {{is_modified ? 'fas fa-edit' : 'fa-plus-circle'}} text-{{is_modified ? 'warning' : 'success'}}"></i>
+            {{is_modified ? "Modification d'un groupe" : "Ajout d'un groupe"}}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModalGroupe()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"></span>
+        </button>
+    </div>
+    <form (ngSubmit)="addGroupe()" [formGroup]="groupeForm">
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="code" class="form-label">Code du groupe <span class="required_color">*</span></label>
+                <input type="text" id="code" class="form-control" formControlName="code" placeholder="Ex: A"
+                    [ngClass]="{ 'is-invalid': groupeForm.get('code')?.touched && !groupeForm.get('code')?.valid }" />
+                <div class="space-between-validator"
+                    *ngIf="groupeForm.get('code')?.touched && groupeForm.get('code').hasError('required')">
+                    <span class="required_color">Entrer le code du groupe.</span>
+                </div>
+                <div class="space-between-validator"
+                    *ngIf="groupeForm.get('code')?.touched && groupeForm.get('code').hasError('minlength')">
+                    <span class="required_color">Le code requiert au moins 1
+                        caractères.</span>
+                </div>
+                <div class="space-between-validator"
+                    *ngIf="groupeForm.get('code')?.touched && groupeForm.get('code').hasError('maxlength')">
+                    <span class="required_color">Le code requiert au plus 8
+                        caractères.</span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description du groupe</label>
+                <input type="text" id="description" class="form-control" formControlName="description"
+                    placeholder="Ex: Pour la série ..."
+                    [ngClass]="{ 'is-invalid': groupeForm.get('description')?.touched && !groupeForm.get('description')?.valid }" />
+
+                <div class="space-between-validator"
+                    *ngIf="groupeForm.get('description')?.touched && groupeForm.get('description').hasError('minlength')">
+                    <span class="required_color">Le description requiert au moins 4
+                        caractères.</span>
+                </div>
+                <div class="space-between-validator"
+                    *ngIf="groupeForm.get('description')?.touched && groupeForm.get('description').hasError('maxlength')">
+                    <span class="required_color">Le code requiert au plus 50
+                        caractères.</span>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="closeModalGroupe()">Fermer</button>
+                <button type="submit" class="btn btn-success" id="add-btn"
+                    [disabled]="!groupeForm.valid || isProcessing">{{is_modified ? "Modifier" : "Ajouter"}}</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<!--End Modal -->
+
+<!-- Delete Confirmation Modal -->
+<!-- <ng-template #StaticDeleteModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="deletegroupe"><i class="fa fa-info-circleg text-warning fa-1x"></i>
+            Confirmation
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closeModalDeleting()"></button>
+    </div>
+    <div class="modal-body text-center">
+        <p class="h5 text-danger">Voulez-vous vraiment supprimer le groupe : {{ groupeName }} ?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="closeModalDeleting()">Non</button>
+        <button type="button" class="btn btn-danger" (click)="delete()">Supprimer</button>
+    </div>
+</ng-template> -->

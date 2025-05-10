@@ -1,0 +1,171 @@
+<div class="container-fluid mt-2">
+    <app-page-title title="STATISTIQUE DES TRANSACTIONS" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" *ngIf="!isFilter">
+                            <div class="col-lg-2">
+                                <button class="btn btn-primary mt-1" type="button" (click)="displayFilter()"> <i
+                                        class="fa fa-filter"></i>
+                                    Filtrer</button>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="isFilter">
+                            <div class="col-lg-2">
+                                <button class="btn btn-danger mt-1" type="button" (click)="displayFilter()"> <i
+                                        class="fa fa-times"></i>
+                                    Fermer</button>
+                            </div>
+                        </div>
+                        <form #seachPaymentForm="ngForm" *ngIf="isFilter"
+                            (ngSubmit)="getHistoryOfPayment(seachPaymentForm)">
+
+                            <div class="row mt-2">
+                                <div class="col-lg-2">
+                                    <label for="date_debut">Début</label>
+                                    <input class="form-control" type="date" name="date_debut" ngModel
+                                        (keyup.enter)="getHistoryOfPayment(seachPaymentForm)">
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="date_fin">Fin</label>
+                                    <input class="form-control" type="date" name="date_fin" ngModel
+                                        (keyup.enter)="getHistoryOfPayment(seachPaymentForm)">
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="operators">Operateur Mobile</label>
+                                    <select class="form-control" name="operateur_id" ngModel
+                                        (change)="getHistoryOfPayment(seachPaymentForm)">
+                                        <option value="" selected>Selection opérateur</option>
+                                        <option value="{{operator.id}}" *ngFor="let operator of operators">
+                                            {{operator.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="academic_year">Année</label>
+                                    <select class="form-control" name="academic_year" ngModel
+                                        (change)="getHistoryOfPayment(seachPaymentForm)">
+                                        <option value="" selected>Selection l'année</option>
+                                        <option value="{{academicyser.id}}" *ngFor="let academicyser of academicysers">
+                                            {{academicyser.academic_year}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="date_debut">Ecole</label>
+                                    <select class="form-control" name="school_id" ngModel
+                                        (change)="getHistoryOfPayment(seachPaymentForm)">
+                                        <option value="" selected>Selection école</option>
+                                        <option value="{{school.id}}" *ngFor="let school of schools">
+                                            {{school.social_reason}}</option>
+                                    </select>
+                                </div>
+                                <!--div class="col-lg-3">
+                                    <label for="date_debut">Type Frais</label>
+                                    <select class="form-control" name="type_fees_id" ngModel>
+                                        <option value="" selected>Selection type frais</option>
+                                        <option value="{{type_frais.id}}" *ngFor="let type_frais of types_frais">
+                                            {{type_frais.libelle}}
+                                        </option>
+                                    </select>
+                                </div-->
+                                <div class="col-lg-1 text-right mt-3">
+                                    <button class="btn btn-primary mt-3" type="submit"> <i
+                                            class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="isProcessing">
+            <div class="col-lg-12">
+                <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Total des Paiement Reçus &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b
+                                class="text-left text-primary">{{totalOfPaymentAggregationByTypeFeesData |
+                                currency:'XOF'}}</b></h4>
+                        <div class="table-responsive mt-3">
+                            <table
+                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                                id="projectList-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" style="width: 50px">#</th>
+                                        <th scope="col">Type de Frais Reçu</th>
+                                        <th scope="col">Montant</th>
+                                        <th scope="col">Commission</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-striped">
+                                    <tr *ngIf="isProcessing" class="text-center">
+                                        <td colspan="4">Chargement en cours. Veuillez patienter !!!</td>
+                                    </tr>
+                                    <tr *ngIf="paymentAggregationByTypeFeesData?.length == 0" class="text-center">
+                                        <td colspan="3">Aucune donnée trouvée !</td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="let aggregat of paymentAggregationByTypeFeesData | paginate: {id:'table1', itemsPerPage: 5, currentPage: p1 }; let i = index;">
+                                        <td>{{i+1}}</td>
+                                        <td><b>{{aggregat.type_fees?.label}}</b></td>
+                                        <td><b>{{aggregat.sum | currency:'XOF'}}</b></td>
+                                        <td><b>{{aggregat.scolar_com | currency:'XOF'}}</b></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <div class="pagination-style">
+                                <pagination-controls id="table1" previousLabel="Précédent" nextLabel="Suivant"
+                                    (pageChange)="p1 = $event"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Evolution des transactions par type de frais -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Graphique des Paiements reçus</h4>
+                        <apx-chart class="apex-charts" dir="ltr" [series]="simplePieChart?.series"
+                            [chart]="simplePieChart?.chart" [labels]="simplePieChart?.labels"
+                            [legend]="simplePieChart?.legend" [colors]="simplePieChart?.colors"
+                            [responsive]="simplePieChart?.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Evolution des transactions par type de frais</h4>
+                        <apx-chart class="apex-charts" dir="ltr" [series]="linewithDataChart.series"
+                            [chart]="linewithDataChart.chart" [colors]="linewithDataChart.colors"
+                            [stroke]="linewithDataChart.stroke" [dataLabels]="linewithDataChart.dataLabels"
+                            [responsive]="linewithDataChart.responsive" [legend]="linewithDataChart.legend"
+                            [xaxis]="linewithDataChart.xaxis" [yaxis]="linewithDataChart.yaxis"
+                            [stroke]="linewithDataChart.stroke" [markers]="linewithDataChart.markers">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>

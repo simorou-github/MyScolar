@@ -1,0 +1,271 @@
+<div class="container-fluid p-0">
+    <div class="row g-0">
+
+        <div class="col-xl-6" id="bg" style="position: fixed;">
+            <div class="auth-full-bg pt-lg-5 p-4">
+                <div class="w-100">
+                    <!--div class="bg-overlay"></div-->
+                    <div class="d-flex flex-column" style="overflow:none; height: 100%;">
+
+                        <div class="p-4 mt-auto">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-7">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end col -->
+
+        <!-- Form -->
+        <div class="col-xl-6"
+            style="margin-top: -35px; position: absolute; right: 0; float: right; overflow: auto; background-color: white;">
+            <div class="auth-full-page-content p-md-5 p-3">
+                <div class="w-100">
+
+                    <div class="d-flex flex-column h-100">
+                        <div class="mb-1">
+                            <a routerLink="/" class="d-block card-logo mt-5">
+                                <img src="assets/images/logo-scolarplus1.png" alt="" width="85" height="80"
+                                    class="card-logo-dark"> <p class="h1" style="margin: -50px 0px 0px 85px  !important;"> &nbsp; <b >SCOLAR PLUS</b></p>
+                                <span class="card-logo-light h3 text-primary"><b> &nbsp;<br> <br> S'inscrire</b></span>
+                            </a>
+                            <p class="text-muted" style="text-align: justify;">Les Ecoles, les Parents d'élèves et les
+                                Etudiant(e)s peuvent
+                                s'enregistrer afin d'accéder à l'application ScolarPlus
+                                en remplissant le formulaire ci-dessous.
+                            </p>
+                        </div>
+                        <app-my-own-loader *ngIf="loading"></app-my-own-loader>
+                        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                            <div class="my-auto">
+                                <div class=" row search-box me-2 d-inline-block pull-right">
+
+                                </div><br><br>
+
+                                <ng-container *ngIf="!isTwiceSubmission">
+                                    <div class="row" style="margin-top: -35px;">
+                                        <div class="col-md-12">
+                                            <label for="type">Qui êtes-vous <span class="text-danger">*</span> </label>
+                                            <select class="form-select mb-4" formControlName="type" id="type">
+                                                <option disabled value="">Selectionnez votre statut</option>
+                                                <option value="ecole">Je suis un promoteur d'école</option>
+                                                <!--option value="parent">Je suis un parent d'élève(s)</option>
+                                                <option value="etudiant">Je suis un étudiant(e)</option-->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="email">E-mail <span class="text-danger">*</span></label>
+                                            <input type="text"
+                                                [ngClass]="{'is-invalid' : registerForm.get('email')?.touched && !registerForm.get('email')?.valid}"
+                                                class="form-control" formControlName="email" id="email">
+                                            <span class="required_color"
+                                                *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('pattern')">Entrer
+                                                une adresse mail valide.</span>
+                                        </div>
+                                        <div class="col-md-6 mt-1" *ngIf="!isEmailSent">
+                                        <!-- <div class="col-md-6 mt-1"> -->
+                                            <label for="code_verification"></label>
+                                            <button type="button" class="btn btn-primary w-md p-2 mt-4"
+                                                [disabled]="isProcessing" style="width: 100%; font-size: 16px;"
+                                                (click)="sendEmailVerificationCode();"><span class="bx bx-check"></span>
+                                                Vérifier l'email</button>
+                                        </div>
+                                        <div class="col-md-6" *ngIf="isEmailSent">
+                                        <!-- <div class="col-md-6"> -->
+                                            <label for="code_verification">Code de vérification <span
+                                                    class="text-danger">*</span></label>
+                                            <span class="bx bx-info-circle pull-right"
+                                                title="Saisir le code reçu dans votre email"></span>
+                                            <input type="text" class="form-control" formControlName="code_verification"
+                                                id="code_verification" placeholder="Ex: E5D58D" (keyup)="verifyCode()" (cut)="DisableCut($event)" (copy)="DisableCopy($event)" (paste)="DisablePaste($event)">
+                                            <button *ngIf="isEmailSent" type="button" style="margin-top: -22px;"
+                                                    (click)="resendEmailVerificationCode()" class="btn text-warning"> <b class="h5">Renvoyer
+                                                        le code</b> </button>
+    
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                
+                                <ng-container *ngIf="isEmailValid || isTwiceSubmission">
+                                <!-- <ng-container> -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="social_reason">Raison Sociale de l'Ecole <span
+                                                        class="text-danger"></span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Saisir le nom de votre école ou université"></span>
+
+                                                <input type="text" class="form-control" formControlName="social_reason"
+                                                    id="social_reason">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="ifu">N° d'Identité Fiscale</label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Saisir la référence fiscale de votre école ou université"></span>
+
+                                                <input type="text" class="form-control" id="ifu" formControlName="ifu">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <app-my-own-loader *ngIf="loading"></app-my-own-loader>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="country_id">Pays <span class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Sélectionnez votre Pays de résidence ou celui de votre école ou université"></span>
+
+                                                <select class="form-select mb-4" formControlName="country_id"
+                                                    id="country_id" (change)="getCityByCountry($event)">
+                                                    <option disabled value="">Selectionnez votre Pays</option>
+                                                    <option *ngFor="let country of countries" value="{{ country?.id }}">
+                                                        {{ "("+ country?.phone_code +")" + " " + country?.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="city_id">Ville <span class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Sélectionnez votre Ville de résidence ou celle de votre école ou université"></span>
+
+                                                <select class="form-select mb-4" formControlName="city_id" id="city_id">
+                                                    <option disabled value="">Selectionnez votre Ville</option>
+                                                    <option *ngFor="let city of cities_filtered" value="{{ city?.id }}">
+                                                        {{ city?.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="last_name">Nom <span class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Saisir votre nom de famille"></span>
+
+                                                <input type="text" class="form-control" formControlName="last_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="first_name">Prénom <span class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Saisir vos prénoms"></span>
+
+                                                <input type="text" class="form-control" id="first_name"
+                                                    formControlName="first_name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="">
+                                                <label for="tel">Code </label>
+                                                <input type="text" class="form-control" formControlName="phone_code"
+                                                    id="phone_code">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="">
+                                                <label for="tel">Téléphone <span class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Saisir votre numéro de téléphone fonctionnel sans l'indicatif. Scolar Plus pourrait vous appeler."></span>
+
+                                                <input type="text" class="form-control" mask="{{mask_template}}"
+                                                    formControlName="tel" id="tel">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="location">Adresse <span class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Saisir votre adresse ou celle de votre école. Ex: Awakê, 01 BP00120"></span>
+
+                                                <input type="text" class="form-control" formControlName="location"
+                                                    id="location">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="password">Mot de passe <span
+                                                        class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Créer votre mot de passe."></span>
+
+                                                <input type="password" class="form-control" formControlName="password"
+                                                    id="password">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <label for="password">Confirmation du mot de passe <span
+                                                        class="text-danger">*</span></label>
+                                                <span class="bx bx-info-circle pull-right"
+                                                    title="Créer votre mot de passe."></span>
+
+                                                <input type="password" class="form-control"
+                                                    formControlName="password_conf">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin-top: -20px !important;">
+                                        <div class="col-md-12">
+                                            <i class="text-danger">Veuillez utiliser un mot de passe fort (8 Caractères au moins, Chiffres, Majuscules, Minuscules, Caractères spéciaux comme @-!-#).</i>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3 mt-3">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <div>
+                                                    <label for="document" class="form-label">Joindre un document <span class="bx bx-info-circle pull-right"
+                                                        title="Veuillez joindre un fichier unique (vous pouvez compiler plusieurs fichiers PDF avant de joindre)."></span></label>
+                                                    <input class="form-control form-control-lg" id="document" accept=".pdf"
+                                                        title="Tout document permettant de vérifier l'identité ou l'autorisation de l'école."
+                                                        type="file" (change)="fileEvent($event)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <button type="submit" class="btn btn-primary w-md p-2"
+                                                    style="width: 100%; font-size: 18px;"
+                                                    [disabled]="!registerForm.valid || isProcessing"><span
+                                                        class="bx bx-user-plus bx-2"></span> S'inscrire </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                            </div>
+                        </form>
+                        <div class="mt-4 mt-md-5 text-center">
+                            <p class="mb-0 h5">Vous aviez déjà un compte, <a href="https://scolar.coopdicpa.com/web/"><span
+                                        class="bx bx-log-in-circle"></span> Se Connecter </a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- end container-fluid -->
