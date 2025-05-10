@@ -1,0 +1,248 @@
+<div class="container-fluid">
+  <app-page-title title="Liste des Frais | {{scName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm">
+              <div class="d-inline-block">
+                <div class="position-relative">
+                  <a *ngIf="!isSearchForm" class="btn btn-primary" id="search-btn"
+                    (click)="displaySearchForm();"><i class="fa fa-search me-1"></i> Rechercher
+                  </a>
+                  <a *ngIf="isSearchForm" class="btn btn-danger" id="close-btn"
+                    (click)="displaySearchForm();"><i class="fa fa-times me-1"></i> Fermer
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- end col -->
+            <div class="col-sm-auto">
+              <div class="text-sm-end">
+                <a *ngIf="!isSearchForm" class="btn btn-success" id="addClasse"
+                  (click)="openCreateModal(feesTypeModal)"><i class="fa fa-plus me-1"></i> Nouveau frais
+                </a>
+              </div>
+            </div>
+            <!-- end col -->
+          </div>
+          <!-- end row -->
+
+          <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+
+          <div *ngIf="isSearchForm" class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-4">Recherche avancée</h5>
+                <form class="row gy-2 gx-3 align-items-center" (ngSubmit)="typeFeesList(searchForm.value)"
+                  [formGroup]="searchForm">
+                  <div class="col-sm-11">
+                    <label class="visually-hidden">Libellé frais</label>
+                    <input type="text" formControlName="label" class="form-control"
+                      placeholder="Ex: Frais de d'assurance ...">
+                  </div>
+                  <div class="col-sm-1 text-center" style="margin-top: -2%;">
+                    <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">
+                      <i class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- end card body -->
+            </div>
+            <!-- end card -->
+          </div>
+          <div>
+            <div class="row ht-2">
+              <div class="col-md-12 h5">Liste des frais à collecter : ({{typeFees?.length}}) </div>
+            </div>
+            <div class="table-responsive">
+              <table  ngxUiLoaderBlurred [loaderId]="'loader-fees'" class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                id="projectList-table">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" style="width: 50px">#</th>
+                    <th scope="col">Libellé frais</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="isProcessing" class="text-center">
+                    <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
+                  </tr>
+                  <tr *ngIf="typeFees?.length == 0" class="text-center">
+                    <td colspan="5">Aucune donnée trouvée !</td>
+                  </tr>
+                  <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;"
+                  class="hover-item">
+                    <td>{{i+1}}</td>
+                    <td>{{typefee.label}}</td>
+                    <td>{{typefee.created_at | date : 'dd/MM/yyyy HH:mm:ss'}}</td>                                   
+                    <td>
+                      <span class="badge p-1" [ngClass]="{ 'bg-success': typefee?.status == '1',
+                        'bg-danger': typefee?.status == '0' }">{{typefee.status ? 'Activé' :
+                        'Désactivé'}}</span>
+                    </td>
+
+
+                    <td class="text-center">
+                      <div class="dropdown" dropdown placement="bottom-right">
+                          <a href="javascript: void(0);" class="dropdown-toggle card-drop"
+                              dropdownToggle>
+                              <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                              
+                              <a class="dropdown-item" href="javascript: void(0);" (click)="openCreateModal(feesTypeModal, 'Modification de frais', 'Modifier', typefee)"><i class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i> Modifier</a>
+
+                              <a class="dropdown-item" href="javascript: void(0);" (click)="ConfirmDeleteModal(feesDeleteModal, typefee)"><i class="{{typefee.status ? 'mdi mdi-close' : 'mdi mdi-check'}} font-size-7 {{typefee.status ? 'text-danger' : 'text-success'}} align-middle me-2"></i> {{typefee.status ?
+                                'Désactiver frais' : 'Activer frais'}}</a>
+                              
+                                <a class="dropdown-item" href="javascript: void(0);" [disabled]="!typefee.status" (click)="magerFees(typefee)"><i class="mdi mdi-connection text-primary font-size-7 align-middle me-2"></i> Affecter frais</a>
+                          
+                                <a class="dropdown-item" href="javascript: void(0);" (click)="displayDetailsModal(detailsModal, typefee)"><i class="mdi mdi-information-outline font-size-7 text-primary align-middle me-2"></i> Détails</a>
+                          
+                            </div>
+                      </div>
+                  </td>
+
+                  </tr>
+                </tbody>
+
+              </table>
+              <div class="pagination-style">
+                <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                  (pageChange)="p = $event"></pagination-controls>
+              </div>
+          <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-fees'"></ngx-ui-loader>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+      <div class="row">
+        <div class="col-lg-12">
+
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+  </div>
+</div>
+
+
+<!--Start Fees Modal -->
+<ng-template #feesTypeModal role="document" let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="addClassForm">{{labelFormTitle}}</h5>
+  </div>
+  <form (ngSubmit)="create()" [formGroup]="feesTypeForm">
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="label" class="form-label">Libellé Frais <span class="required_color text-danger">*</span></label>
+        <input type="text" id="label" class="form-control" formControlName="label" placeholder="Ex: Frais de scolarité"
+          [ngClass]="{ 'is-invalid': feesTypeForm.get('label')?.touched && !feesTypeForm.get('label')?.valid }" />
+        <label class="text-danger" *ngIf="btnFormTitle == 'Ajouter'" style="font-size: 12px !important;"><b>Note :
+          </b>Quand vous ajoutez un frais à
+          votre espace, vous ne pouvez plus le supprimer. Vous pourez par contre le désactiver ou l'activer au
+          besoin.</label>
+        <div class="space-between-validator"
+          *ngIf="feesTypeForm.get('label')?.touched && feesTypeForm.get('label').hasError('required')">
+          <span class="required_color">Entrer le libellé du Frais.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeModal()">Fermer</button>
+        <button type="submit" class="btn btn-warning" id="add-btn"
+          [disabled]="!feesTypeForm.valid">{{btnFormTitle}}</button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!--End Modal -->
+
+<!-- Delete Confirmation Modal -->
+<ng-template #feesDeleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="deleteClasse"><i class="fa fa-info-circleg text-warning fa-1x"></i>
+      Confirmation
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="closeModalDeleting()"></button>
+  </div>
+  <div class="modal-body text-center">
+    <p class="h5 text-danger">Voulez-vous vraiment {{feesStatus ? 'désactiver' : 'activer'}} ce frais ?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="closeModalDeleting()">Non</button>
+    <button type="button" class="btn btn-danger" (click)="crudTypeFees('delete')">{{feesStatus ? 'Désactiver' :
+      'Activer'}}</button>
+  </div>
+</ng-template>
+
+
+
+<!--Start Details Modal -->
+<ng-template #detailsModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myLargeModalLabel"> <i class="fa fa-info-circle text-info"></i> Détails Frais
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="modalRef?.hide()"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-xl-5 col-md-5">
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th scope="col">Frais</th>
+                <td scope="col">{{curr_fees?.label}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Années :</th>
+                <td> {{curr_fees?.created_at | date:'yyyy'}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Date</th>
+                <td>{{curr_fees?.created_at | date:'dd/MM/yyyy'}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Statut</th>
+                <td><span class="badge {curr_fees.status ? badge-soft-success :  badge-soft-danger}">{{curr_fees.status
+                    ? 'Actif' : 'Inactif'}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+      <div class="col-xl-7 col-md-7">
+        <div class="card jobs-categories">
+          <div class="card-body">
+            <h5>Classes affectées</h5>
+            <ng-container *ngIf="isProcessing"><h6 class="text-info"> Chargement en cours ...</h6></ng-container>
+            <ng-container *ngIf="!isProcessing">
+              <a *ngFor="let detail of feesDatails | paginate: { itemsPerPage: 3, currentPage: p2 };" href="javascript:void(0);"
+                class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2"><b>{{detail.classes.code}} - {{detail.school_classe?.groupe?.code}}</b> - Paiement
+                {{detail.type_payment}}<span class="badge text-bg-info float-end bg-opacity-100">{{detail.amount_fees |
+                  currency:'XOF'}}</span></a>
+                  <div class="pagination-style">
+                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                      (pageChange)="p2 = $event"></pagination-controls>
+                  </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

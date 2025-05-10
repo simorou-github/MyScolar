@@ -1,0 +1,131 @@
+<div class="container-fluid">
+    <app-page-title title="AFFECTATION DE FRAIS  | {{scName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+
+                <div class="card-body">
+                    <form [formGroup]="schoolClasseForm" (ngSubmit)="assigneFeesToSchoolClasse()">
+                        <div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-2">
+                                        <h6 style="color: black;">Classe <span class="required_color">*</span></h6>
+                                        <select class="form-select mb-2" formControlName="school_classe_id"
+                                            id="school_classe_id">
+                                            <option disabled value="" selected>Selectionnez une classe ...</option>
+                                            <option *ngFor="let classe of classes" value="{{ classe?.id }}">
+                                                {{ classe.classe?.code }} {{classe.groupe ? '-' : ''}} {{ classe.groupe?.code }}
+                                            </option>
+                                        </select>
+                                        <div
+                                            *ngIf="schoolClasseForm.get('school_classe_id')?.touched && schoolClasseForm.get('school_classe_id').hasError('required')">
+                                            <span class="required_color">Sélectionner la classe à ajouter.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" formControlName="academic_year">
+                            <div class="row mt-3" *ngIf="schoolClasseForm.value.school_classe_id">
+                                <div class="col-md-4">
+                                    <h6 style="color: black;" class="mt-2">Frais à ajouter<span
+                                            class="required_color">*</span></h6>
+                                    <select class="form-select mb-2" formControlName="type_fees_id" id="type_fees_id"
+                                        [ngClass]="{'is-invalid' : schoolClasseForm.get('type_fees_id')?.touched && !schoolClasseForm.get('type_fees_id')?.valid}">
+                                        <option disabled value="">Selectionnez un frais
+                                        </option>
+                                        <option *ngFor="let typeFee of typeFees" value="{{ typeFee?.id }}">{{
+                                            typeFee?.label }}
+                                        </option>
+                                    </select>
+                                    <div
+                                        *ngIf="schoolClasseForm.get('type_fees_id')?.touched && schoolClasseForm.get('type_fees_id').hasError('required')">
+                                        <span class="required_color">Sélectionner le type de frais.</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h6 style="color: black;" class="mt-2">Montant total du frais<span
+                                            class="required_color">*</span></h6>
+                                    <input type="number" class="form-control mb-2" formControlName="amount_fees"
+                                        placeholder="Montant"
+                                        [ngClass]="{'is-invalid' : schoolClasseForm.get('amount_fees')?.touched && !schoolClasseForm.get('amount_fees')?.valid}">
+                                    <div
+                                        *ngIf="schoolClasseForm.get('amount_fees')?.touched && schoolClasseForm.get('amount_fees').hasError('required')">
+                                        <span class="required_color">Entrer le montant.</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h6 style="color: black;" class="mt-2">Type de paiement<span
+                                            class="required_color">*</span></h6>
+                                    <select class="form-select mb-2" formControlName="type_payment" id="type_payment"
+                                        (change)="addFees()"
+                                        [ngClass]="{'is-invalid' : schoolClasseForm.get('type_payment')?.touched && !schoolClasseForm.get('type_payment')?.valid}">
+                                        <option disabled value="" selected>Selectionnez un type de paiement
+                                        </option>
+                                        <option *ngFor="let type_payment of typePayments" [ngValue]="type_payment">{{
+                                            type_payment?.label }}</option>
+                                    </select>
+                                    <div
+                                        *ngIf="schoolClasseForm.get('type_payment')?.touched && schoolClasseForm.get('type_payment').hasError('required')">
+                                        <span class="required_color">Sélectionner le type de frais.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ng-container formArrayName="fees" *ngFor="let fee of feesList?.controls; let i = index">
+                                <div class="row mt-2 pt-2 bg-light rounded" [formGroupName]="i">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control mb-2" formControlName="label"
+                                            placeholder="Libellé"
+                                            [ngClass]="{'is-invalid' : feesList?.controls[i].get('label')?.touched && !feesList?.controls[i].get('label')?.valid}" />
+                                        <div
+                                            *ngIf="feesList?.controls[i].get('label')?.touched && feesList?.controls[i].get('label').hasError('required')">
+                                            <span class="required_color">Entrer le libellé.</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control mb-2" formControlName="due_amount"
+                                            placeholder="Montant"
+                                            [ngClass]="{'is-invalid' : feesList?.controls[i].get('due_amount')?.touched && !feesList?.controls[i].get('due_amount')?.valid}" />
+                                        <div
+                                            *ngIf="feesList?.controls[i].get('due_amount')?.touched && feesList?.controls[i].get('due_amount').hasError('required')">
+                                            <span class="required_color">Entrer le montant.</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control mb-2" min="{{toDay | date:'yyyy-MM-dd'}}"
+                                            formControlName="due_date" placeholder="Date échéance"
+                                            [ngClass]="{'is-invalid' : feesList?.controls[i].get('due_date')?.touched && !feesList?.controls[i].get('due_date')?.valid}" />
+                                        <div
+                                            *ngIf="feesList?.controls[i].get('due_date')?.touched && feesList?.controls[i].get('due_date').hasError('required')">
+                                            <span class="required_color">Entrer l'échéance.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="text-end mt-2 mb-2">
+                                <button type="submit" [disabled]="!schoolClasseForm.valid || isProcessing"
+                                    class="btn btn-primary">Enregistrer l'affectation</button>
+                                <a type="button" [routerLink]="['/espace/gestion-frais']"
+                                    style="margin-left: 10px !important;" class="btn btn-soft-secondary">Retourner</a>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+
+</div> <!-- container-fluid -->
