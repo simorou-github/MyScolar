@@ -4,9 +4,9 @@
 
   <!--- Sidemenu -->
   <div id="sidebar-menu">
-    <!-- Left Menu Start -->
+    
     <ul class="metismenu list-unstyled" id="side-menu" #sideMenu>
-      <!-- {{menuItems}} -->
+     
       <ng-container *ngFor="let item of menuItems">
         <li class="menu-title" *ngIf="item.isTitle">{{ item.label | translate }}</li>
         <ng-container *ngIf="toDisplay(item)">
@@ -52,7 +52,9 @@
         </ng-container>
       </ng-container>
     </ul>
-  </div>
+  </div> 
+
+ 
 </ng-template>
 <!-- Sidebar -->
 

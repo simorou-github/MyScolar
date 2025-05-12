@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ClasseService } from 'src/app/services/classe.service';
 import { ManageFeesService } from 'src/app/services/manage-fees.service';
 import { ParameterService } from 'src/app/services/parameter.service';
@@ -19,7 +20,8 @@ export class AssignFeesToClasseComponent implements OnInit {
   isProcessing: boolean;  message: string; toDay: Date;
   scName: string;
   constructor(private fb: FormBuilder, private tokenService: TokenService, private manageFeesService: ManageFeesService, private route: ActivatedRoute, private parameterService: ParameterService,
-    private classeService: ClasseService, private toastr: ToastrService, private router: Router){
+    private classeService: ClasseService, private toastr: ToastrService, private router: Router,
+  private ngxLoader: NgxUiLoaderService){
 
   }
 
@@ -44,7 +46,7 @@ export class AssignFeesToClasseComponent implements OnInit {
   }
 
   assigneFeesToSchoolClasse() {
-    this.isProcessing = true;
+    this.ngxLoader.startLoader('loader-fees');
     this.manageFeesService.assigneFeesToSchoolClasse(this.schoolClasseForm.value).subscribe(
       {
         next: (v: any) => {
@@ -53,10 +55,10 @@ export class AssignFeesToClasseComponent implements OnInit {
             this.schoolClasseForm.reset();
             this.showSuccess(this.message);
             this.router.navigate(['espace/gestion-frais']);
-            this.isProcessing = false;
+           //this.ngxLoader.stopLoader('loader-fees');
           } else {
             this.showError(this.message);
-            this.isProcessing = false;
+           //this.ngxLoader.stopLoader('loader-fees');
           }
         },
 

@@ -93,6 +93,7 @@
                 line-height: 32px !important;
             }
         }
+
     </style>
 </head>
 
@@ -148,19 +149,22 @@
 
                     @if($data['status'] == "VALIDE")
                     <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Cliquez <a href="https://scolar.coopdicpa.com/web">ici</a> pour directement accéder à l'application.</p>
+                        <td bgcolor="#ffffff" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                            <p style="margin: 0;">Pour accéder à votre espace de travail en ligne, veuillez cliquer sur le bouton ci-dessous. </p>
+                            <a style="background-color: blue;color: white;margin-top: 10px;padding: 10px 20px;border-radius: 40px;text-align: center;text-decoration: none;display: inline-block;" 
+                            href="https://scolar.coopdicpa.com/web" target="_blank">ESPACE DE TRAVAIL</a>
+                            <!-- <p style="margin: 0;">Cliquez <a href="https://scolar.coopdicpa.com/web">ici</a> pour directement accéder à l'application.</p> -->
                         </td>
                     </tr>
                     @endif
 
                     @if($data['status'] == "REJETE")
-                        <tr>
+                    <tr>
                         <td bgcolor="#ffffff" align="left" style="text-decoration: underline; padding: 20px 30px 20px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;"><b>Raison du rejet :</b></p>
                         </td>
-                        </tr>
-                        <tr>
+                    </tr>
+                    <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 10px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;">{{$data['reason']}}</p>
                         </td>
@@ -173,7 +177,7 @@
                     </tr>
                     @endif
 
-                    
+
                     <tr style="margin-bottom: 10% !important;">
                         <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 5px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;">MERCI</p>

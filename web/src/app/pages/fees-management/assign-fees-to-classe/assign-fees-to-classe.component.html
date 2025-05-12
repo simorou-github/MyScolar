@@ -1,9 +1,9 @@
 <div class="container-fluid">
     <app-page-title title="AFFECTATION DE FRAIS  | {{scName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12"  ngxUiLoaderBlurred [loaderId]="'loader-fees'">
             <div class="card">
-                <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
+                <!-- <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader> -->
 
                 <div class="card-body">
                     <form [formGroup]="schoolClasseForm" (ngSubmit)="assigneFeesToSchoolClasse()">
@@ -16,7 +16,8 @@
                                             id="school_classe_id">
                                             <option disabled value="" selected>Selectionnez une classe ...</option>
                                             <option *ngFor="let classe of classes" value="{{ classe?.id }}">
-                                                {{ classe.classe?.code }} {{classe.groupe ? '-' : ''}} {{ classe.groupe?.code }}
+                                                {{ classe.classe?.code }} {{classe.groupe ? '-' : ''}} {{
+                                                classe.groupe?.code }}
                                             </option>
                                         </select>
                                         <div
@@ -121,9 +122,12 @@
 
                     </form>
 
+                    
 
                 </div>
             </div>
+            <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                        [loaderId]="'loader-fees'"></ngx-ui-loader>
         </div>
     </div>
     <!-- end row -->
