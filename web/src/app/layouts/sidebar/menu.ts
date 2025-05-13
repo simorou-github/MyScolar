@@ -145,6 +145,15 @@ export const MENU: MenuItem[] = [
                 parentId: 18
             }
         ]
-    }
+    },
+
+    {
+        id: 19,
+        label: 'Suivi des Paiements',
+        icon: 'bx bx-wallet',
+        link: '/scolar/fees-balance-followup',
+        rolesAllowed: ['school_admin', 'admin', 'super_admin', 'accountant', 'treasurer']
+
+    },
 ];
 

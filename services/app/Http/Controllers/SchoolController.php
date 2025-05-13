@@ -27,20 +27,20 @@ class SchoolController extends Controller
     public function list(Request $request)
     {
         $params = [];
-        if ($request->input('id')) {
-            $params[] = ['id', '=', $request->input('id')];
+        if ($request->id) {
+            $params[] = ['id', '=', $request->id];
         }
-        if ($request->input('social_reason')) {
-            $params[] = ['social_reason', 'like', '%' . $request->input('social_reason') . '%'];
+        if ($request->social_reason) {
+            $params[] = ['social_reason', 'like', '%' . $request->social_reason . '%'];
         }
-        if ($request->input('status')) {
-            $params[] = ['status', '=', $request->input('statut')];
+        if ($request->status) {
+            $params[] = ['status', '=', $request->statut];
         }
-        if ($request->input('ifu')) {
-            $params[] = ['ifu', 'like', '%' . $request->input('ifu') . '%'];
+        if ($request->ifu) {
+            $params[] = ['ifu', 'like', '%' . $request->ifu . '%'];
         }
-        if ($request->input('country_id')) {
-            $params[] = ['country_id', '=', $request->input('country_id')];
+        if ($request->country_id) {
+            $params[] = ['country_id', '=', $request->country_id ];
         }
         if ($request->status) {
             $params[] = ['status', '=', $request->status];
@@ -49,7 +49,7 @@ class SchoolController extends Controller
         try {
             $data = School::with(['creater', 'updater', 'activater', 'approver', 'canceller', 'country'])
                 ->where($params)->whereNotIn('status', ['ANNULE', 'REJETE'])->orderBy('id', 'desc')->get();
-            if ($request->input('id')) {
+            if ($request->id) {
                 $data = $data->first();
             }
             return response()->json([
@@ -110,7 +110,7 @@ class SchoolController extends Controller
                 $params[] = ['school_id', '=', $request->input('school_id')];
             }
 
-            $data = SchoolClasse::with(['school', 'classe', 'groupe'])->where($params)
+            $data = SchoolClasse::with(['school:id,email,social_reason,owner', 'classe:id,code,label', 'groupe:id,code,description'])->where($params)
             ->orderByRaw('(SELECT rank FROM classes WHERE classes.id = school_classes.classe_id) ASC')->get();
 
             return response()->json([

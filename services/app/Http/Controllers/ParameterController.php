@@ -113,7 +113,7 @@ class ParameterController extends Controller
     //
     public function listAcademicYear(Request $request){
         try{            
-            $data = AcademicYear::all();
+            $data = AcademicYear::orderBy('created_at', 'desc')->get();
             return response()->json([
                 'data' => $data,
                 'message' => 'Liste des années académique',

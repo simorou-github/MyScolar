@@ -115,6 +115,7 @@ Route::group(['prefix' => 'manage-fees'], function () {
     Route::post('get-student-balance', [FeesManageController::class, 'getStudentFeesBalance']);
     Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
     Route::post('get-fees-details-data', [FeesManageController::class, 'getFeesDetails']);
+    Route::post('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
 });
 
 // All about classe of the system

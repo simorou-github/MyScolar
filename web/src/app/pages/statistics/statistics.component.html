@@ -48,7 +48,7 @@
                                     <select class="form-control" name="academic_year" ngModel
                                         (change)="getHistoryOfPayment(seachPaymentForm)">
                                         <option value="" selected>Selection l'année</option>
-                                        <option value="{{academicyser.id}}" *ngFor="let academicyser of academicysers">
+                                        <option value="{{academicyser.id}}" *ngFor="let academicyser of academicyears">
                                             {{academicyser.academic_year}}
                                         </option>
                                     </select>
@@ -168,4 +168,5 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
+</div>

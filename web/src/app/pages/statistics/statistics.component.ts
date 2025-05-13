@@ -26,7 +26,7 @@ export class StatisticsComponent {
   
   linewithDataChart: ChartType; simplePieChart: ChartType; paymentByYearData: any;
   operators: any;
-  academicysers: any;
+  academicyears: any;
 
   
   constructor(private schoolService: SchoolService, private scolarService: StatisticsService, private toastr: ToastrService, private tokenService: TokenService,
@@ -61,7 +61,7 @@ export class StatisticsComponent {
   listAccademicYear() {
     this.parameterService.listAccademicYear({}).subscribe({
       next: (v: any) => {
-        this.academicysers = v.data;
+        this.academicyears = v.data;
         console.log(v.data);
       }
     });
@@ -130,7 +130,6 @@ export class StatisticsComponent {
       {
         next: (v: any) => {
           this.paymentAggregationByTypeFeesData = v.data;
-          console.log(this.paymentAggregationByTypeFeesData)
           this.totalOfPaymentAggregationByTypeFeesData = v.total;
           this.amounts = v.amounts;
           this.pieChartStructure(this.amounts?.type_fees, this.amounts?.amount);

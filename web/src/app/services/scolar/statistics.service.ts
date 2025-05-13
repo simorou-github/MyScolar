@@ -13,8 +13,12 @@ export class StatisticsService {
   getPaymentAggregationByTypeFees(body){
     return this.http.post(environment.apiUrl + '/scolar/statistic/payment-aggregation-by-typefees', body);
   }
-
+  
   getYearPaymentPerMonth(body){
     return this.http.post(environment.apiUrl + '/scolar/statistic/year-payment-per-month', body);
+  }
+
+  getFeesBalanceFollowupData(body){
+    return this.http.post(environment.apiUrl + '/manage-fees/get-fees-balance-follow-up-data', body);
   }
 }

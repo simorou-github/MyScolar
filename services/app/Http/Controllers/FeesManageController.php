@@ -377,4 +377,63 @@ class FeesManageController extends Controller
             ]);
         }
     }
+
+    //Suivi des paiements
+    function getFeesBalanceFollowupData(Request $request)
+    {
+        try {
+            $params = [];
+            if (!$request->academic_year) {
+                $params[] = ['b.academic_year', '=', getActiveAcademicYear()];
+            }
+            if ($request->id) {
+                $params[] = ['b.id', '=', $request->id];
+            }
+            if ($request->fees_label) {
+                $params[] = ['b.fees_label', 'like', '%'.$request->fees_label.'%'];
+            }
+            if ($request->student_id) {
+                $params[] = ['b.student_id', '=', $request->student_id];
+            }
+            if ($request->classe_id) {
+                $params[] = ['b.classe_id', '=', $request->classe_id];
+            }
+            if ($request->type_fees_id) {
+                $params[] = ['b.type_fees_id', '=', $request->type_fees_id];
+            }
+            if ($request->school_id) {
+                $params[] = ['b.school_id', '=', $request->school_id];
+            }
+
+            $balanceFees = DB::table('balance_fees as b')
+                ->leftJoin('type_fees as tf', 'b.type_fees_id', '=', 'tf.id')
+                ->leftJoin('schools as s', 'b.school_id', '=', 's.id')
+                ->leftJoin('school_classes as sc', 'b.classe_id', '=', 'sc.id')
+                ->leftJoin('students as st', 'b.student_id', '=', 'st.id')
+                ->leftJoin('classes as c', 'sc.classe_id', '=', 'c.id')
+                ->leftJoin('groupes as g', 'sc.groupe_id', '=', 'g.id')
+                ->where($params)
+                ->select('b.*',
+                    's.ifu as ifu', 's.social_reason as social_reason', 's.email as school_email', 's.owner as school_owner', 's.tel as school_tel', 's.location as school_location', 
+                    'st.code_scolar', 'st.code as student_code', 'st.last_name as student_last_name', 'st.first_name as student_first_name','st.sex as student_sex', 'st.matricule as student_matricule', 'st.email as student_email', 'st.birthday as student_birthday', 'st.phone as student_phone',
+                    'c.code as classe_code', 'c.label as classe_label', 
+                    'g.code as groupe_code', 'g.description as groupe_label',
+                    'tf.label as type_fees_label')
+                ->orderBy('st.code_scolar')->orderBy('b.fees_label')
+                ->get();
+
+            return response()->json([
+                'data' => $balanceFees,
+                'sum_fees' => $balanceFees->sum('fees_amount'),
+                'sum_balance' => $balanceFees->sum('balance'),
+                'message' => 'Balance'
+            ],200);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'data' => [],
+                'message' => 'Une erreur interne est survenue',
+            ], 500);
+        }
+    }
 }

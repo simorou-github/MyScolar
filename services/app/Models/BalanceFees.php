@@ -26,7 +26,7 @@ class BalanceFees extends Model
     ];
 
     public function student(){
-        return $this->belongsTo('App\Models\Student', 'student_id');
+        return $this->belongsTo('App\Models\Student', 'id');
     }
 
     public function classe(){
