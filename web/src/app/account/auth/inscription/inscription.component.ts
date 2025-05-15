@@ -70,20 +70,17 @@ export class InscriptionComponent {
         this.school_service.getSchoolDetail({ id: this.schoolId }).subscribe({
           next: (v: any) => {
             this.message = v.message;
-            if (v.status == 200) {
-              // Variable pour tester si c'est une première soumission
-              this.isTwiceSubmission = true;
-              this.school = v.data;
-              this.registerForm.patchValue(this.school);
-              this.registerForm.patchValue({'last_name': this.school?.owner_lastname,'first_name': this.school?.owner_firstname,
-              type: "ecole", code_verification: "123456"});
-              this.getCityByCountry(this.registerForm.get('country_id').value);
-              console.log(this.registerForm.value)
-              this.loading = false;
-            } else {
-              this.loading = false;
-              this.showError(this.message);
-            }
+            // Variable pour tester si c'est une première soumission
+            this.isTwiceSubmission = true;
+            this.school = v.data;
+            this.registerForm.patchValue(this.school);
+            this.registerForm.patchValue({
+              'last_name': this.school?.owner_lastname, 'first_name': this.school?.owner_firstname,
+              type: "ecole", code_verification: "123456"
+            });
+            this.getCityByCountry(this.registerForm.get('country_id').value);
+            this.loading = false;
+
           },
           error: (e) => {
             this.loading = false;
@@ -119,23 +116,17 @@ export class InscriptionComponent {
       {
         next: (v: any) => {
           this.message = v.message;
-          if (v.status == 200) {
-            this.isEmailSent = true;
-            this.loading = false;
-            this.isProcessing = false;
-            this.showSuccess(this.message);
-          } else {
-            this.isEmailSent = false;
-            this.loading = false;
-            this.isProcessing = false;
-            this.showError(this.message);
-          }
-        },
-        error: (e) => {
-          console.error(e);
+          this.isEmailSent = true;
           this.loading = false;
           this.isProcessing = false;
-          this.showError(this.message);
+          this.showSuccess(this.message);
+        },
+        error: (e) => {
+          //console.error(e);
+          this.isEmailSent = false;
+          this.loading = false;
+          this.isProcessing = false;
+          this.showError(e.error?.message);
         }
       });
   }
@@ -152,27 +143,19 @@ export class InscriptionComponent {
       }).subscribe({
         next: (v: any) => {
           this.message = v.message;
-          if (v.status == 200) {
-            this.loading = false;
-            this.isProcessing = false;
-            this.showSuccess(this.message);
-            this.isEmailValid = true;
-          } else {
-            this.loading = false;
-            this.registerForm.patchValue({ code_verification: '' });
-            this.registerForm.controls['code_verification'].enable();
-            this.isProcessing = false;
-            this.showError(this.message)
-          }
+          this.loading = false;
+          this.isProcessing = false;
+          this.showSuccess(this.message);
+          this.isEmailValid = true;
         },
 
         error: (e) => {
-          console.error(e);
+          //console.error(e);
           this.loading = false;
           this.registerForm.patchValue({ code_verification: '' });
           this.registerForm.controls['code_verification'].enable();
           this.isProcessing = false;
-          this.showError(this.message)
+          this.showError(e.error?.message)
         },
 
         complete: () => {
@@ -188,20 +171,15 @@ export class InscriptionComponent {
     this.inscriptionService.getNewConfirmationCode({ email: this.registerForm.get('email').value }).subscribe({
       next: (v: any) => {
         this.message = v.message;
-        if (v.status == 200) {
-          this.loading = false;
-          this.isProcessing = false;
-          this.showSuccess(this.message);
-        } else {
-          this.loading = false;
-          this.isProcessing = false;
-          this.showError(this.message);
-        }
+        this.loading = false;
+        this.isProcessing = false;
+        this.showSuccess(this.message);
       },
 
       error: (e) => {
-        console.error(e);
-        this.showError(this.message);
+        this.loading = false;
+        this.isProcessing = false;
+        this.showError(e.error?.message);
       },
 
       complete: () => {
@@ -245,24 +223,18 @@ export class InscriptionComponent {
     this.inscriptionService.createInscription(myFormData).subscribe({
       next: (v: any) => {
         this.message = v.message;
-        if (v.status == 200) {
-          this.loading = false;
-          this.isProcessing = false;
-          this.showSuccess(this.message);
-          setTimeout(() => {
-            document.location.href = environment.baseUrl;
-          }, 1200)
-        } else {
-          this.loading = false;
-          this.isProcessing = false;
-          this.showError(this.message);
-        }
+        this.loading = false;
+        this.isProcessing = false;
+        this.showSuccess(this.message);
+        setTimeout(() => {
+          document.location.href = environment.baseUrl;
+        }, 1200)
       },
 
       error: (e) => {
         console.error(e);
         this.isProcessing = false;
-        this.showError(this.message);
+        this.showError(e.error?.message);
       }
     });
   }

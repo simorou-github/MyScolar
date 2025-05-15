@@ -118,7 +118,7 @@ Route::group(['prefix' => 'manage-fees'], function () {
 });
 
 // All about classe of the system
-Route::group(['prefix' => 'classe'], function () {
+Route::middleware(['auth:api'])->group(['prefix' => 'classe'], function () {
     Route::get('list', [ClasseController::class, 'list']);
     Route::post('create', [ClasseController::class, 'create']);
     Route::post('delete', [ClasseController::class, 'delete']);
