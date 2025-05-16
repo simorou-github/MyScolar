@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('groupes', function (Blueprint $table) {
-            $table->char('id', 30)->primary();
-            $table->string('code', 8);
-            $table->string('description', 50)->nullable();
-            $table->boolean('status')->default(1);
-            $table->char('school_id', 30);
+        Schema::create('school_classe_fees_details', function (Blueprint $table) {
+             $table->char('id', 30)->primary();
+            $table->char('school_classe_fees_id', 30);            
+            $table->string('fees_label');
+            $table->date('due_date')->nullable();
+            $table->integer('due_amount');
             $table->char('create_id', 30)->nullable();
             $table->char('update_id', 30)->nullable();
-            
+
+            $table->foreign('school_classe_fees_id')->references('id')->on('school_classe_fees');
             $table->foreign('create_id')->references('id')->on('users');
             $table->foreign('update_id')->references('id')->on('users');
-            $table->foreign('school_id')->references('id')->on('schools');
+            
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('groupes');
+        Schema::dropIfExists('school_classe_fees_details');
     }
 };

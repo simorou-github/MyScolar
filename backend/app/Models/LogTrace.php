@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TypeFee extends Model
+class LogTrace extends Model
 {
     use HasFactory;
-    public $incrementing = false;
-    public $keyType = 'string'; 
-    
     public $fillable = [
-        'id',
-        'label', 
-        'school_id', 
-        'status',
+        'action', 
+        'details',
     ];
 }

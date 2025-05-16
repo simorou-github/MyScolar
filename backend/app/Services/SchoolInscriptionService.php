@@ -8,12 +8,14 @@ use App\Jobs\EmailVerificationJob;
 use App\Models\MailVerification;
 use App\Models\School;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 class SchoolInscriptionService
 {
@@ -86,7 +88,7 @@ class SchoolInscriptionService
 
         if ($school_request->type == 'ecole') { //Inscription of school
             if (School::create(array_merge($school_request->except(['document', 'tel']), [
-                'id' => generateDBTableId(15, "App\Models\School"),
+                'id' => generateDBTableId(30, "App\Models\School"),
                 'owner' => $school_request->first_name . ' ' . $school_request->last_name,
                 'owner_lastname' => $school_request->last_name,
                 'owner_firstname' => $school_request->first_name,
@@ -95,7 +97,7 @@ class SchoolInscriptionService
             ]))) {
 
                 $user = User::create([
-                    'id' => generateDBTableId(15, "App\Models\User"),
+                    'id' => generateDBTableId(30, "App\Models\User"),
                     'last_name' => $school_request->last_name,
                     'first_name' => $school_request->first_name,
                     'email' => $school_request->email,
@@ -191,5 +193,76 @@ class SchoolInscriptionService
         } else {
             throw new ScolarException("Adresse mail inexistant pour renvoyer le code.");
         }
+    }
+
+    // Validate inscription and change status of school inscription
+    public function changeStatus(Request $request)
+    {
+        $message = '';
+        $msg = '';
+        $data = School::find($request->id);
+        if (!$data) {
+            throw new ScolarException("Cette demande d'inscription n\'existe plus dans le système.");
+        }
+
+        DB::beginTransaction();
+        $user = User::where('email', $data->email)->first();
+
+        if ($request->status == 'VALIDE' && $data->update(['status' => $request->status])) {
+            $user->school_id = $data->id;
+            $user->email_verified_at = Carbon::now();
+            $user->status = !$user->status;
+            $user->save();
+            $school_admin = Role::findByName('school_admin', 'api');
+            $school_acc = Role::findByName('accountant', 'api');
+            $user->syncRoles([$school_admin->name, $school_acc]);
+            $msg = 'Compte activé avec succès.';
+            $message = 'Votre demande d\'inscription a bien été validée.';
+
+        }
+
+        if ($request->status == 'REJETE' && $data->update(['status' => $request->status])) {
+            $data->reject_reason = $request->reject_reason;
+            $data->save();
+
+            $msg = 'Inscription rejetée avec succès';
+            $message = 'Votre demande d\'inscription a été rejétée. Merci de lire les motifs de ce rejet
+                    pour resoumettre votre demande.';
+        }
+
+        if ($request->status == 'INACTIF' && $data->update(['status' => $request->status])) {
+            $data->save();
+
+            //Disable user
+            $user->status = false;
+            $user->save();
+
+            $msg = 'Compte désactivé avec succès';
+            $message = 'Le compte de votre école a été désactivé. Merci de de contacter le Groupe Scolar Plus.';
+        }
+
+        EmailVerificationJob::dispatch(
+            [
+               // env("ADMIN_MAIL_1"),
+                $data->email
+            ],
+            [
+                'school' => $data->social_reason,
+                'email' => $data->email,
+                'status' => $request->status,
+                'reason' => $request->reject_reason,
+                'school_id' => $data->id
+            ],
+            'emails.validateInscription',
+            ($request->status == 'VALIDE') ? 'Validation Inscription' : 'Rejet Inscription',
+             env("APP_NAME"),
+            $message
+        );
+
+        DB::commit();
+        $data['data'] = $data;
+        $data['msg'] = $msg;
+
+       return  $data;
     }
 }

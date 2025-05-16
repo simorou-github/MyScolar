@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('groupes', function (Blueprint $table) {
-            $table->char('id', 30)->primary();
-            $table->string('code', 8);
-            $table->string('description', 50)->nullable();
-            $table->boolean('status')->default(1);
-            $table->char('school_id', 30);
+        Schema::create('parameters', function (Blueprint $table) {
+             $table->char('id', 30)->primary();
+            $table->string('label', 80);
+            $table->string('value', 60);
+            $table->string('description', 180);
+            $table->boolean('status')->default(true);
             $table->char('create_id', 30)->nullable();
             $table->char('update_id', 30)->nullable();
-            
+            $table->timestamps();
+
             $table->foreign('create_id')->references('id')->on('users');
             $table->foreign('update_id')->references('id')->on('users');
-            $table->foreign('school_id')->references('id')->on('schools');
-            $table->timestamps();
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('groupes');
+        Schema::dropIfExists('parameters');
     }
 };

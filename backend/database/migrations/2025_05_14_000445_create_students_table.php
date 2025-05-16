@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone', 20)->nullable();
             $table->boolean('status');
+            $table->char('matricule', 30)->nullable();   
             $table->char('school_id', 30);
             $table->char('create_id', 30)->nullable();
             $table->char('update_id', 30)->nullable();

@@ -6,12 +6,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
     public $incrementing = false;
     public $keyType = 'string'; 
 
@@ -41,6 +43,10 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
+    public function school(){
+        return $this->belongsTo('App\Models\School', 'school_id');
+    }
+
     /**
      * The attributes that should be cast.
      *
@@ -68,6 +74,22 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+       $user = User::with('school', 'roles')->where('email', $this->email)->first();
+        $roles = $user->getRoleNames();
+        Log::info($roles);
+        return [
+            'id' => $user->id,
+            'roles' => $roles,
+            //'permissions' => $permissions,
+            'last_name' => $user->last_name,
+            'first_name' => $user->first_name,
+            'email' => $user->email,
+            'status' => $user->status,
+            'school_id' => $user->school?->id,
+            'social_reason' => $user->school?->social_reason,
+            'ac' =>  getActiveAcademicYear(),
+            'token_type' => 'bearer',
+
+        ];
     }
 }

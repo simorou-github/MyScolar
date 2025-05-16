@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('type_fees', function (Blueprint $table) {
-            $table->char('id', 30)->primary();
-            $table->string('label');
-            $table->char('school_id', 30)->nullable();
-            $table->boolean('status')->default(true);
+        Schema::create('log_traces', function (Blueprint $table) {
+            $table->id();
+            $table->string('action');
+            $table->string('details');
             $table->timestamps();
-            
-            $table->foreign('school_id')->references('id')->on('schools');
-
         });
     }
 
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('type_fees');
+        Schema::dropIfExists('log_traces');
     }
 };
