@@ -122,7 +122,12 @@ class SchoolInscriptionService
 
         //Generate verification email code
         $code = $this->generateCodeOfVerification();
-        $response = MailVerification::create(['email' => $school_request->email, 'code' => $code]);
+        $response = MailVerification::create([
+            'email' => $school_request->email,
+            'code' => $code,
+            // 30 min pour utiliser le code sinon regénérer
+            'expires_at' => Carbon::now()->addMinutes(30)
+        ]);
 
         if ($response) {
             EmailVerificationJob::dispatch(
@@ -132,7 +137,7 @@ class SchoolInscriptionService
                 'Vérification de compte mail',
                 env("APP_NAME"),
                 'Merci de taper le code reçu sur la page de vérification de mail sur notre plateforme pour continuer
-                        votre demande d\'inscription.'
+                        votre demande d\'inscription. Ce code expire dans 30 minutes.'
             );
         } else {
             throw new ScolarException("Une erreur est survenue. Merci de réessayer");
@@ -156,9 +161,10 @@ class SchoolInscriptionService
 
     public function codeVerification(Request $request)
     {
-        $res = MailVerification::where('email', $request->email)->where('code', $request->code)->first();
+        $res = MailVerification::where('email', $request->email)->where('code', $request->code)
+        ->where('expires_at', '>', now())->first();
         if (!$res) {
-            throw new ScolarException("Code invalide");
+            throw new ScolarException("Code invalide ou code expiré après 30 min");
         }
     }
 
@@ -176,7 +182,8 @@ class SchoolInscriptionService
 
             //Generate verification email code
             $code = $this->generateCodeOfVerification();
-            $response = MailVerification::where('email', $request->email)->update(['code' => $code]);
+            $response = MailVerification::where('email', $request->email)->update(['code' => $code,
+        'expires_at' => Carbon::now()->addMinutes(30)]);
             if ($response) {
                 EmailVerificationJob::dispatch(
                     $request->email,
@@ -218,7 +225,6 @@ class SchoolInscriptionService
             $user->syncRoles([$school_admin->name, $school_acc]);
             $msg = 'Compte activé avec succès.';
             $message = 'Votre demande d\'inscription a bien été validée.';
-
         }
 
         if ($request->status == 'REJETE' && $data->update(['status' => $request->status])) {
@@ -243,7 +249,7 @@ class SchoolInscriptionService
 
         EmailVerificationJob::dispatch(
             [
-               // env("ADMIN_MAIL_1"),
+                // env("ADMIN_MAIL_1"),
                 $data->email
             ],
             [
@@ -255,7 +261,7 @@ class SchoolInscriptionService
             ],
             'emails.validateInscription',
             ($request->status == 'VALIDE') ? 'Validation Inscription' : 'Rejet Inscription',
-             env("APP_NAME"),
+            env("APP_NAME"),
             $message
         );
 
@@ -263,6 +269,6 @@ class SchoolInscriptionService
         $data['data'] = $data;
         $data['msg'] = $msg;
 
-       return  $data;
+        return  $data;
     }
 }

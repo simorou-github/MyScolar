@@ -10,6 +10,7 @@ class MailVerification extends Model
     use HasFactory;
     public $fillable = [
         'email',
-        'code'
+        'code',
+        'expires_at'
     ];
 }

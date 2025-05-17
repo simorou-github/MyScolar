@@ -35,9 +35,10 @@ Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('school/create-inscription', [SchoolInscriptionController::class, 'createInscription']);
 
 // Code verification to make school inscription request
-Route::post('code/confirmation', [SchoolInscriptionController::class, 'getCodeOfVerification']);
+// L'utilisateur peut faire 3 requêtes maximum dans une fenêtre de 15 min.
+Route::middleware('throttle:3,15')->post('code/confirmation', [SchoolInscriptionController::class, 'getCodeOfVerification']);
+Route::middleware('throttle:3,15')->post('new/code/confirmation', [SchoolInscriptionController::class, 'getNewCodeOfVerification']);
 Route::post('verify/code', [SchoolInscriptionController::class, 'codeVerification']);
-Route::post('new/code/confirmation', [SchoolInscriptionController::class, 'getNewCodeOfVerification']);
 
 Route::post('change-status', [SchoolInscriptionController::class, 'changeStatus']);
 

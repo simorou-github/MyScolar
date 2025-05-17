@@ -45,8 +45,8 @@ export class InscriptionComponent {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       password: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}'), Validators.minLength(8)]],
-      first_name: ['', [Validators.required, Validators.required, Validators.pattern('^[a-zA-Z]+$'), Validators.maxLength(80)]],
-      last_name: ['', [Validators.required, Validators.required, Validators.pattern('^[a-zA-Z]+$'), Validators.maxLength(40)]],
+      first_name: ['', [Validators.required, Validators.required, Validators.maxLength(80)]],
+      last_name: ['', [Validators.required, Validators.required, Validators.maxLength(40)]],
       location: ['', [Validators.required]],
       country_id: ['', [Validators.required]],
       city_id: ['', [Validators.required]],

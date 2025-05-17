@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -49,7 +50,7 @@ class Handler extends ExceptionHandler
         });
 
         // Authentification
-         $this->renderable(function (AuthenticationException $e, $request) {
+        $this->renderable(function (AuthenticationException $e, $request) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'error' => 'Accès non autorisé.',
@@ -59,13 +60,24 @@ class Handler extends ExceptionHandler
         });
 
         // Exception de Scolar
-         $this->renderable(function (ScolarException $e, Request $request) {
+        $this->renderable(function (ScolarException $e, Request $request) {
             if ($request->expectsJson()) {
-                Log::info(get_class($e));
                 return response()->json([
                     'error' => $e->getMessage(),
                     'code' => 422,
                 ], 422);
+            }
+        });
+
+        // Nombre limite de requêtes 
+        $this->renderable(function (ThrottleRequestsException $e, Request $request) {
+            if ($request->expectsJson()) {
+                $retry_after = (int) $e->getHeaders()['Retry-After'];
+                $minutes = ceil($retry_after / 60);
+                return response()->json([
+                    'message' => "Vous avez effectué trop de tentatives. Réessayez dans environ {$minutes} minute(s).",
+                    'retry_after' => $retry_after,
+                ], 429);
             }
         });
 

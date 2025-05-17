@@ -148,7 +148,8 @@ class SchoolInscriptionController extends Controller
                     $user->save();
                     $school_admin = Role::findByName('school_admin', 'api');
                     $school_acc = Role::findByName('accountant', 'api');
-                    $user->syncRoles([$school_admin->name, $school_acc]);
+                    $user->assignRole($school_admin);
+                    $user->assignRole($school_acc);
                     $msg = 'Compte activé avec succès.';
                     $message = 'Votre demande d\'inscription a bien été validée.';
                 }
@@ -192,7 +193,7 @@ class SchoolInscriptionController extends Controller
                     $message
                 );
 
-               
+
                 DB::commit();
                 return response()->json([
                     'data' => $data,
