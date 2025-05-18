@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SchoolSpace;
 
 use App\Http\Controllers\Controller;
+use App\Imports\StudentListImport;
 use Illuminate\Http\Request;
 use App\Models\BalanceFees;
 use App\Models\Classe;
@@ -21,6 +22,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SchoolController extends Controller
 {
@@ -111,7 +113,7 @@ class SchoolController extends Controller
             }
 
             $data = SchoolClasse::with(['school', 'classe', 'groupe'])->where($params)
-            ->orderByRaw('(SELECT rank FROM classes WHERE classes.id = school_classes.classe_id) ASC')->get();
+                ->orderByRaw('(SELECT rank FROM classes WHERE classes.id = school_classes.classe_id) ASC')->get();
 
             return response()->json([
                 'data' => $data,
@@ -395,7 +397,13 @@ class SchoolController extends Controller
     public function addStudentListToClasse(Request $request)
     {
         try {
-            DB::beginTransaction();
+        //     $request->validate([
+        //         'file' => 'required|mimes:xlsx,csv,xls',
+        //     ]);
+
+        //     Excel::import(new StudentListImport($request->classe_id,$request->academic_year,
+        // $request->academic_year), $request->file('file'));
+
             $academic_year = $request->academic_year;
             $classe_id = $request->classe_id;
             $students_list = $request->students_list;
@@ -435,6 +443,8 @@ class SchoolController extends Controller
                         'status' => 500
                     ]);
                 }
+
+                DB::beginTransaction();
 
                 if (!isset($students_list[$i][4])) {
                     $students_list[$i][4] = null;

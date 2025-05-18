@@ -22,14 +22,14 @@ export class ClasseManagementComponent {
   p: number = 1; schoolClasses: any; academicYear: string; schoolId: string; schoolName: string; uploadForm!: FormGroup;
 
   isSearchForm: boolean = false; modalRef?: BsModalRef; schoolClasseForm!: FormGroup; dataFromExcelFile: any; groupes: any;
-  
+
   message: any; domain_url: string = environment.domainUrl; currentClasseCode: any; currentClasseId: any; fileUrl: any;
 
   existed_students: any;
 
   @ViewChild('modalExistedStudent') private modalExistedStudent;
   constructor(private fb: FormBuilder, private schoolService: SchoolService, private tokenService: TokenService,
-    private modalService: BsModalService, private toastr: ToastrService,  private ngxLoader: NgxUiLoaderService, private classeService: ClasseService) {
+    private modalService: BsModalService, private toastr: ToastrService, private ngxLoader: NgxUiLoaderService, private classeService: ClasseService) {
     this.academicYear = this.tokenService.getAcademicYear;
     this.schoolId = this.tokenService.getSchoolId;
     this.schoolName = this.tokenService.getSocialReasonSchool;
@@ -45,7 +45,7 @@ export class ClasseManagementComponent {
       classe_id: ['', [Validators.required]],
       groupe_id: ['']
     });
-    
+
 
     this.searchForm = this.fb.group({
       code: [''],
@@ -53,7 +53,7 @@ export class ClasseManagementComponent {
     });
 
     this.initUploadListForm();
-    
+
   }
 
   initUploadListForm() {
@@ -158,29 +158,14 @@ export class ClasseManagementComponent {
     });
   }
 
-  onFileChange(evt: any) {
+  onFileChange(evt: any, file: File) {
     const target: DataTransfer = <DataTransfer>(evt.target);
     if (target.files.length > 1) {
       alert('Vous ne pouvez pas importer plusieurs fichiers');
       return;
     }
-    else {
-      this.dataFromExcelFile = [];
-      const reader: FileReader = new FileReader();
-      reader.onload = (e: any) => {
-        const bstr: string = e.target.result;
-        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-        const wsname = wb.SheetNames[0];
-        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-        let data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
-        // Print the Excel Data
-        for (let i = 0; i <= 6; i++) {
-          data.shift();
-        }
-        this.dataFromExcelFile = data;
-      }
-      reader.readAsBinaryString(target.files[0]);
-    }
+    const formData = new FormData();
+    formData.append('file_upload', file);
   }
 
   openViewUploadModal(schoolClasseData: any, modalUploadStudent: any) {
@@ -221,8 +206,8 @@ export class ClasseManagementComponent {
             this.showSuccess(this.message);
             this.isProcessing = false;
             this.initUploadListForm();
-            
-            if(v.data?.length > 0){
+
+            if (v.data?.length > 0) {
               this.displayExistedStudentModal(v.data);
             }
           } else {
@@ -245,7 +230,7 @@ export class ClasseManagementComponent {
     )
   }
 
-  closeModalDeleting(){
+  closeModalDeleting() {
     this.modalService.hide();
   }
 
@@ -265,7 +250,7 @@ export class ClasseManagementComponent {
       next: (v: any) => {
         if (v.status == 200) {
           this.groupes = v.data;
-        } 
+        }
       },
       error: (e) => {
         console.error(e);
@@ -279,11 +264,26 @@ export class ClasseManagementComponent {
     });
   }
 
-  retireClasse(){
+  downloadTemplate(): void {
+    this.schoolService.downloadTemplate().subscribe({
+      next: (blob: any) => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'ModelListeEleve.xlsx';
+        link.click();
+      },
+      error: (e: any) => {
+        console.log(e)
+      }
+
+    });
+  }
+
+  retireClasse() {
 
   }
 
-  
+
   /**
   * Open center modal
   * @param infoOnModelUpload center modal data

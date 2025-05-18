@@ -4,11 +4,11 @@ use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AdminSpace\MTNPaymentController;
 use App\Http\Controllers\AdminSpace\ParameterController;
 use App\Http\Controllers\Authentication\AuthController;
-use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\FeesManageController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SchoolSpace\CityController;
+use App\Http\Controllers\SchoolSpace\ClasseController;
 use App\Http\Controllers\SchoolSpace\PaymentController;
 use App\Http\Controllers\SchoolSpace\SchoolController;
 use App\Http\Controllers\SchoolSpace\SchoolDashboardController;
@@ -141,6 +141,14 @@ Route::group(['prefix' => 'payment'], function () {
 Route::group(['prefix' => 'scolar'], function () {
     Route::post('statistic/payment-aggregation-by-typefees', [ScolarController::class, 'paymentAggregationByTypeFees']);
     Route::post('statistic/year-payment-per-month', [ScolarController::class, 'yearTransactionPerMonth']);
+});
+
+Route::get('/download-template', function () {
+    $filePath = storage_path('app/public/modeles/ModelListeEleve.xlsx');
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->download($filePath, 'ModelListeEleve.xlsx');
 });
 
 Route::group(['prefix' => 'user'], function () {

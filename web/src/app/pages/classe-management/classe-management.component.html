@@ -20,9 +20,8 @@
 
             <div class="col-sm-auto">
               <div>
-                <a class="btn btn-info" (click)="infoOnModelUpload.show()" target="_self"
-                  href="{{domain_url}}/storage/modeles/ModelListeEleve.xlsx"><span
-                    class="mdi mdi-playlist-edit"></span>Modèle</a>
+                <a class="btn btn-info" (click)="downloadTemplate()" (click)="infoOnModelUpload.show()"
+                  target="_self"><span class="mdi mdi-playlist-edit"></span>Modèle</a>
               </div>
             </div>
 
@@ -90,9 +89,8 @@
             <div class="row ht-2">
               <div class="col-md-12 h5">Liste des classes : ({{schoolClasses?.length}}) </div>
             </div>
-            <div class="table-responsive" >
-              <table class="table table-striped"
-                id="projectList-table" ngxUiLoaderBlurred [loaderId]="'loader-class'" >
+            <div class="table-responsive">
+              <table class="table table-striped" id="projectList-table" ngxUiLoaderBlurred [loaderId]="'loader-class'">
                 <thead class="table-light">
                   <tr>
                     <th scope="col" style="width: 8%">#</th>
@@ -118,19 +116,25 @@
                       <td style="width: 15%">{{schoolClasse.groupe?.code}}</td>
                       <td class="text-center">
                         <div class="dropdown" dropdown placement="bottom-right">
-                            <a href="javascript: void(0);" class="dropdown-toggle card-drop"
-                                dropdownToggle>
-                                <i class="mdi mdi-dots-horizontal font-size-18"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-                                <a class="dropdown-item" href="javascript: void(0);" [routerLink]="['/espace/gestion-classe/list-apprenant', schoolClasse?.id]"><i class="mdi mdi-account-group font-size-7 text-secondary align-middle me-2"></i> Liste élèves</a>
-                                <a class="dropdown-item" href="javascript: void(0);" (click)="openViewUploadModal(schoolClasse, modalUploadStudent)"><i class="mdi mdi-playlist-edit font-size-7 text-info align-middle me-2"></i> Charger</a>
-                                <a class="dropdown-item" href="javascript: void(0);" (click)="ConfirmClasseDelete(DeleteModalSchoolClasse, schoolClasse.classe)"><i class="mdi mdi-close text-danger font-size-7 align-middle me-2"></i> Retirer</a>
-                            </div>
+                          <a href="javascript: void(0);" class="dropdown-toggle card-drop" dropdownToggle>
+                            <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                            <a class="dropdown-item" href="javascript: void(0);"
+                              [routerLink]="['/espace/gestion-classe/list-apprenant', schoolClasse?.id]"><i
+                                class="mdi mdi-account-group font-size-7 text-secondary align-middle me-2"></i> Liste
+                              élèves</a>
+                            <a class="dropdown-item" href="javascript: void(0);"
+                              (click)="openViewUploadModal(schoolClasse, modalUploadStudent)"><i
+                                class="mdi mdi-playlist-edit font-size-7 text-info align-middle me-2"></i> Charger</a>
+                            <a class="dropdown-item" href="javascript: void(0);"
+                              (click)="ConfirmClasseDelete(DeleteModalSchoolClasse, schoolClasse.classe)"><i
+                                class="mdi mdi-close text-danger font-size-7 align-middle me-2"></i> Retirer</a>
+                          </div>
                         </div>
-                    </td>                                          
-   
-                    
+                      </td>
+
+
 
                     </tr>
                   </ng-container>
@@ -144,7 +148,8 @@
 
               </div>
 
-              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-class'"></ngx-ui-loader>
+              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                [loaderId]="'loader-class'"></ngx-ui-loader>
 
             </div>
           </div>
@@ -317,28 +322,30 @@
     </div>
     <h5 class="modal-title mt-0" id="uploadStudentForm">Rapport Du Chargement - Classe : <span
         style="color: blue;">{{currentClasseCode}}</span></h5>
-    <button type="button" class="btn-close" (click)="closeExistedStudentModal()" data-dismiss="modal" aria-label="Close">
+    <button type="button" class="btn-close" (click)="closeExistedStudentModal()" data-dismiss="modal"
+      aria-label="Close">
       <span aria-hidden="true"></span>
     </button>
   </div>
 
   <div class="modal-body">
-      <div class="row">
-        <div class="col-sm-12">
-          <p>Le chargement du fichier s'est terminé avec succès. <br>
+    <div class="row">
+      <div class="col-sm-12">
+        <p>Le chargement du fichier s'est terminé avec succès. <br>
           Les apprenants ci-dessous existaient déjà dans le système. Il s'agit de : </p>
-          <ul>
-            <li *ngFor="let student of existed_students"><b>{{ student.student }}</b> (ligne {{student.line}} du fichier excel)</li>
-          </ul>
-        </div>
+        <ul>
+          <li *ngFor="let student of existed_students"><b>{{ student.student }}</b> (ligne {{student.line}} du fichier
+            excel)</li>
+        </ul>
       </div>
+    </div>
 
+  </div>
+  <div class="modal-footer">
+    <div class="hstack gap-2 justify-content-end">
+      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+        (click)="closeExistedStudentModal()">Fermer</button>
     </div>
-    <div class="modal-footer">
-      <div class="hstack gap-2 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-          (click)="closeExistedStudentModal()">Fermer</button>
-      </div>
-    </div>
+  </div>
 </ng-template>
 <!-- View Students Existed When List Uploaded Modal -->

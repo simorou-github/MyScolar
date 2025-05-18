@@ -96,4 +96,8 @@ export class SchoolService {
     return this.http.post(environment.apiUrl + '/school/statistic/year-payment-per-month', body);
   }
 
+  downloadTemplate(){
+    return this.http.get(environment.apiUrl + '/download-template');
+  }
+
 }
