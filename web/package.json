@@ -58,6 +58,7 @@
     "ng-otp-input": "^1.9.2",
     "ng2-charts": "^4.1.1",
     "ngx-bootstrap": "^10.3.0",
+    "ngx-capture": "^0.14.0",
     "ngx-color-picker": "^14.0.0",
     "ngx-cookie-service": "^16.0.0",
     "ngx-drag-drop": "^16.0.0",

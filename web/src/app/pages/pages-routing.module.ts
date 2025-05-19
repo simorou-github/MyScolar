@@ -20,6 +20,7 @@ import { ManageUserComponent } from './manage-user/manage-user.component';
 import { ManagePermissionComponent } from './manage-permission/manage-permission.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { SchoolUserManagementComponent } from './school-user-management/school-user-management.component';
+import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: 'dashboard' },
@@ -49,6 +50,7 @@ const routes: Routes = [
   { path: 'scolar/manage-user', component: ManageUserComponent },
   { path: 'scolar/manage-permission', component: ManagePermissionComponent },
   { path: 'scolar/statistics', component: StatisticsComponent },
+  { path: 'scolar/fees-balance-followup', component: FeesBalanceFollowupComponent },
 
 
   ];

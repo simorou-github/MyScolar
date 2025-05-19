@@ -68,10 +68,12 @@ import { ManagePermissionComponent } from './manage-permission/manage-permission
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { SchoolUserManagementComponent } from './school-user-management/school-user-management.component';
+import { NgxCaptureModule } from 'ngx-capture';
+import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
 
 @NgModule({
   declarations: [CalendarComponent, ChatComponent, FilemanagerComponent, 
-    StatisticsComponent, UrlPipe, InscriptionPendingComponent, ClasseComponent, InscriptionValidatedComponent, AddClasseSchoolComponent, FeesManagementComponent, ClasseManagementComponent, PaymentHistoryComponent, SchoolStatisticsComponent, StudentManagementComponent, AssignFeesToClasseComponent, StudentListByClasseComponent, OperatorComponent, GroupeManagementComponent, SystemParameterComponent, ManageUserComponent, ManagePermissionComponent, SchoolUserManagementComponent],
+    StatisticsComponent, UrlPipe, InscriptionPendingComponent, ClasseComponent, InscriptionValidatedComponent, AddClasseSchoolComponent, FeesManagementComponent, ClasseManagementComponent, PaymentHistoryComponent, SchoolStatisticsComponent, StudentManagementComponent, AssignFeesToClasseComponent, StudentListByClasseComponent, OperatorComponent, GroupeManagementComponent, SystemParameterComponent, ManageUserComponent, ManagePermissionComponent, SchoolUserManagementComponent, FeesBalanceFollowupComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -114,7 +116,8 @@ import { SchoolUserManagementComponent } from './school-user-management/school-u
     NgxUiLoaderModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
-    })
+    }),
+    NgxCaptureModule
   ],
   providers: [DatePipe]
 })
