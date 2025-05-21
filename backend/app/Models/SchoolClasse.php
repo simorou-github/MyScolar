@@ -13,36 +13,24 @@ class SchoolClasse extends Model
     
     public $fillable = [
         'id',
-        'school_classe_id',
         'school_id',
         'classe_id',
-        'type_fees_id',
-        'type_payment',
-        'status',
-        'academic_year',
-        'amount_fees',
+        'groupe_id',
         'create_id',
-        'update_id'
+        'update_id',
+        'status'
     ];
 
-    public function type_fees(){
-        return $this->belongsTo('App\Models\TypeFees', 'type_fees_id');
-    }
-
-    public function type_payment(){
-        return $this->belongsTo('App\Models\TypePayment', 'label',);
-    }
-
-    public function school_classe(){
-        return $this->belongsTo('App\Models\SchoolClasse', 'school_classe_id');
-    }
-
-    public function schools(){
+    public function school(){
         return $this->belongsTo('App\Models\School', 'school_id');
     }
-    
-    public function classes(){
+
+    public function classe(){
         return $this->belongsTo('App\Models\Classe', 'classe_id');
+    }
+
+    public function groupe(){
+        return $this->belongsTo('App\Models\Groupe', 'groupe_id');
     }
 
     public function creater(){

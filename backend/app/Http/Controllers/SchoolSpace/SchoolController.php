@@ -22,6 +22,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SchoolController extends Controller
@@ -202,6 +203,7 @@ class SchoolController extends Controller
 
     public function createSchoolClasse(Request $request)
     {
+
         $classe_id = $request->school_classe['classe_id'];
         $school_id = $request->school_id;
         $groupe_id = $request->school_classe['groupe_id'];
@@ -220,9 +222,10 @@ class SchoolController extends Controller
                 'id' => generateDBTableId('10', 'App\Models\SchoolClasse'),
                 'school_id' => $school_id,
                 'classe_id' => $classe_id,
-                'school_classe_id' => $classe_id,
+                //'school_classe_id' => $classe_id,
                 'groupe_id' => $groupe_id
             ]);
+            //Log::info($res);
             if ($res) {
                 return response()->json([
                     'data' => '',
@@ -237,7 +240,7 @@ class SchoolController extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            Log::info($e);
+            Log::info($e->getMessage());
             return response()->json([
                 'data' => '',
                 'message' => 'Une erreur interne est survenue, veuillez réessayer.',
@@ -397,183 +400,198 @@ class SchoolController extends Controller
     public function addStudentListToClasse(Request $request)
     {
         try {
-        //     $request->validate([
-        //         'file' => 'required|mimes:xlsx,csv,xls',
-        //     ]);
-
-        //     Excel::import(new StudentListImport($request->classe_id,$request->academic_year,
-        // $request->academic_year), $request->file('file'));
-
+            $request->validate([
+                'file' => 'required|mimes:xlsx,csv,xls',
+            ]);
+            Log::info($request);
             $academic_year = $request->academic_year;
             $classe_id = $request->classe_id;
-            $students_list = $request->students_list;
+            $school_id = $request->school_id;
+
+            DB::beginTransaction();
+            Excel::import(new StudentListImport($classe_id, $academic_year, $school_id), $request->file('file'));
+            DB::commit();
+
+            //     Excel::import(new StudentListImport($request->classe_id,$request->academic_year,
+            // $request->academic_year), $request->file('file'));
+
+            // $academic_year = $request->academic_year;
+            // $classe_id = $request->classe_id;
+            // $students_list = $request->students_list;
 
             // To get code of country of school
-            if (!$school = School::with('country')->where('id', $request->school_id)->first()) {
-                return response()->json([
-                    'message' => 'L\'école associée manque de configuration. Veuillez la mettre à jour.',
-                    'status' => 500
-                ]);
-            }
+            // if (!$school = School::with('country')->where('id', $request->school_id)->first()) {
+            //     return response()->json([
+            //         'message' => 'L\'école associée manque de configuration. Veuillez la mettre à jour.',
+            //         'status' => 500
+            //     ]);
+            // }
 
-            $existed_student_list = [];
-            for ($i = 0; $i < count($students_list); $i++) {
+            // $existed_student_list = [];
+            // for ($i = 0; $i < count($students_list); $i++) {
 
-                if ($students_list[$i][0] == "" || $students_list[$i][0] == null) {
-                    return response()->json([
-                        'message' => 'Le nom de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
-                        'status' => 500
-                    ]);
-                }
-                if ($students_list[$i][1] == "" || $students_list[$i][1] == null) {
-                    return response()->json([
-                        'message' => 'Le prénom de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
-                        'status' => 500
-                    ]);
-                }
-                if ($students_list[$i][2] == "" || $students_list[$i][2] == null) {
-                    return response()->json([
-                        'message' => 'La date de naissance de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
-                        'status' => 500
-                    ]);
-                }
-                if ($students_list[$i][3] == "" || $students_list[$i][3] == null) {
-                    return response()->json([
-                        'message' => 'Le sexe de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
-                        'status' => 500
-                    ]);
-                }
+            //     if ($students_list[$i][0] == "" || $students_list[$i][0] == null) {
+            //         return response()->json([
+            //             'message' => 'Le nom de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
+            //             'status' => 500
+            //         ]);
+            //     }
+            //     if ($students_list[$i][1] == "" || $students_list[$i][1] == null) {
+            //         return response()->json([
+            //             'message' => 'Le prénom de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
+            //             'status' => 500
+            //         ]);
+            //     }
+            //     if ($students_list[$i][2] == "" || $students_list[$i][2] == null) {
+            //         return response()->json([
+            //             'message' => 'La date de naissance de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
+            //             'status' => 500
+            //         ]);
+            //     }
+            //     if ($students_list[$i][3] == "" || $students_list[$i][3] == null) {
+            //         return response()->json([
+            //             'message' => 'Le sexe de l\'apprenant est manquant à la ligne ' . ($i + 7) . ' Veuillez corriger et réessayer',
+            //             'status' => 500
+            //         ]);
+            //     }
 
-                DB::beginTransaction();
+            //     DB::beginTransaction();
 
-                if (!isset($students_list[$i][4])) {
-                    $students_list[$i][4] = null;
-                }
+            //     if (!isset($students_list[$i][4])) {
+            //         $students_list[$i][4] = null;
+            //     }
 
-                if (!isset($students_list[$i][5])) {
-                    $students_list[$i][5] = null;
-                }
+            //     if (!isset($students_list[$i][5])) {
+            //         $students_list[$i][5] = null;
+            //     }
 
-                if (!isset($students_list[$i][6])) {
-                    $students_list[$i][6] = null;
-                }
+            //     if (!isset($students_list[$i][6])) {
+            //         $students_list[$i][6] = null;
+            //     }
 
 
-                $last_name = trim($students_list[$i][0]);
-                $first_name = trim($students_list[$i][1]);
-                $matricule = trim($students_list[$i][6]);
+            //     $last_name = trim($students_list[$i][0]);
+            //     $first_name = trim($students_list[$i][1]);
+            //     $matricule = trim($students_list[$i][6]);
 
-                $birthday = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($students_list[$i][2])->format('Y-m-d');
-                $sex = $students_list[$i][3];
+            //     $birthday = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($students_list[$i][2])->format('Y-m-d');
+            //     $sex = $students_list[$i][3];
 
-                $params = [];
+            //     $params = [];
 
-                if ($matricule) {
-                    $params[] = ['matricule', '=', $matricule];
-                }
+            //     if ($matricule) {
+            //         $params[] = ['matricule', '=', $matricule];
+            //     }
 
-                if ($first_name) {
-                    $params[] = ['first_name', 'like', '%' . $first_name . '%'];
-                }
-                if ($last_name) {
-                    $params[] = ['last_name', 'like', '%' . strtoupper($last_name) . '%'];
-                }
-                if ($sex) {
-                    $params[] = ['sex', '=', $sex];
-                }
-                if ($birthday) {
-                    $params[] = ['birthday', '=', date("Y-m-d", strtotime($birthday))];
-                }
+            //     if ($first_name) {
+            //         $params[] = ['first_name', 'like', '%' . $first_name . '%'];
+            //     }
+            //     if ($last_name) {
+            //         $params[] = ['last_name', 'like', '%' . strtoupper($last_name) . '%'];
+            //     }
+            //     if ($sex) {
+            //         $params[] = ['sex', '=', $sex];
+            //     }
+            //     if ($birthday) {
+            //         $params[] = ['birthday', '=', date("Y-m-d", strtotime($birthday))];
+            //     }
 
-                $stud = Student::where($params)->first();
-                if (!is_null($stud)) {
-                    $existed_student_list[] = ['line' => $i + 7, 'student' => $last_name . ' ' . $first_name];
-                    continue;
-                }
+            //     $stud = Student::where($params)->first();
+            //     if (!is_null($stud)) {
+            //         $existed_student_list[] = ['line' => $i + 7, 'student' => $last_name . ' ' . $first_name];
+            //         continue;
+            //     }
 
-                // To get school-classe row
-                if (!$school_classe = SchoolClasseFees::where('school_id', $request->school_id)->where('school_classe_id', $request->classe_id)->first()) {
-                    return response()->json([
-                        'message' => 'La configuration de frais manque pour cette Classe. Veuillez la mettre à jour.',
-                        'status' => 500
-                    ]);
-                }
+            //     // To get school-classe row
+            //     if (!$school_classe = SchoolClasseFees::where('school_id', $request->school_id)->where('school_classe_id', $request->classe_id)->first()) {
+            //         return response()->json([
+            //             'message' => 'La configuration de frais manque pour cette Classe. Veuillez la mettre à jour.',
+            //             'status' => 500
+            //         ]);
+            //     }
 
-                //Corresponding SchoolClasseFees
-                if (!$school_classe_fees = SchoolClasseFees::where('school_id', $request->school_id)
-                    ->where('school_classe_id', $classe_id)
-                    ->where('academic_year', $request->academic_year)
-                    ->get()) {
-                    return response()->json([
-                        'message' => 'Aucun frais n\'est encore configuré pour cette école. Veuillez la mettre à jour d\'abord.',
-                        'status' => 500
-                    ]);
-                }
+            //     //Corresponding SchoolClasseFees
+            //     if (!$school_classe_fees = SchoolClasseFees::where('school_id', $request->school_id)
+            //         ->where('school_classe_id', $classe_id)
+            //         ->where('academic_year', $request->academic_year)
+            //         ->get()) {
+            //         return response()->json([
+            //             'message' => 'Aucun frais n\'est encore configuré pour cette école. Veuillez la mettre à jour d\'abord.',
+            //             'status' => 500
+            //         ]);
+            //     }
 
-                // Insert Student in DB Table
-                $generatedStudentRegistration = generateStudentRegistration($school->country->code);
-                $student = Student::create([
-                    'id' => generateDBTableId(28, "App\Models\Student"),
-                    'code' => $generatedStudentRegistration['last_student_code_plus_one'],
-                    'school_id' => $request->school_id,
-                    'last_name' => $last_name,
-                    'first_name' => $first_name,
-                    'sex' => $sex,
-                    'email' => $students_list[$i][4],
-                    'phone' => $students_list[$i][5],
-                    'matricule' => $students_list[$i][6],
-                    'birthday' => date("Y-m-d", strtotime($birthday)),
-                    'code_scolar' => $generatedStudentRegistration['registration'],
-                    'status' => 1
-                ]);
+            //     // Insert Student in DB Table
+            //     $generatedStudentRegistration = generateStudentRegistration($school->country->code);
+            //     $student = Student::create([
+            //         'id' => generateDBTableId(28, "App\Models\Student"),
+            //         'code' => $generatedStudentRegistration['last_student_code_plus_one'],
+            //         'school_id' => $request->school_id,
+            //         'last_name' => $last_name,
+            //         'first_name' => $first_name,
+            //         'sex' => $sex,
+            //         'email' => $students_list[$i][4],
+            //         'phone' => $students_list[$i][5],
+            //         'matricule' => $students_list[$i][6],
+            //         'birthday' => date("Y-m-d", strtotime($birthday)),
+            //         'code_scolar' => $generatedStudentRegistration['registration'],
+            //         'status' => 1
+            //     ]);
 
-                if ($student) {
-                    $student_classe = StudentClasse::create([
-                        'id' => generateDBTableId(29, "App\Models\StudentClasse"),
-                        'student_id' => $student->id,
-                        'classe_id' => $classe_id,
-                        'school_classe_id' => $classe_id,
-                        'academic_year' => $academic_year,
-                    ]);
+            //     if ($student) {
+            //         $student_classe = StudentClasse::create([
+            //             'id' => generateDBTableId(29, "App\Models\StudentClasse"),
+            //             'student_id' => $student->id,
+            //             'classe_id' => $classe_id,
+            //             'school_classe_id' => $classe_id,
+            //             'academic_year' => $academic_year,
+            //         ]);
 
-                    if ($student_classe) {
-                        //$isbalance = 0;
-                        //Loop on School Classe Fees rows to save each row in Balance Fees table for the current student
-                        foreach ($school_classe_fees as $value) {
-                            if ($school_classe_fees_details = SchoolClasseFeesDetails::where('school_classe_fees_id', $value['id'])->get()) {
-                                //Loop to create BalanceFees
-                                foreach ($school_classe_fees_details as $detail) {
-                                    $balance = BalanceFees::create([
-                                        'id' => generateDBTableId(29, "App\Models\BalanceFees"),
-                                        'student_id' => $student->id,
-                                        'classe_id' => $classe_id,
-                                        'school_id' => $request->school_id,
-                                        'type_fees_id' => $value['type_fees_id'],
-                                        'academic_year' => getActiveAcademicYear(),
-                                        'fees_amount' => $detail['due_amount'],
-                                        'balance' => $detail['due_amount'],
-                                        'fees_label' => $detail['fees_label'],
-                                        'due_date' => $detail['due_date'],
-                                        'school_classe_fees_id' => $value['school_classe_fees_id'],
-                                    ]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            DB::commit();
+            //         if ($student_classe) {
+            //             //$isbalance = 0;
+            //             //Loop on School Classe Fees rows to save each row in Balance Fees table for the current student
+            //             foreach ($school_classe_fees as $value) {
+            //                 if ($school_classe_fees_details = SchoolClasseFeesDetails::where('school_classe_fees_id', $value['id'])->get()) {
+            //                     //Loop to create BalanceFees
+            //                     foreach ($school_classe_fees_details as $detail) {
+            //                         $balance = BalanceFees::create([
+            //                             'id' => generateDBTableId(29, "App\Models\BalanceFees"),
+            //                             'student_id' => $student->id,
+            //                             'classe_id' => $classe_id,
+            //                             'school_id' => $request->school_id,
+            //                             'type_fees_id' => $value['type_fees_id'],
+            //                             'academic_year' => getActiveAcademicYear(),
+            //                             'fees_amount' => $detail['due_amount'],
+            //                             'balance' => $detail['due_amount'],
+            //                             'fees_label' => $detail['fees_label'],
+            //                             'due_date' => $detail['due_date'],
+            //                             'school_classe_fees_id' => $value['school_classe_fees_id'],
+            //                         ]);
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            //DB::commit();
             return response()->json([
-                'data' => $existed_student_list,
+                // 'data' => $existed_student_list,
                 'message' => 'Liste d\'apprenants chargée avec succès',
                 'status' => 200
             ]);
-        } catch (Exception $e) {
+        } catch (ValidationException $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            $failures = $e->failures();
+
+            $messages = [];
+            foreach ($failures as $failure) {
+                $messages[] = "Ligne {$failure->row()}: " . implode(', ', $failure->errors());
+            }
+            Log::error($messages);
+
             return response()->json([
                 'data' => [],
-                'message' => 'Une erreur interne est survenue',
+                'message' => $messages[0],
                 'status' => 500
             ]);
         }

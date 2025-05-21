@@ -25,7 +25,7 @@ export class ClasseManagementComponent {
 
   message: any; domain_url: string = environment.domainUrl; currentClasseCode: any; currentClasseId: any; fileUrl: any;
 
-  existed_students: any;
+  existed_students: any; selectedFile: File | null = null;
 
   @ViewChild('modalExistedStudent') private modalExistedStudent;
   constructor(private fb: FormBuilder, private schoolService: SchoolService, private tokenService: TokenService,
@@ -158,15 +158,36 @@ export class ClasseManagementComponent {
     });
   }
 
-  onFileChange(evt: any, file: File) {
-    const target: DataTransfer = <DataTransfer>(evt.target);
-    if (target.files.length > 1) {
-      alert('Vous ne pouvez pas importer plusieurs fichiers');
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file_upload', file);
-  }
+  onFileChange(event: any) {
+  this.selectedFile = event.target.files[0];
+}
+
+  // onFileChange(evt: any) {
+  //   const target: DataTransfer = <DataTransfer>(evt.target);
+  //   if (target.files.length > 1) {
+  //     alert('Vous ne pouvez pas importer plusieurs fichiers');
+  //     return;
+  //   }
+  //   else {
+  //     const formData = new FormData();
+  //     formData.append('file_upload', file);
+  //     // this.dataFromExcelFile = [];
+  //     // const reader: FileReader = new FileReader();
+  //     // reader.onload = (e: any) => {
+  //     //   const bstr: string = e.target.result;
+  //     //   const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+  //     //   const wsname = wb.SheetNames[0];
+  //     //   const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+  //     //   let data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
+  //     //   // Print the Excel Data
+  //     //   for (let i = 0; i <= 6; i++) {
+  //     //     data.shift();
+  //     //   }
+  //     //   this.dataFromExcelFile = data;
+  //     // }
+  //     // reader.readAsBinaryString(target.files[0]);
+  //   }
+  // }
 
   openViewUploadModal(schoolClasseData: any, modalUploadStudent: any) {
     let space = (schoolClasseData?.groupe) ? "-" : "";
@@ -194,10 +215,13 @@ export class ClasseManagementComponent {
 
   addStudentListToClasse() {
     this.isProcessing = true;
-    this.schoolService.addStudentListToClasse({
-      classe_id: this.currentClasseId,
-      school_id: this.schoolId, students_list: this.dataFromExcelFile, academic_year: this.academicYear
-    }).subscribe(
+    const formData = new FormData();
+  formData.append('file', this.selectedFile);
+    formData.append('classe_id', this.currentClasseId);
+    formData.append('academic_year', this.academicYear);
+    formData.append('school_id', this.schoolId);
+
+    this.schoolService.addStudentListToClasse(formData).subscribe(
       {
         next: (v: any) => {
           this.message = v.message;

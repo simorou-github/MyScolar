@@ -16,6 +16,7 @@ use App\Http\Controllers\SchoolSpace\SchoolInscriptionController;
 use App\Http\Controllers\ScolarController;
 use App\Http\Controllers\UserContoller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -144,6 +145,7 @@ Route::group(['prefix' => 'scolar'], function () {
 });
 
 Route::get('/download-template', function () {
+    Log::info('oui');
     $filePath = storage_path('app/public/modeles/ModelListeEleve.xlsx');
     if (!file_exists($filePath)) {
         abort(404);

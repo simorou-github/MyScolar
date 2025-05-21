@@ -10,14 +10,15 @@ use App\Models\Student;
 use App\Models\StudentClasse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToArray;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class StudentListImport implements ToArray, WithValidation, SkipsOnFailure, WithStartRow
+class StudentListImport implements ToArray, WithValidation, WithStartRow, WithHeadingRow
 {
     public $invalidRows = [];
 
@@ -31,11 +32,11 @@ class StudentListImport implements ToArray, WithValidation, SkipsOnFailure, With
         $this->academicYear = $academicYear;
         $this->schoolId = $schoolId;
     }
-    /**
-     * @param Collection $collection
-     */
+  
     public function array(array $data)
     {
+        Log::info("----------------------------------");
+        Log::info($data);
         if (!$school = School::with('country')->where('id', $this->schoolId)->first()) {
             return response()->json([
                 'message' => 'L\'école associée manque de configuration. Veuillez la mettre à jour.',
@@ -53,7 +54,7 @@ class StudentListImport implements ToArray, WithValidation, SkipsOnFailure, With
             ]);
         }
 
-        DB::beginTransaction();
+        
 
         try {
             foreach ($data as $row) {
@@ -107,10 +108,9 @@ class StudentListImport implements ToArray, WithValidation, SkipsOnFailure, With
                 }
             }
 
-            DB::commit();
         } catch (\Throwable $th) {
-            DB::rollBack();
             throw $th; // repropager l'erreur pour annuler l'import
+            Log::info($th);
         }
     }
 
@@ -122,41 +122,41 @@ class StudentListImport implements ToArray, WithValidation, SkipsOnFailure, With
     public function rules(): array
     {
         return [
-            '*.last_name'     => 'required|string|max:255',
-            '*.first_name'     => 'required|string|max:255',
+            '*.nom'     => 'required|string|max:255',
+            '*.prenom'     => 'required|string|max:255',
             '*.matricule'     => 'string|max:30',
             '*.email'    => 'email',
-            '*.birthday' => 'required|date|before:today|after:1900-01-01',
-            '*.sex'     => 'required|in:M,F',
-            '*.phone'     => 'numeric|min:8|max:20',
+            '*.date_de_naissance' => 'required|date|before:today|after:1900-01-01',
+            '*.sexe'     => 'required|in:M,F',
+            '*.téléphone'     => 'numeric|min:8|max:20',
         ];
     }
 
-    public function onFailure(...$failures)
-    {
-        // Capturer les erreurs de validation
-        foreach ($failures as $failure) {
-            $row = $failure->values();
-            $row['error'] = implode(', ', $failure->errors());
-            $this->invalidRows[] = $row;
-        }
-    }
+    // public function onFailure(...$failures)
+    // {
+    //     // Capturer les erreurs de validation
+    //     foreach ($failures as $failure) {
+    //         $row = $failure->values();
+    //         $row['error'] = implode(', ', $failure->errors());
+    //         $this->invalidRows[] = $row;
+    //     }
+    // }
 
     public function customValidationMessages(): array
     {
         return [
-            '*.last_name.required'     => 'Le nom de famille est obligatoire à la ligne :attribute.',
-            '*.first_name.required'     => 'Le prénom est obligatoire à la ligne :attribute.',
-            '*.birthday.required'    => 'La date de naissance est obligatoire à la ligne :attribute.',
+            '*.nom.required'     => 'Le nom de famille est obligatoire à la ligne :attribute.',
+            '*.prenoms.required'     => 'Le prénom est obligatoire à la ligne :attribute.',
+            '*.date_de_naissance.required'    => 'La date de naissance est obligatoire à la ligne :attribute.',
             '*.email.email'       => 'Le format de l\'email n’est pas valide à la ligne :attribute.',
-            '*.birthday.required' => 'La date de naissance est obligatoire.',
-            '*.birthday.date'     => 'Format de date invalide.',
-            '*.birthday.before'   => 'La date de naissance doit être dans le passé.',
-            '*.birthday.after'    => 'La date de naissance est trop ancienne.',
-            '*.sex.in'           => 'Le sexe doit être H ou F à la ligne :attribute.',
-            '*.phone.numeric' => 'Le numéro de téléphone doit être composé de chiffres.',
-            '*.phone.min' => 'Le numéro de téléphone doit comporter au moins 8 chiffres.',
-            '*.phone.max' => 'Le numéro de téléphone doit comporter au plus 20 chiffres.'
+            '*.date_de_naissance.required' => 'La date de naissance est obligatoire.',
+            '*.date_de_naissance.date'     => 'Format de date invalide.',
+            '*.date_de_naissance.before'   => 'La date de naissance doit être dans le passé.',
+            '*.date_de_naissance.after'    => 'La date de naissance est trop ancienne.',
+            '*.sexe.in'           => 'Le sexe doit être H ou F à la ligne :attribute.',
+            '*.teléphone.numeric' => 'Le numéro de téléphone doit être composé de chiffres.',
+            '*.téléphone.min' => 'Le numéro de téléphone doit comporter au moins 8 chiffres.',
+            '*.téléphone.max' => 'Le numéro de téléphone doit comporter au plus 20 chiffres.'
         ];
     }
 }
