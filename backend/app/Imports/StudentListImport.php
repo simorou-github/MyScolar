@@ -51,7 +51,6 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             if ($std = Student::where('last_name', $row['nom'])->where('first_name', $row['prenoms'])
                 ->first()
             ) {
-                Log::info('oui oui oui');
                 throw new ScolarException('L\'élève à la ligne ' . $key + 8 . ' existe déjà dans la base.');
             }
             // Création 

@@ -1,6 +1,5 @@
 <div class="container-fluid">
-    <app-page-title title="Liste des opérateurs"
-        [breadcrumbItems]="breadCrumbItems"></app-page-title>
+    <app-page-title title="Liste des opérateurs" [breadcrumbItems]="breadCrumbItems"></app-page-title>
 
     <div class="row">
         <div class="col-lg-12">
@@ -10,18 +9,12 @@
                         <div class="col-sm">
                             <div class="d-inline-block">
                                 <div class="position-relative">
-                                    <a *ngIf="!isSearchForm"
-                                        class="btn btn-primary"
-                                        id="addProject-btn"
-                                        (click)="displaySearchForm(true);"><i
-                                            class="fa fa-search me-1"></i>
+                                    <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
+                                        (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i>
                                         Rechercher
                                     </a>
-                                    <a *ngIf="isSearchForm"
-                                        class="btn btn-danger"
-                                        id="addProject-btn"
-                                        (click)="displaySearchForm(false);"><i
-                                            class="fa fa-times me-1"></i> Fermer
+                                    <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
+                                        (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
                                     </a>
                                 </div>
                             </div>
@@ -35,9 +28,7 @@
                         <!-- end col -->
                         <div class="col-sm-auto">
                             <div class="text-sm-end">
-                                <a class="btn btn-success"
-                                    (click)="openViewModal(modalOperator)"
-                                    id="addOperator"><i
+                                <a class="btn btn-success" (click)="openViewModal(modalOperator)" id="addOperator"><i
                                         class="fa fa-plus me-1"></i> Nouveau
                                 </a>
                             </div>
@@ -55,8 +46,8 @@
                                     (ngSubmit)="getAllOperators()">
                                     <div class="col-sm-3">
                                         <label class="visually-hidden" for="autoSizingSelect">Nom de l'opérateur</label>
-                                        <input type="text" id="name" class="form-control"
-                                            formControlName="name" placeholder="Nom de l'opérateur" />
+                                        <input type="text" id="name" class="form-control" formControlName="name"
+                                            placeholder="Nom de l'opérateur" />
                                     </div>
 
                                     <div class="col-sm-3">
@@ -91,8 +82,7 @@
                     </div>
 
                     <div>
-                        <app-my-own-loader
-                            *ngIf="isProcessing"></app-my-own-loader>
+                        <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
                         <div class="row ht-2">
                             <div class="col-md-12 h5">Liste des opérateurs :
                                 ({{operators?.length}}) </div>
@@ -104,23 +94,18 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 8%">#</th>
-                                        <th scope="col"
-                                            style="width: 30%">Nom</th>
-                                        <th scope="col"
-                                            style="width: 30%">Pays</th>
-                                        <th scope="col"
-                                            style="width: 10%">Statut</th>
+                                        <th scope="col" style="width: 30%">Nom</th>
+                                        <th scope="col" style="width: 30%">Pays</th>
+                                        <th scope="col" style="width: 10%">Statut</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngIf="isProcessing"
-                                        class="text-center">
+                                    <tr *ngIf="isProcessing" class="text-center">
                                         <td colspan="10">Chargement en cours.
                                             Veuillez patienter !!!</td>
                                     </tr>
-                                    <tr *ngIf="operators?.length == 0"
-                                        class="text-center">
+                                    <tr *ngIf="operators?.length == 0" class="text-center">
                                         <td colspan="10">Aucune donnée trouvée
                                             !</td>
                                     </tr>
@@ -128,37 +113,27 @@
                                         <tr
                                             *ngFor="let operator of operators | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
                                             <td style="width: 8%">{{i+1}}</td>
-                                            <td
-                                                style="width: 30%">{{operator.name}}</td>
-                                            <td
-                                                style="width: 30%">{{operator.country?.name}}</td>
-                                            <td
-                                                style="width: 10%">
+                                            <td style="width: 30%">{{operator.name}}</td>
+                                            <td style="width: 30%">{{operator.country?.name}}</td>
+                                            <td style="width: 10%">
                                                 <span
                                                     class="badge {{(operator.status == 1) ? 'bg-success' : 'bg-danger'}}">{{(operator.status
                                                     == 1) ? 'Actif' :
-                                                    'Inactif'}}</span></td>
+                                                    'Inactif'}}</span>
+                                            </td>
                                             <td class="text-center">
-                                                <div class="dropdown" dropdown
-                                                    placement="bottom-right">
-                                                    <a
-                                                        href="javascript: void(0);"
-                                                        class="dropdown-toggle card-drop"
+                                                <div class="dropdown" dropdown placement="bottom-right">
+                                                    <a href="javascript: void(0);" class="dropdown-toggle card-drop"
                                                         dropdownToggle>
-                                                        <i
-                                                            class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
                                                     </a>
-                                                    <div
-                                                        class="dropdown-menu dropdown-menu-end"
-                                                        *dropdownMenu>
+                                                    <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
 
-                                                        <a class="dropdown-item"
-                                                            href="javascript: void(0);"
+                                                        <a class="dropdown-item" href="javascript: void(0);"
                                                             (click)="update(modalOperator, operator)"><i
                                                                 class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i>
                                                             Modifier</a>
-                                                        <a class="dropdown-item"
-                                                            href="javascript: void(0);"
+                                                        <a class="dropdown-item" href="javascript: void(0);"
                                                             (click)="ConfirmDeleteModal(StaticDeleteModal, operator)"><i
                                                                 class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i>
                                                             Supprimer</a>
@@ -172,13 +147,11 @@
 
                             </table>
                             <div class="pagination-style">
-                                <pagination-controls previousLabel="Précédent"
-                                    nextLabel="Suivant"
+                                <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
                                     (pageChange)="p = $event"></pagination-controls>
 
                             </div>
-                            <ngx-ui-loader overlayColor="#ECF0F1"
-                                [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                            <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
                                 [loaderId]="'loader-spin'"></ngx-ui-loader>
                         </div>
                     </div>
@@ -199,28 +172,23 @@
 <!--Start Classe Modal -->
 <ng-template #modalOperator role="document" let-modal>
     <div class="modal-header">
-        <div *ngIf="isProcessing"
-            class="position-relative spinner-border text-primary m-1 pull-right">
+        <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
             <span class="sr-only pull-right">Loading...</span>
         </div>
         <h5 class="modal-title" id="addOpertaorForm">{{labelFormTitle}}</h5>
-        <button type="button" class="btn-close" (click)="closeModal()"
-            data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" (click)="closeModal()" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true"></span>
         </button>
     </div>
     <form (ngSubmit)="create()" [formGroup]="operatorForm">
         <div class="modal-body">
             <div class="mb-3">
-                <label for="code" class="form-label">Pays <span
-                        class="required_color">*</span></label>
-                <select class="form-select mb-2" formControlName="country_id"
-                    id="country_id"
+                <label for="code" class="form-label">Pays <span class="required_color">*</span></label>
+                <select class="form-select mb-2" formControlName="country_id" id="country_id"
                     [ngClass]="{ 'is-invalid': operatorForm.get('country_id')?.touched && !operatorForm.get('country_id')?.valid }">
                     <option disabled value selected>Selectionnez un
                         pays</option>
-                    <option *ngFor="let country of countries"
-                        value="{{ country?.id }}">{{
+                    <option *ngFor="let country of countries" value="{{ country?.id }}">{{
                         country?.name
                         }}</option>
                 </select>
@@ -233,10 +201,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="name" class="form-label">Nom <span
-                        class="required_color">*</span></label>
-                <input type="text" id="label" class="form-control"
-                    formControlName="name" placeholder="Ex: MTN"
+                <label for="name" class="form-label">Nom <span class="required_color">*</span></label>
+                <input type="text" id="label" class="form-control" formControlName="name" placeholder="Ex: MTN"
                     [ngClass]="{ 'is-invalid': operatorForm.get('name')?.touched && !operatorForm.get('name')?.valid }" />
                 <div class="space-between-validator"
                     *ngIf="operatorForm.get('name')?.touched && operatorForm.get('name').hasError('required')">
@@ -255,11 +221,17 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <label for="logo" class="form-label">Logo </label>
+
+                <input class="form-control" type="file" id="image" formControlName="image"
+                    (change)="onFileSelected($event)" accept="image/*">
+            </div>
+
         </div>
         <div class="modal-footer">
             <div class="hstack gap-2 justify-content-end">
-                <button type="button" class="btn btn-danger"
-                    data-bs-dismiss="modal"
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="closeModal()">Fermer</button>
                 <button type="submit" class="btn btn-success" id="add-btn"
                     [disabled]="!operatorForm.valid || isProcessing">{{btnFormTitle}}</button>
@@ -272,12 +244,10 @@
 <!-- Delete Confirmation Modal -->
 <ng-template #StaticDeleteModal let-modal>
     <div class="modal-header">
-        <h5 class="modal-title" id="deleteOperator"><i
-                class="fa fa-info-circleg text-warning fa-1x"></i>
+        <h5 class="modal-title" id="deleteOperator"><i class="fa fa-info-circleg text-warning fa-1x"></i>
             Confirmation
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            aria-label="Close"
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
             (click)="closeModalDeleting()"></button>
     </div>
     <div class="modal-body text-center">
@@ -285,9 +255,7 @@
             operatorName }} ?</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-            (click)="closeModalDeleting()">Non</button>
-        <button type="button" class="btn btn-danger"
-            (click)="delete()">Supprimer</button>
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="closeModalDeleting()">Non</button>
+        <button type="button" class="btn btn-danger" (click)="delete()">Supprimer</button>
     </div>
 </ng-template>

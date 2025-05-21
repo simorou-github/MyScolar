@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('operators', function (Blueprint $table) {
             $table->char('id', 15)->primary();
             $table->string('name', 60);
-            $table->string('path_logo');
+            $table->string('path_logo')->nullable();
             $table->boolean('status')->default(false);
             $table->unsignedBigInteger('country_id')->nullable();
             $table->char('create_id', 30)->nullable();

@@ -13,6 +13,7 @@ class Operator extends Model
     public $fillable = [
         'id',
         'name', 
+        'path_logo', 
         'status', 
         'country_id'
     ];
