@@ -3,10 +3,7 @@
 use App\Models\AcademicYear;
 use App\Models\Parameter;
 use App\Models\Student;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use PhpOffice\PhpSpreadsheet\Calculation\Logical\Conditional;
 
 function generateStudentRegistration($school_country_code){
     $regis = "";

@@ -91,8 +91,8 @@
                       <div class="d-flex gap-3">
                       <a href="javascript:void(0);" tooltip="Modifier" class="text-warning" (click)="openCreateModal(feesTypeModal, 'Modification de frais', 'Modifier', typefee)"><i class="mdi mdi-pencil font-size-18"></i></a>
                       <a href="javascript:void(0);" tooltip="{{typefee.status ? 'Désactiver frais' : 'Activer frais'}}" class="text-danger" (click)="ConfirmDeleteModal(feesDeleteModal, typefee)"><i class="{{typefee.status ? 'mdi mdi-lock-plus-outline' : 'mdi mdi-lock-open-remove-outline'}} font-size-7 {{typefee.status ? 'text-danger' : 'text-success'}} align-middle me-2"></i></a>
-                      <a href="javascript:void(0);" tooltip="Affecter frais" class="text-primary" [disabled]="!typefee.status" (click)="magerFees(typefee)"><i class="mdi mdi-connection text-primary font-size-7 align-middle me-2"></i></a>
-                      <a href="javascript:void(0);" tooltip="Détails" class="text-primary" [disabled]="!typefee.status" (click)="displayDetailsModal(detailsModal, typefee)"><i class="mdi mdi-information-outline font-size-7 text-primary align-middle me-2"></i></a>
+                      <a href="javascript:void(0);" tooltip="Affecter frais" class="text-primary" [disabled]="!typefee.status" (click)="magerFees(typefee)"><i class="mdi mdi-connection text-primary font-size-18 align-middle me-2"></i></a>
+                      <a href="javascript:void(0);" tooltip="Détails" class="text-primary" [disabled]="!typefee.status" (click)="displayDetailsModal(detailsModal, typefee)"><i class="mdi mdi-information-outline font-size-18 text-primary align-middle me-2"></i></a>
                     </div>
                     </td>
 

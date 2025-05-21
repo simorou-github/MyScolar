@@ -242,8 +242,7 @@ export class ClasseManagementComponent {
 
         error: (e) => {
           console.error(e);
-          this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
-          this.showError(this.message);
+          this.showError(e.message);
           this.isProcessing = false;
         },
 

@@ -2,23 +2,21 @@
 
 namespace App\Imports;
 
+use App\Exceptions\ScolarException;
 use App\Models\BalanceFees;
 use App\Models\School;
 use App\Models\SchoolClasseFees;
 use App\Models\SchoolClasseFeesDetails;
 use App\Models\Student;
 use App\Models\StudentClasse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToArray;
-use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class StudentListImport implements ToArray, WithValidation, WithStartRow, WithHeadingRow
+class StudentListImport implements ToArray, WithValidation, WithHeadingRow
 {
     public $invalidRows = [];
 
@@ -32,104 +30,112 @@ class StudentListImport implements ToArray, WithValidation, WithStartRow, WithHe
         $this->academicYear = $academicYear;
         $this->schoolId = $schoolId;
     }
-  
+
     public function array(array $data)
     {
-        Log::info("----------------------------------");
-        Log::info($data);
+
+
         if (!$school = School::with('country')->where('id', $this->schoolId)->first()) {
-            return response()->json([
-                'message' => 'L\'école associée manque de configuration. Veuillez la mettre à jour.',
-                'status' => 500
-            ]);
+            throw new ScolarException("L'école associée manque de configuration. Veuillez la mettre à jour.");
         }
 
         if (!$school_classe_fees = SchoolClasseFees::where('school_id', $this->schoolId)
             ->where('school_classe_id', $this->currentClasseId)
             ->where('academic_year', $this->academicYear)
             ->get()) {
-            return response()->json([
-                'message' => 'Aucun frais n\'est encore configuré pour cette école. Veuillez la mettre à jour d\'abord.',
-                'status' => 500
-            ]);
+            throw new ScolarException("Aucun frais n'est encore configuré pour cette école. Veuillez la mettre à jour d'abord.");
         }
 
-        
 
-        try {
-            foreach ($data as $row) {
-                // Création 
-                $generatedStudentRegistration = generateStudentRegistration($school->country->code);
-                $student = Student::create([
-                    'id' => generateDBTableId(28, "App\Models\Student"),
-                    'code' => $generatedStudentRegistration['last_student_code_plus_one'],
-                    'school_id' => $this->schoolId,
-                    'last_name' => $row[0],
-                    'first_name' => $row[1],
-                    'sex' => $row[3],
-                    'email' => $row[4],
-                    'phone' => $row[5],
-                    'matricule' => $row[6],
-                    'birthday' => is_numeric($row[2])
-                        ? Date::excelToDateTimeObject($row[2])
-                        : Carbon::parse($row[2]),
-                    'code_scolar' => $generatedStudentRegistration['registration'],
-                    'status' => 1
-                ]);
+        foreach ($data as $key => $row) {
+            if ($std = Student::where('last_name', $row['nom'])->where('first_name', $row['prenoms'])
+                ->first()
+            ) {
+                Log::info('oui oui oui');
+                throw new ScolarException('L\'élève à la ligne ' . $key + 8 . ' existe déjà dans la base.');
+            }
+            // Création 
+            $generatedStudentRegistration = generateStudentRegistration($school->country->code);
+            $student = Student::create([
+                'id' => generateDBTableId(28, "App\Models\Student"),
+                'code' => $generatedStudentRegistration['last_student_code_plus_one'],
+                'school_id' => $this->schoolId,
+                'last_name' => $row['nom'],
+                'first_name' => $row['prenoms'],
+                'sex' => $row['sexe'],
+                'email' => $row['email'],
+                'phone' => $row['telephone'],
+                'matricule' => $row['matricule_ecole'],
+                'birthday' => $this->transformDate($row['date_de_naissance']),
+                'code_scolar' => $generatedStudentRegistration['registration'],
+                'status' => 1
+            ]);
 
-                $student_classe = StudentClasse::create([
-                    'id' => generateDBTableId(29, "App\Models\StudentClasse"),
-                    'student_id' => $student->id,
-                    'classe_id' => $this->currentClasseId,
-                    'school_classe_id' => $this->currentClasseId,
-                    'academic_year' => $this->academicYear,
-                ]);
+            $student_classe = StudentClasse::create([
+                'id' => generateDBTableId(29, "App\Models\StudentClasse"),
+                'student_id' => $student->id,
+                'classe_id' => $this->currentClasseId,
+                'school_classe_id' => $this->currentClasseId,
+                'academic_year' => $this->academicYear,
+            ]);
 
-                //Loop on School Classe Fees rows to save each row in Balance Fees table for the current student
-                foreach ($school_classe_fees as $value) {
-                    if ($school_classe_fees_details = SchoolClasseFeesDetails::where('school_classe_fees_id', $value['id'])->get()) {
-                        //Loop to create BalanceFees
-                        foreach ($school_classe_fees_details as $detail) {
-                            $balance = BalanceFees::create([
-                                'id' => generateDBTableId(29, "App\Models\BalanceFees"),
-                                'student_id' => $student->id,
-                                'classe_id' => $this->currentClasseId,
-                                'school_id' => $this->schoolId,
-                                'type_fees_id' => $value['type_fees_id'],
-                                'academic_year' => getActiveAcademicYear(),
-                                'fees_amount' => $detail['due_amount'],
-                                'balance' => $detail['due_amount'],
-                                'fees_label' => $detail['fees_label'],
-                                'due_date' => $detail['due_date'],
-                                'school_classe_fees_id' => $value['school_classe_fees_id'],
-                            ]);
-                        }
+            //Loop on School Classe Fees rows to save each row in Balance Fees table for the current student
+            foreach ($school_classe_fees as $value) {
+                if ($school_classe_fees_details = SchoolClasseFeesDetails::where('school_classe_fees_id', $value['id'])->get()) {
+                    //Loop to create BalanceFees
+                    foreach ($school_classe_fees_details as $detail) {
+                        $balance = BalanceFees::create([
+                            'id' => generateDBTableId(29, "App\Models\BalanceFees"),
+                            'student_id' => $student->id,
+                            'classe_id' => $this->currentClasseId,
+                            'school_id' => $this->schoolId,
+                            'type_fees_id' => $value['type_fees_id'],
+                            'academic_year' => getActiveAcademicYear(),
+                            'fees_amount' => $detail['due_amount'],
+                            'balance' => $detail['due_amount'],
+                            'fees_label' => $detail['fees_label'],
+                            'due_date' => $detail['due_date'],
+                            'school_classe_fees_id' => $value['school_classe_fees_id'],
+                        ]);
                     }
                 }
             }
-
-        } catch (\Throwable $th) {
-            throw $th; // repropager l'erreur pour annuler l'import
-            Log::info($th);
         }
     }
 
-    public function startRow(): int
+    public function headingRow(): int
     {
-        return 8; // On commence à la ligne 6 (donc on ignore les lignes 1 à 7)
+        return 7; // Ligne où se trouvent les en-têtes
     }
 
     public function rules(): array
     {
         return [
             '*.nom'     => 'required|string|max:255',
-            '*.prenom'     => 'required|string|max:255',
-            '*.matricule'     => 'string|max:30',
-            '*.email'    => 'email',
-            '*.date_de_naissance' => 'required|date|before:today|after:1900-01-01',
+            '*.prenoms'     => 'required|string|max:255',
+            '*.matricule_ecole'     => 'nullable|max:30',
+            '*.email'    => 'nullable|email',
+            '*.date_de_naissance' => 'required|before:today|after:1900-01-01',
             '*.sexe'     => 'required|in:M,F',
-            '*.téléphone'     => 'numeric|min:8|max:20',
+            '*.téléphone'     => 'nullable|numeric|min:8|max:20',
         ];
+    }
+
+    public function transformDate($value)
+    {
+        if (!$value) return null;
+
+        // Cas 1 : Excel timestamp
+        if (is_numeric($value)) {
+            return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format('Y-m-d');
+        }
+
+        // Cas 2 : Texte avec / ou -
+        try {
+            return Carbon::parse($value)->format('Y-m-d');
+        } catch (\Exception $e) {
+            return null; // ou déclenche une exception si tu veux bloquer l'import
+        }
     }
 
     // public function onFailure(...$failures)
@@ -145,15 +151,15 @@ class StudentListImport implements ToArray, WithValidation, WithStartRow, WithHe
     public function customValidationMessages(): array
     {
         return [
-            '*.nom.required'     => 'Le nom de famille est obligatoire à la ligne :attribute.',
-            '*.prenoms.required'     => 'Le prénom est obligatoire à la ligne :attribute.',
-            '*.date_de_naissance.required'    => 'La date de naissance est obligatoire à la ligne :attribute.',
-            '*.email.email'       => 'Le format de l\'email n’est pas valide à la ligne :attribute.',
-            '*.date_de_naissance.required' => 'La date de naissance est obligatoire.',
-            '*.date_de_naissance.date'     => 'Format de date invalide.',
+            '*.nom.required'     => 'Le nom de famille est obligatoire dans la colonne :attribute.',
+            '*.prenoms.required'     => 'Le prénom est obligatoire dans la colonne :attribute.',
+            '*.date_de_naissance.required'    => 'La date de naissance est obligatoire dans la colonne :attribute.',
+            '*.email.email'       => 'Le format de l\'email n’est pas valide dans la colonne :attribute.',
+            '*.date_de_naissance.required' => 'La date de naissance est obligatoire .',
+            // '*.date_de_naissance.date'     => 'Format de date invalide.',
             '*.date_de_naissance.before'   => 'La date de naissance doit être dans le passé.',
             '*.date_de_naissance.after'    => 'La date de naissance est trop ancienne.',
-            '*.sexe.in'           => 'Le sexe doit être H ou F à la ligne :attribute.',
+            '*.sexe.in'           => 'Le sexe doit être H ou F dans la colonne :attribute.',
             '*.teléphone.numeric' => 'Le numéro de téléphone doit être composé de chiffres.',
             '*.téléphone.min' => 'Le numéro de téléphone doit comporter au moins 8 chiffres.',
             '*.téléphone.max' => 'Le numéro de téléphone doit comporter au plus 20 chiffres.'
