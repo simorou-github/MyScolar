@@ -164,9 +164,9 @@ export class FeesBalanceFollowupComponent {
       let downloadURL = window.URL.createObjectURL(response);
       let link = document.createElement('a');
       link.href = downloadURL;
-      link.download = "Solde_Paiement.xls";
+      link.download = "Solde_Paiement.xlsx";
       link.click();
-      this.showError("Exportation terminée avec succès.");
+      this.showSuccess("Exportation terminée avec succès.");
       this.ngxLoader.stopLoader('loader-spin');
     },
       error => {

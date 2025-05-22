@@ -91,6 +91,9 @@ Route::prefix('manage-fees')->middleware(['auth:api'])->group(function () {
     Route::post('get-student-balance', [FeesManageController::class, 'getStudentFeesBalance']);
     Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
     Route::post('get-fees-details-data', [FeesManageController::class, 'getFeesDetails']);
+    Route::get('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
+    Route::get('get-fees-balance-data-export',[FeesManageController::class, 'getExportOfFeesBalance']);    
+    Route::post('generate-balance/by-type-file', [FeesManageController::class, 'getExportOfFeesBalance']);
 });
 
 // // All about classe of the system
