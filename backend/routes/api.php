@@ -36,12 +36,10 @@ Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('school/create-inscription', [SchoolInscriptionController::class, 'createInscription']);
 
 // Code verification to make school inscription request
-// L'utilisateur peut faire 3 requêtes maximum dans une fenêtre de 15 min.
-Route::middleware('throttle:3,15')->post('code/confirmation', [SchoolInscriptionController::class, 'getCodeOfVerification']);
-Route::middleware('throttle:3,15')->post('new/code/confirmation', [SchoolInscriptionController::class, 'getNewCodeOfVerification']);
+// L'utilisateur peut faire 3 requêtes maximum dans une fenêtre de 10 min.
+Route::middleware('throttle:3,10')->post('code/confirmation', [SchoolInscriptionController::class, 'getCodeOfVerification']);
+Route::middleware('throttle:3,10')->post('new/code/confirmation', [SchoolInscriptionController::class, 'getNewCodeOfVerification']);
 Route::post('verify/code', [SchoolInscriptionController::class, 'codeVerification']);
-
-Route::post('change-status', [SchoolInscriptionController::class, 'changeStatus']);
 
 
 Route::get('country/list', [CityController::class, 'list']);
@@ -49,11 +47,11 @@ Route::get('city/list', [CityController::class, 'listCities']);
 Route::post('country/city/list', [CityController::class, 'listCitiesByCountry']);
 
 //Manage Dashboard   
-Route::group(['prefix' => 'manage-dashboard'], function () {
+Route::prefix('manage-dashboard')->middleware(['auth:api'])->group(function () {
     Route::post('verify-fees-assignement', [SchoolDashboardController::class, 'getUnassignedSchoolFees']);
 });
 
-Route::group(['prefix' => 'school'], function () {
+Route::prefix('school')->middleware(['auth:api'])->group(function () {
     Route::post('detail', [SchoolController::class, 'getSchoolDetail']);
     Route::post('change-inscription-status', [SchoolInscriptionController::class, 'changeStatus']);
     Route::post('list-inscription-pending', [SchoolInscriptionController::class, 'listInscriptionsPending']);
@@ -83,12 +81,12 @@ Route::group(['prefix' => 'school'], function () {
 
 
 //Manage Dashboard   
-Route::group(['prefix' => 'manage-dashboard'], function () {
+Route::prefix('manage-dashboard')->middleware(['auth:api'])->group(function () {
     Route::post('verify-fees-assignement', [SchoolDashboardController::class, 'getUnassignedSchoolFees']);
 });
 
 // //Manage Fees   
-Route::group(['prefix' => 'manage-fees'], function () {
+Route::prefix('manage-fees')->middleware(['auth:api'])->group(function () {
     Route::post('assign-fees-to-classe', [FeesManageController::class, 'assigneFeesToClasse']);
     Route::post('get-student-balance', [FeesManageController::class, 'getStudentFeesBalance']);
     Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
@@ -96,7 +94,7 @@ Route::group(['prefix' => 'manage-fees'], function () {
 });
 
 // // All about classe of the system
-Route::group(['prefix' => 'classe'], function () {
+Route::prefix('classe')->middleware(['auth:api'])->group(function () {
     Route::get('list', [ClasseController::class, 'list']);
     Route::post('create', [ClasseController::class, 'create']);
     Route::post('delete', [ClasseController::class, 'delete']);
@@ -104,18 +102,18 @@ Route::group(['prefix' => 'classe'], function () {
 });
 
 // // All parameters of the system
-Route::group(['prefix' => 'parameter'], function () {
-    Route::get('distinct-years', [SchoolController::class, 'getDistinctAcademicYears']);
+Route::get('parameter/distinct-years', [SchoolController::class, 'getDistinctAcademicYears']);
+Route::post('parameter/academic-year/list', [ParameterController::class, 'listAcademicYear']);
+
+Route::prefix('parameter')->middleware(['auth:api'])->group(function () {
     Route::post('params-list', [ParameterController::class, 'listParams']);
     Route::post('crud-params', [ParameterController::class, 'crudParams']);
     Route::post('type-fees/list', [ParameterController::class, 'listTypeFees']);
     Route::post('group/list', [ParameterController::class, 'listGroupe']);
-    Route::post('academic-year/list', [ParameterController::class, 'listAcademicYear']);
     Route::post('operator/list', [ParameterController::class, 'listOperator']);
     Route::post('operator/create', [ParameterController::class, 'createOperator']);
     Route::post('operator/delete', [ParameterController::class, 'deleteOperator']);
     Route::get('type-payment/list', [ParameterController::class, 'listTypePayment']);
-
     Route::post('type-fees/crud', [ParameterController::class, 'crudTypeFees']);
     Route::post('group/crud', [ParameterController::class, 'crudGroups']);
 });
@@ -128,10 +126,10 @@ Route::group(['prefix' => 'academic-year'], function () {
 });
 
 // Payment
-Route::group(['prefix' => 'payment'], function () {
-    Route::post('get-history', [PaymentController::class, 'getHistoryOfPayment']);
-    Route::post('get-details', [PaymentController::class, 'getPaymentDetails']);
+Route::middleware(['auth:api'])->post('payment/get-history', [PaymentController::class, 'getHistoryOfPayment']);
+Route::middleware(['auth:api'])->post('payment/get-details', [PaymentController::class, 'getPaymentDetails']);
 
+Route::group(['prefix' => 'payment'], function () {
     Route::post('create-token', [MTNPaymentController::class, 'createAccessToken']);
     Route::post('process-unique-payment', [MTNPaymentController::class, 'requestToUniquePayment']);
     Route::post('process-batch-payment', [MTNPaymentController::class, 'requestToBatchPayment']);
@@ -139,13 +137,12 @@ Route::group(['prefix' => 'payment'], function () {
 });
 
 //Scolar 
-Route::group(['prefix' => 'scolar'], function () {
+Route::prefix('scolar')->middleware(['auth:api'])->group(function () {
     Route::post('statistic/payment-aggregation-by-typefees', [ScolarController::class, 'paymentAggregationByTypeFees']);
     Route::post('statistic/year-payment-per-month', [ScolarController::class, 'yearTransactionPerMonth']);
 });
 
 Route::get('/download-template', function () {
-    Log::info('oui');
     $filePath = storage_path('app/public/modeles/ModelListeEleve.xlsx');
     if (!file_exists($filePath)) {
         abort(404);
@@ -153,7 +150,7 @@ Route::get('/download-template', function () {
     return response()->download($filePath, 'ModelListeEleve.xlsx');
 });
 
-Route::group(['prefix' => 'user'], function () {
+Route::prefix('user')->middleware(['auth:api'])->group(function () {
     //Route::resource('role', RoleController::class);
     Route::post('get-all-role', [RoleController::class, 'getAllRole']);
     Route::post('save-role', [RoleController::class, 'saveRole']);
@@ -164,7 +161,3 @@ Route::group(['prefix' => 'user'], function () {
 
 Route::resource('roles', UserContoller::class);
 Route::resource('users', UserContoller::class);
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });

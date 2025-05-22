@@ -128,7 +128,7 @@ class SchoolInscriptionService
             // 30 min pour utiliser le code sinon regénérer
             'expires_at' => Carbon::now()->addMinutes(30)
         ]);
-
+        
         if ($response) {
             EmailScolarTemplateJob::dispatch(
                 $school_request->email,
@@ -184,6 +184,7 @@ class SchoolInscriptionService
             $code = $this->generateCodeOfVerification();
             $response = MailVerification::where('email', $request->email)->update(['code' => $code,
         'expires_at' => Carbon::now()->addMinutes(30)]);
+        // 'expires_at' => Carbon::now()->addMinutes(30)]);
             if ($response) {
                 EmailScolarTemplateJob::dispatch(
                     $request->email,
@@ -192,7 +193,7 @@ class SchoolInscriptionService
                     'Vérification de compte mail',
                     env("APP_NAME"),
                     'Merci de taper ce nouveau code reçu sur la page de vérification de mail sur notre plateforme pour continuer
-                        votre demande d\'inscription.'
+                        votre demande d\'inscription. Ce code expire dans 30 minutes.'
                 );
             } else {
                 throw new ScolarException("Merci de réessayer.");

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AdminSpace;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\PaymentJob;
 use App\Models\BalanceFees;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
@@ -227,17 +228,29 @@ class MTNPaymentController extends Controller
                             $balance_fees->save();
                         }
                     }
-                    
+
                     $this->generatePDFInvoice($payment->id);
 
                     $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])
-                    ->where('payment_id', $payment->id)->get();
+                        ->where('payment_id', $payment->id)->get();
 
                     $data["email"] = $payment->email;
                     $data["title"] = "Paiement Scolar Plus";
                     $data["payment"] = $payment;
                     $data["payment_details"] = $payment_details;
+                    //$receipt_path = public_path('storage/factures/Recu_SP_' . $data["payment"]["id"] . '.pdf');
+                    //$file_name = 'Recu_SP_' . $data["payment"]["id"] . '.pdf';
 
+                    //Sending Mail
+                    // PaymentJob::dispatch(
+                    //     $data["email"],
+                    //     ['data' => $data],
+                    //     'emails.paymentNotificationdd',
+                    //     $data["title"],
+                    //     env("APP_NAME"),
+                    //     $receipt_path,
+                    //     $file_name
+                    // );
 
                     Mail::send('emails.paymentNotification', ['data' => $data], function ($message) use ($data) {
                         $message->to($data["email"])
@@ -359,7 +372,7 @@ class MTNPaymentController extends Controller
         //Check balance
         DB::beginTransaction();
         if ($balance_fees = BalanceFees::where('id', $request->balance_id)->first()) {
-            
+
             if ($balance_fees->balance >= $request->amount) {
                 if ($http_code == 202) {
                     try {
@@ -395,18 +408,29 @@ class MTNPaymentController extends Controller
                             // Update Balance Fees
                             $balance_fees->balance = $balance_fees->balance - $payment->amount;
                             $balance_fees->save();
-                            
+
                             $this->generatePDFInvoice($payment->id);
 
 
                             $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])
-                            ->where('payment_id', $payment->id)->get();
+                                ->where('payment_id', $payment->id)->get();
 
                             $data["email"] = $payment->email;
                             $data["title"] = "Paiement Scolar Plus";
                             $data["payment"] = $payment;
                             $data["payment_details"] = $payment_details;
+                            // $receipt_path = public_path('storage/factures/Recu_SP_' . $data["payment"]["id"] . '.pdf');
+                            // $file_name = 'Recu_SP_' . $data["payment"]["id"] . '.pdf';
 
+                            // PaymentJob::dispatch(
+                            //     $data["email"],
+                            //     ['data' => $data],
+                            //     'emails.paymentNotificationdd',
+                            //     $data["title"],
+                            //     env("APP_NAME"),
+                            //     $receipt_path,
+                            //     $file_name,
+                            // );
 
                             Mail::send('emails.paymentNotification', ['data' => $data], function ($message) use ($data) {
                                 $message->to($data["email"])
@@ -493,7 +517,7 @@ class MTNPaymentController extends Controller
 
         //Execute the cURL request
         $response = curl_exec($curl);
-       // Log::info($response);
+        // Log::info($response);
 
         //check for cURL error
         if (curl_errno($curl)) {
@@ -511,21 +535,23 @@ class MTNPaymentController extends Controller
         //get http status code
         $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-
     }
 
     public function generatePDFInvoice($id)
     {
-        
+
         if ($payment = Payment::with(['student', 'classe', 'school'])->where('id', $id)->first()) {
             // Set options of page and load data in blade file
             $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])
-            ->where('payment_id', $payment->id)->get();
+                ->where('payment_id', $payment->id)->get();
             $pdf = PDF::setOptions([
-                'isJavascriptEnabled' => true, 'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true, 'isPhpEnabled' => true,   "dpi" => 96,
-            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details'=> $payment_details]);
-            
+                'isJavascriptEnabled' => true,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'isPhpEnabled' => true,
+                "dpi" => 96,
+            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details]);
+
             //Log::info($payment_details);
             // Name of file
             $file_name = "Recu_SP_" . $id . ".pdf";

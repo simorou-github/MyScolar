@@ -13,7 +13,6 @@ class CityService
     public function listCountries()
     {
         if($data = Cache::get('countries')){
-            Log::info($data);
             return $data;
         }else{
             $data = Country::orderBy('name', 'asc')->get();

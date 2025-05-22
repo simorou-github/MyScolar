@@ -84,7 +84,6 @@ export class PaiementScolaireComponent {
           this.student_classe = v.student_classe;
           // console.log(this.student_classe);
           this.operators = v.operators;
-          console.log(this.operators)
           this.isProcessing = false;
           this.showSuccess(this.message);
           this.paymentForm = this.fb.group({

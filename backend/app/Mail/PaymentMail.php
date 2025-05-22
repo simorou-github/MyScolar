@@ -9,28 +9,29 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
-
+use Illuminate\Mail\Mailables\Attachment;
 
 class PaymentMail extends Mailable
 {
     use Queueable, SerializesModels;
-public $data;
+    public $data;
     public $template;
     public $subject;
     public $name;
-    public $message;
+    public $receipt_path;
+    public $file_name;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data, $template, $subject, $name, $message)
+    public function __construct($data, $template, $subject, $name, $receipt_path, $file_name)
     {
         $this->data = $data;
         $this->template = $template;
         $this->subject = $subject;
         $this->name = $name;
-        $this->message = $message;
-
+        $this->receipt_path = $receipt_path;
+        $this->file_name = $file_name;
     }
 
     /**
@@ -39,7 +40,7 @@ public $data;
     public function envelope(): Envelope
     {
         return new Envelope(
-           from: new Address(env("MAIL_FROM_ADDRESS"), $this->name),
+            from: new Address(env("MAIL_FROM_ADDRESS"), $this->name),
             subject: $this->subject,
         );
     }
@@ -54,7 +55,6 @@ public $data;
             with: [
                 'data' => $this->data,
                 'subject' => $this->subject,
-                '_message' => $this->message,
                 'name' => $this->name
             ]
         );
@@ -67,6 +67,10 @@ public $data;
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromPath($this->receipt_path)
+                ->as($this->file_name)
+                ->withMime('application/pdf'),
+        ];
     }
 }
