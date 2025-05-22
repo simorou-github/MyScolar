@@ -1,0 +1,252 @@
+<div class="container-fluid mt-2" #screen>
+    <app-page-title title="SUIVI DES SOLDES A COLLECTER" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <img src="assets/images/logo-scolarplus2.png" alt=""
+                                        class="avatar-md rounded-circle img-thumbnail">
+                                </div>
+                                <div class="flex-grow-1 align-self-center">
+                                    <div class="text-muted">
+                                        <p class="mb-2 h5">Point des Paiements</p>
+                                        <h6 class="mb-1">{{feesBalanceDatas?.length}} Frais</h6>
+                                        <!--p class="mb-0">Scolar Plus</p-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-7 align-self-center">
+                            <div class="text-lg-center mt-4 mt-lg-0">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-muted text-truncate mb-2">Total à Collecter</p>
+                                            <h6 class="mb-0">{{sum_fees | currency:'XOF'}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-muted text-truncate mb-2">Total Collecté</p>
+                                            <h6 class="mb-0">{{(sum_fees-sum_balance) | currency:'XOF'}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-muted text-truncate mb-2">Total Solde</p>
+                                            <h6 class="mb-0">{{sum_balance | currency:'XOF'}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-muted text-truncate mb-2">Efficacité</p>
+                                            <h6 class="mb-0">
+                                                <span class="{{((sum_fees-sum_balance)/sum_fees)<=0.8 ? 'text-danger' : 'text-success'}}">{{(((sum_fees-sum_balance)/sum_fees)*100) | number: '1.0-0' }}%</span></h6>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 d-none d-lg-block">
+                            <div class="clearfix  mt-4 mt-lg-0">
+                                <div class="dropdown float-end" dropdown>
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                                        <i class="bx bxs-cog align-middle me-1"></i> Exporter
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                                        <a class="dropdown-item" href="javascript: void(0);" (click)="exportJournal()"> <i class="fa fa-file-excel text-success"></i> En Excel</a>
+                                        <a class="dropdown-item" href="javascript: void(0);" (click)="downloadJournal()"> <i class="fa fa-file-pdf text-danger"></i> En PDF</a>
+                                        <a class="dropdown-item" href="javascript: void(0);" (click)="getCapture()"> <i class="fa fa-camera text-secondary"></i> En Capture Ecran</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <ngx-ui-loader overlayColor="#ECF0F1"
+                                [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                                [loaderId]="'loader-spin'"></ngx-ui-loader>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row" *ngIf="!isFilter">
+                        <div class="col-lg-2">
+                            <button class="btn btn-primary mt-1" type="button" (click)="displayFilter()"> <i
+                                    class="fa fa-filter"></i>
+                                Filtre Avancé</button>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="isFilter">
+                        <div class="col-lg-2">
+                            <button class="btn btn-danger mt-1" type="button" (click)="displayFilter(); resetForm();">
+                                <i class="fa fa-times"></i>
+                                Fermer</button>
+                        </div>
+                    </div>
+                    <form #filterForm="ngForm" *ngIf="isFilter"
+                        (ngSubmit)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+
+                        <div class="row mt-1">
+
+                            <div class="col-lg-3">
+                                <label for="academicyear">Année Acatémique</label>
+                                <select class="form-control" name="academicyear" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.academic_year"
+                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    <option value="">Selection l'année</option>
+                                    <option value="{{academicyear.academic_year}}"
+                                        *ngFor="let academicyear of academicyears">
+                                        {{academicyear.academic_year}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label for="type_fees_id">Type Frais</label>
+                                <select class="form-control" name="type_fees_id" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.type_fees_id"
+                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    <option value="">Tous</option>
+                                    <option value="{{type_frais.id}}" *ngFor="let type_frais of types_frais">
+                                        {{type_frais.label}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3" *ngIf="isSchoolsList">
+                                <label for="school_id">Ecoles</label>
+                                <select class="form-control" name="school_id" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.school_id"
+                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    <option value="">Tous</option>
+                                    <option value="{{school.id}}" *ngFor="let school of schools">
+                                        {{school.social_reason}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3" *ngIf="!isSchoolsList">
+                                <label for="school_id">Ecoles</label>
+                                <select class="form-control" name="school_id" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.school_id"
+                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    <option value="">Tous</option>
+                                    <option value="{{schools.id}}">
+                                        {{schools.social_reason}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label for="date_debut">Classe</label>
+                                <select class="form-control" name="classe_id" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.classe_id"
+                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    <option value="">Tous</option>
+                                    <option value="{{classe.id}}" *ngFor="let classe of classes">
+                                        {{classe.classe.code}}-{{classe.groupe.code}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <label for="fees_label">Répartition</label>
+                                <input class="form-control" type="text" name="fees_label" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.fees_label"
+                                    placeholder="Exp: Transche 1, Unique, Mois, etc."
+                                    (keyup.enter)="getHistoryOfPayment(seachPaymentForm)">
+                            </div>
+                            <br>
+                            <div class="col-lg-2 text-right">
+                                <button class="btn btn-primary " type="submit"> <i class="fa fa-search"></i>
+                                    Rechercher</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <div class="row ht-2">
+                <div class="col-md-4 h5">
+                    Liste des Soldes de Frais 
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table
+                    class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                    id="projectList-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Matricule</th>
+                            <th scope="col">Nom & Prénoms</th>
+                            <th scope="col">Classe</th>
+                            <th scope="col">Année</th>
+                            <th scope="col">Frais</th>
+                            <th scope="col">Montant</th>
+                            <th scope="col">Solde</th>
+                            <th scope="col">Téléphone</th>
+                            <th scope="col" lass="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="feesBalanceDatas?.length == 0" class="text-center">
+                            <td colspan="10">Aucune donnée trouvée !</td>
+                        </tr>
+                        <ng-container *ngIf="feesBalanceDatas?.length > 0">
+                            <tr
+                                *ngFor="let balance of feesBalanceDatas | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                                <td>{{i+1}}</td>
+                                <td>{{balance.code_scolar}}</td>
+                                <td title="Naissance : {{balance.student_birthday}} | Sexe : {{balance.student_sex=='F'?'Féminin':'Masculin'}} | Email : {{balance.student_email}}">{{balance.student_last_name }} {{balance.student_first_name}}</td>
+                                <td>{{balance.classe_code}}-{{balance.groupe_code}}</td>
+                                <td>{{balance.academic_year}}</td>
+                                <td>{{balance.fees_label}}</td>
+                                <td>{{balance.fees_amount | currency:'XOF'}}</td>
+                                <td>
+                                    <span *ngIf="balance.balance==0" class="badge bg-success blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
+                                    <span *ngIf="balance.balance>0 && balance.balance<balance.fees_amount" class="badge bg-warning blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
+                                    <span *ngIf="balance.balance>0 && balance.balance==balance.fees_amount" class="badge bg-danger blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
+                                </td>
+                                <td>{{balance.student_phone}}</td>
+
+                                <td class="text-center">
+                                    <div class="d-flex gap-3 text-center">
+                                        <ul class="list-unstyled hstack gap-1 mb-0">
+                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="Détails">
+                                                <a class="btn btn-sm btn-soft-info"
+                                                    (click)="getFeesBalanceFollowupData(balance)"><i
+                                                        class="mdi mdi-eye-outline"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+
+                </table>
+                <div class="pagination-style">
+                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
+                        (pageChange)="p = $event"></pagination-controls>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

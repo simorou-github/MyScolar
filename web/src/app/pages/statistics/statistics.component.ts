@@ -130,7 +130,6 @@ export class StatisticsComponent {
       {
         next: (v: any) => {
           this.paymentAggregationByTypeFeesData = v.data;
-          console.log(this.paymentAggregationByTypeFeesData)
           this.totalOfPaymentAggregationByTypeFeesData = v.total;
           this.amounts = v.amounts;
           this.pieChartStructure(this.amounts?.type_fees, this.amounts?.amount);
