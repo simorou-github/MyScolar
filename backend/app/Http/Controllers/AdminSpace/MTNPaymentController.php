@@ -493,7 +493,7 @@ class MTNPaymentController extends Controller
 
         //Execute the cURL request
         $response = curl_exec($curl);
-        Log::info($response);
+       // Log::info($response);
 
         //check for cURL error
         if (curl_errno($curl)) {

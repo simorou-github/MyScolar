@@ -5,7 +5,7 @@ namespace App\Http\Controllers\SchoolSpace;
 use App\Exceptions\ScolarException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSchoolInscriptionRequest;
-use App\Jobs\EmailVerificationJob;
+use App\Jobs\EmailScolarTemplateJob;
 use App\Models\School;
 use App\Models\User;
 use App\Services\SchoolInscriptionService;
@@ -175,7 +175,7 @@ class SchoolInscriptionController extends Controller
                 }
 
                 //Sending Mail
-                EmailVerificationJob::dispatch(
+                EmailScolarTemplateJob::dispatch(
                     [
                         env("ADMIN_MAIL_1"),
                         $data->email

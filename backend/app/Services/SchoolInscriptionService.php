@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ScolarException;
 use App\Http\Requests\StoreSchoolInscriptionRequest;
-use App\Jobs\EmailVerificationJob;
+use App\Jobs\EmailScolarTemplateJob;
 use App\Models\MailVerification;
 use App\Models\School;
 use App\Models\User;
@@ -130,7 +130,7 @@ class SchoolInscriptionService
         ]);
 
         if ($response) {
-            EmailVerificationJob::dispatch(
+            EmailScolarTemplateJob::dispatch(
                 $school_request->email,
                 ['code' => $code],
                 'emails.emailVerification',
@@ -185,7 +185,7 @@ class SchoolInscriptionService
             $response = MailVerification::where('email', $request->email)->update(['code' => $code,
         'expires_at' => Carbon::now()->addMinutes(30)]);
             if ($response) {
-                EmailVerificationJob::dispatch(
+                EmailScolarTemplateJob::dispatch(
                     $request->email,
                     ['code' => $code],
                     'emails.emailVerification',
@@ -247,7 +247,7 @@ class SchoolInscriptionService
             $message = 'Le compte de votre école a été désactivé. Merci de de contacter le Groupe Scolar Plus.';
         }
 
-        EmailVerificationJob::dispatch(
+        EmailScolarTemplateJob::dispatch(
             [
                 // env("ADMIN_MAIL_1"),
                 $data->email
