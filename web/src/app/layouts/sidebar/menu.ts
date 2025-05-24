@@ -156,19 +156,11 @@ export const MENU: MenuItem[] = [
     },
 
     {
-<<<<<<< HEAD
-        id: 19,
-        label: 'Suivi des Paiements',
-        icon: 'bx bx-wallet',
-        link: '/scolar/fees-balance-followup',
-        rolesAllowed: ['school_admin', 'admin', 'super_admin', 'accountant', 'treasurer']
-=======
         id: 8,
         label: 'Suivi des Paiements',
         icon: 'bx bx-wallet',
         link: '/scolar/fees-balance-followup',
         rolesAllowed: ['admin', 'super_admin']
->>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
 
     },
 ];

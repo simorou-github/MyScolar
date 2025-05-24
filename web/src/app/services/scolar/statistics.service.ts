@@ -19,11 +19,6 @@ export class StatisticsService {
   getYearPaymentPerMonth(body){
     return this.http.post(environment.apiUrl + '/scolar/statistic/year-payment-per-month', body);
   }
-<<<<<<< HEAD
-
-  getFeesBalanceFollowupData(body){
-    return this.http.post(environment.apiUrl + '/manage-fees/get-fees-balance-follow-up-data', body);
-=======
   
   getFeesBalanceFollowupData(body){
     return this.http.get(environment.apiUrl + '/manage-fees/get-fees-balance-follow-up-data', body);
@@ -31,6 +26,5 @@ export class StatisticsService {
   
   exportJournal(body){
     return this.http.post(environment.apiUrl + '/manage-fees/generate-balance/by-type-file', body, this.blobHttpOptions);
->>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
   }
 }
