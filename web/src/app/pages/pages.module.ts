@@ -69,6 +69,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { SchoolUserManagementComponent } from './school-user-management/school-user-management.component';
 import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
+import { NgxCaptureService } from 'ngx-capture';
 
 @NgModule({
   declarations: [CalendarComponent, ChatComponent, FilemanagerComponent, 
@@ -115,7 +116,8 @@ import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup
     NgxUiLoaderModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
-    })
+    }),
+    NgxCaptureService
   ],
   providers: [DatePipe]
 })

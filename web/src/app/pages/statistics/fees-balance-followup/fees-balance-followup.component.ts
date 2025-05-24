@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ClasseService } from 'src/app/services/classe.service';
 import { ParameterService } from 'src/app/services/parameter.service';
@@ -6,6 +6,8 @@ import { SchoolService } from 'src/app/services/school.service';
 import { StatisticsService } from 'src/app/services/scolar/statistics.service';
 import { TokenService } from 'src/app/shared/authentication/token.service';
 import { FeesBalanceSearchModel } from './fees-balance-search.model';
+import { NgxCaptureService } from 'ngx-capture';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-fees-balance-followup',
@@ -13,12 +15,17 @@ import { FeesBalanceSearchModel } from './fees-balance-search.model';
   styleUrls: ['./fees-balance-followup.component.scss']
 })
 export class FeesBalanceFollowupComponent {
-  breadCrumbItems: Array<{}>;  classes: []; academicyears: []; isFilter: boolean; isProcessing: boolean = false;
-  types_frais: []; schools: [any]; academicYear: string; schoolId: string;  p: number = 1;  feesBalanceDatas: [];
-  searchFeesBalanceParam: FeesBalanceSearchModel = {};  sum_fees: number;  sum_balance: number;
+  breadCrumbItems: Array<{}>; classes: []; academicyears: []; isFilter: boolean; isProcessing: boolean = false;
+  types_frais: []; schools: [any]; academicYear: string; schoolId: string; p: number = 1; feesBalanceDatas: [];
+  searchFeesBalanceParam: FeesBalanceSearchModel = {}; sum_fees: number; sum_balance: number;
+  isSchoolsList: boolean; img = ''; body = document.body;
+
+
+  @ViewChild('screen', { static: true }) screen: any;
 
   constructor(private schoolService: SchoolService, private toastr: ToastrService, private tokenService: TokenService,
-    private classeService: ClasseService, private parameterService: ParameterService, private scolarService: StatisticsService,) {
+     private captureService: NgxCaptureService,  private classeService: ClasseService, private parameterService: ParameterService, 
+     private scolarService: StatisticsService,) {
 
   }
   ngOnInit(): void {
@@ -34,7 +41,7 @@ export class FeesBalanceFollowupComponent {
 
 
   //Get Data for Graphique des Paiements reçus
-  getFeesBalanceFollowupData(data) {    
+  getFeesBalanceFollowupData(data) {
     this.isProcessing = true;
     this.scolarService.getFeesBalanceFollowupData(data).subscribe(
       {
@@ -58,15 +65,15 @@ export class FeesBalanceFollowupComponent {
     this.isFilter = !this.isFilter;
   }
 
-  resetForm(){
-    this.searchFeesBalanceParam = {};    
+  resetForm() {
+    this.searchFeesBalanceParam = {};
     this.searchFeesBalanceParam.academic_year = this.tokenService.getAcademicYear;
     this.searchFeesBalanceParam.school_id = this.tokenService.getSchoolId;
   }
 
   getAllClasses(): void {
     this.isProcessing = true;
-    this.classeService.listClasseOfSchool({school_id: this.tokenService.getSchoolId}).subscribe(
+    this.classeService.listClasseOfSchool({ school_id: this.tokenService.getSchoolId }).subscribe(
       {
         next: (v: any) => {
           this.classes = v.data;
@@ -87,6 +94,18 @@ export class FeesBalanceFollowupComponent {
 
   }
 
+  getCapture() {
+    this.captureService
+      .getImage(this.body, true)
+      .pipe(
+        tap((img: string) => {
+          this.img = img;
+          console.log(img);
+        }),
+        tap((img) => this.captureService.downloadImage(img))
+      )
+      .subscribe();
+  }
 
   listAccademicYear() {
     this.parameterService.listAccademicYear({}).subscribe({
@@ -95,7 +114,6 @@ export class FeesBalanceFollowupComponent {
       }
     });
   }
-
 
   getAllTypesFrais(): void {
     this.isProcessing = true;
@@ -117,11 +135,12 @@ export class FeesBalanceFollowupComponent {
 
   getAllSchools(): void {
     this.isProcessing = true;
-    this.schoolService.getAllSchool({id: this.tokenService.getSchoolId}).subscribe(
+    this.schoolService.getAllSchool({ id: this.tokenService.getSchoolId }).subscribe(
       {
         next: (v: any) => {
           this.schools = v.data;
           this.isProcessing = false;
+          this.isSchoolsList = Array.isArray(this.schools);
         },
         error: (e) => {
           console.error(e);
