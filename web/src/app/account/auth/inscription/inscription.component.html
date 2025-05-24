@@ -82,7 +82,7 @@
                                                     class="text-danger">*</span></label>
                                             <span class="bx bx-info-circle pull-right"
                                                 title="Saisir le code reçu dans votre email"></span>
-                                            <input type="text" class="form-control" formControlName="code_verification"
+                                            <input type="text" class="form-control" formControlName="code_verification" style="text-transform: uppercase"
                                                 id="code_verification" placeholder="Ex: E5D58D" (keyup)="verifyCode()" (cut)="DisableCut($event)" (copy)="DisableCopy($event)" (paste)="DisablePaste($event)">
                                             <button *ngIf="isEmailSent" type="button" style="margin-top: -22px;"
                                                     (click)="resendEmailVerificationCode()" class="btn text-warning"> <b class="h5">Renvoyer

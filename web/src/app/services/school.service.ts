@@ -9,6 +9,10 @@ export class SchoolService {
 
   constructor(private http: HttpClient) { }
 
+  blobHttpOptions = {
+      responseType: 'blob' as 'json'
+    };
+
   createSchoolClasse(body){
     return this.http.post(environment.apiUrl + '/school/create-classe', body);
   }
@@ -94,6 +98,10 @@ export class SchoolService {
 
   getYearPaymentPerMonth(body){
     return this.http.post(environment.apiUrl + '/school/statistic/year-payment-per-month', body);
+  }
+
+  downloadTemplate(){
+    return this.http.get(environment.apiUrl + '/download-template', this.blobHttpOptions);
   }
 
 }

@@ -62,11 +62,11 @@
                 id="projectList-table">
                 <thead class="table-light">
                   <tr>
-                    <th scope="col" style="width: 50px">#</th>
-                    <th scope="col">Libellé frais</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Statut</th>
-                    <th scope="col" class="text-center">Action</th>
+                    <th scope="col" style="width: 3%">#</th>
+                    <th scope="col" style="width: 45%">Libellé frais</th>
+                    <th scope="col" style="width: 18%">Date</th>
+                    <th scope="col" style="width: 10%">Statut</th>
+                    <th scope="col" style="width: 20%">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,8 +87,17 @@
                         'Désactivé'}}</span>
                     </td>
 
+                    <td>
+                      <div class="d-flex gap-3">
+                      <a href="javascript:void(0);" tooltip="Modifier" class="text-warning" (click)="openCreateModal(feesTypeModal, 'Modification de frais', 'Modifier', typefee)"><i class="mdi mdi-pencil font-size-18"></i></a>
+                      <a href="javascript:void(0);" tooltip="{{typefee.status ? 'Désactiver frais' : 'Activer frais'}}" class="text-danger" (click)="ConfirmDeleteModal(feesDeleteModal, typefee)"><i class="{{typefee.status ? 'mdi mdi-lock-plus-outline' : 'mdi mdi-lock-open-remove-outline'}} font-size-7 {{typefee.status ? 'text-danger' : 'text-success'}} align-middle me-2"></i></a>
+                      <a href="javascript:void(0);" tooltip="Affecter frais" class="text-primary" [disabled]="!typefee.status" (click)="magerFees(typefee)"><i class="mdi mdi-connection text-primary font-size-18 align-middle me-2"></i></a>
+                      <a href="javascript:void(0);" tooltip="Détails" class="text-primary" [disabled]="!typefee.status" (click)="displayDetailsModal(detailsModal, typefee)"><i class="mdi mdi-information-outline font-size-18 text-primary align-middle me-2"></i></a>
+                    </div>
+                    </td>
 
-                    <td class="text-center">
+
+                    <!-- <td class="text-center">
                       <div class="dropdown" dropdown placement="bottom-right">
                           <a href="javascript: void(0);" class="dropdown-toggle card-drop"
                               dropdownToggle>
@@ -107,7 +116,7 @@
                           
                             </div>
                       </div>
-                  </td>
+                  </td> -->
 
                   </tr>
                 </tbody>
@@ -159,7 +168,7 @@
     <div class="modal-footer">
       <div class="hstack gap-2 justify-content-end">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeModal()">Fermer</button>
-        <button type="submit" class="btn btn-warning" id="add-btn"
+        <button type="submit" class="btn btn-success" id="add-btn"
           [disabled]="!feesTypeForm.valid">{{btnFormTitle}}</button>
       </div>
     </div>

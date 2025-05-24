@@ -93,7 +93,7 @@ class SchoolInscriptionController extends Controller
     {
         //Validate request
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
+            'email' => 'required|email',
             'password' => 'required',
             'password_conf' => 'required',
             'first_name' => 'required',
@@ -111,8 +111,7 @@ class SchoolInscriptionController extends Controller
             return response()->json([
                 'data' => null,
                 'message' => 'Veuillez remplir correctement tous les champs obligatoire (*).',
-                'status' => 500
-            ]);
+            ], 500);
         }
 
         //Verify if password is confirmed
@@ -120,15 +119,19 @@ class SchoolInscriptionController extends Controller
             return response()->json([
                 'data' => null,
                 'message' => 'Les mots de passes ne correspondent pas.',
-                'status' => 500
-            ]);
+            ], 500);
         }
 
         //Validate password complexity
         $validator_pw = Validator::make($request->all(), [
             'password' => [
-                'required', 'string', 'min:8', 'regex:/[a-z]/',
-                'regex:/[A-Z]/', 'regex:/[0-9]/', 'regex:/[@$!%*#?&]/'
+                'required',
+                'string',
+                'min:8',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*#?&]/'
             ],
         ]);
 
@@ -136,8 +139,7 @@ class SchoolInscriptionController extends Controller
             return response()->json([
                 'data' => null,
                 'message' => 'Veuillez utiliser un mot de passe fort (8 Caractères au moins, Chiffres, Majuscules, Minuscules, Caractères spéciaux comme @-!-#).',
-                'status' => 500
-            ]);
+            ], 500);
         }
 
         try {
@@ -150,8 +152,7 @@ class SchoolInscriptionController extends Controller
                 return response()->json([
                     'data' => [],
                     'message' => 'Cette adresse mail est déjà utilisée par une école.',
-                    'status' => 300
-                ]);
+                ], 300);
             }
 
             DB::beginTransaction();
@@ -168,8 +169,7 @@ class SchoolInscriptionController extends Controller
                     return response()->json([
                         'data' => [],
                         'message' => 'Seul le format PDF est accepté.',
-                        'status' => 500
-                    ]);
+                    ], 500);
                 }
 
                 $document   = date('y-m-d-Hms') . '_' . str_replace(' ', '_', $request->social_reason) . '.' . $extension;
@@ -211,8 +211,7 @@ class SchoolInscriptionController extends Controller
                         'data' => [],
                         'message' => 'Les données d\'inscription ont été mises à jour avec succès. 
                         Le Groupe Scolar Plus traitera votre inscription.',
-                        'status' => 200
-                    ]);
+                    ], 200);
                 }
             }
 
@@ -237,16 +236,14 @@ class SchoolInscriptionController extends Controller
                     return response()->json([
                         'data' => [],
                         'message' => 'Inscription enregistrée avec succès. Le Groupe Scolar Plus traitera votre inscription.',
-                        'status' => 200
-                    ]);
+                    ], 200);
                 }
             } else {
                 DB::rollBack();
                 return response()->json([
                     'data' => [],
                     'message' => 'Inscription parent non encore disponible.',
-                    'status' => 500
-                ]);
+                ], 500);
             }
         } catch (Exception $ex) {
             DB::rollBack();
@@ -254,8 +251,7 @@ class SchoolInscriptionController extends Controller
             return response()->json([
                 'data' => [],
                 'message' => 'Une erreur interne est survenue.',
-                'status' => 500
-            ]);
+            ], 500);
         }
     }
 
@@ -330,8 +326,11 @@ class SchoolInscriptionController extends Controller
                         $data->email
                     ],
                     [
-                        'school' => $data->social_reason, 'email' => $data->email, 'status' => $request->status,
-                        'reason' => $request->reject_reason, 'school_id' => $data->id
+                        'school' => $data->social_reason,
+                        'email' => $data->email,
+                        'status' => $request->status,
+                        'reason' => $request->reject_reason,
+                        'school_id' => $data->id
                     ],
                     'emails.validateInscription',
                     ($request->status == 'VALIDE') ? 'Validation Inscription' : 'Rejet Inscription',
@@ -396,7 +395,7 @@ class SchoolInscriptionController extends Controller
                     sendMail(
                         [
                             env("ADMIN_MAIL_1"),
-                           // env("ADMIN_MAIL_2"),
+                            // env("ADMIN_MAIL_2"),
                             $request->email
                         ],
                         ['code' => $code],

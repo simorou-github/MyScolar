@@ -51,7 +51,10 @@ const routes: Routes = [
   { path: 'scolar/manage-permission', component: ManagePermissionComponent },
   { path: 'scolar/statistics', component: StatisticsComponent },
   { path: 'scolar/fees-balance-followup', component: FeesBalanceFollowupComponent },
+<<<<<<< HEAD
   
+=======
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
 
 
   ];

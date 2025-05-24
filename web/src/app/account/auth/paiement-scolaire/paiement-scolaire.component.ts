@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { ManageFeesService } from 'src/app/services/manage-fees.service';
 import { PaiementScolaireService } from 'src/app/services/paiement-scolaire.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-paiement-scolaire',
@@ -16,7 +17,7 @@ export class PaiementScolaireComponent {
   curr_fees: any; academic_years: any; currentAcademicYaer: any; academic_year = ''; balanceFees: any; student: any; student_classe: any;
   operators: any; selectedBalancesRows: Array<{ id: string, balance: number, montant: number, type_fees_id: string }> = [];
   totalFees: number; student_param: any; selected_fees: any[]; totalBalances: number; paymentForm!: FormGroup; batchPaymentForm!: FormGroup;
-  p: number = 1; 
+  p: number = 1; path_part = environment.domainUrl+'/storage/';
   constructor(private authService: AuthService, private modalService: BsModalService, private paiementScolaireService: PaiementScolaireService,
     private toastr: ToastrService, private managerFeesService: ManageFeesService, private fb: FormBuilder,) {
 

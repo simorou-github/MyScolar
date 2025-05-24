@@ -115,11 +115,19 @@ Route::group(['prefix' => 'manage-fees'], function () {
     Route::post('get-student-balance', [FeesManageController::class, 'getStudentFeesBalance']);
     Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
     Route::post('get-fees-details-data', [FeesManageController::class, 'getFeesDetails']);
+<<<<<<< HEAD
     Route::post('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
+=======
+    Route::get('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
+    Route::get('get-fees-balance-data-export',[FeesManageController::class, 'getExportOfFeesBalance']);    
+
+    Route::post('generate-balance/by-type-file', [FeesManageController::class, 'getExportOfFeesBalance']);
+
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
 });
 
 // All about classe of the system
-Route::group(['prefix' => 'classe'], function () {
+Route::middleware(['auth:api'])->group(['prefix' => 'classe'], function () {
     Route::get('list', [ClasseController::class, 'list']);
     Route::post('create', [ClasseController::class, 'create']);
     Route::post('delete', [ClasseController::class, 'delete']);

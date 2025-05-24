@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Calculation\Logical\Conditional;
+use Illuminate\Support\Facades\DB;
 
 function generateStudentRegistration($school_country_code){
     $regis = "";
@@ -29,6 +30,7 @@ function getScolarPlusRate(){
     return 0;
 }
 
+
 //Get Active Academic year
 function getActiveAcademicYear()
 {
@@ -37,6 +39,38 @@ function getActiveAcademicYear()
     }
     return $academic_year->academic_year;
 }
+
+//Get Active Academic year
+function getFeesBalanceData(Array $param)
+{
+    if (!$param) {
+        return [];
+    } else {
+        $balanceFeesData = DB::table('balance_fees as b')
+            ->leftJoin('type_fees as tf', 'b.type_fees_id', '=', 'tf.id')
+            ->leftJoin('schools as s', 'b.school_id', '=', 's.id')
+            ->leftJoin('school_classes as sc', 'b.classe_id', '=', 'sc.id')
+            ->leftJoin('students as st', 'b.student_id', '=', 'st.id')
+            ->leftJoin('classes as c', 'sc.classe_id', '=', 'c.id')
+            ->leftJoin('groupes as g', 'sc.groupe_id', '=', 'g.id')
+            ->where($param)
+            ->select('b.*',
+                's.ifu as ifu', 's.social_reason as social_reason', 's.email as school_email', 's.owner as school_owner', 's.tel as school_tel', 's.location as school_location', 
+                'st.code_scolar', 'st.code as student_code', 'st.last_name as student_last_name', 'st.first_name as student_first_name','st.sex as student_sex', 'st.matricule as student_matricule', 'st.email as student_email', 'st.birthday as student_birthday', 'st.phone as student_phone',
+                'c.code as classe_code', 'c.label as classe_label', 
+                'g.code as groupe_code', 'g.description as groupe_label',
+                'tf.label as type_fees_label')
+            ->orderBy('st.code_scolar')->orderBy('b.fees_label')
+            ->get();
+        return [
+            'data' => $balanceFeesData,
+            'sum_fees' => $balanceFeesData->sum('fees_amount'),
+            'sum_balance' => $balanceFeesData->sum('balance'),
+            'nbre_fees' => $balanceFeesData->count(),
+        ];
+    }
+}
+
 
 // Generate id for each table in database
 function generateDBTableId($length, $model_name): string

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <div class="container-fluid mt-2">
+=======
+<div class="container-fluid mt-2" #screen>
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
     <app-page-title title="SUIVI DES SOLDES A COLLECTER" [breadcrumbItems]="breadCrumbItems"></app-page-title>
     <div class="row">
         <div class="col-lg-12">
@@ -46,7 +50,11 @@
                                         <div>
                                             <p class="text-muted text-truncate mb-2">Efficacité</p>
                                             <h6 class="mb-0">
+<<<<<<< HEAD
                                                 <span class="{{((sum_fees-sum_balance)/sum_fees)<=0.8 ? 'text-danger' : 'text-success'}}">{{(((sum_fees-sum_balance)/sum_fees)*100) | number}}</span>%</h6>
+=======
+                                                <span class="{{((sum_fees-sum_balance)/sum_fees)<=0.8 ? 'text-danger' : 'text-success'}}">{{(((sum_fees-sum_balance)/sum_fees)*100) | number: '1.0-0' }}%</span></h6>
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
 
                                         </div>
                                     </div>
@@ -62,9 +70,15 @@
                                         <i class="bx bxs-cog align-middle me-1"></i> Exporter
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+<<<<<<< HEAD
                                         <a class="dropdown-item" href="javascript: void(0);"> <i class="fa fa-excel text-success"></i> En Excel</a>
                                         <a class="dropdown-item" href="javascript: void(0);"> <i class="fa fa-plus text-danger"></i> En PDF</a>
                                         <a class="dropdown-item" href="javascript: void(0);"> <i class="fa fa-screanshot text-secondary"></i> En Capture Ecran</a>
+=======
+                                        <a class="dropdown-item" href="javascript: void(0);" (click)="exportJournal()"> <i class="fa fa-file-excel text-success"></i> En Excel</a>
+                                        <a class="dropdown-item" href="javascript: void(0);" (click)="downloadJournal()"> <i class="fa fa-file-pdf text-danger"></i> En PDF</a>
+                                        <a class="dropdown-item" href="javascript: void(0);" (click)="getCapture()"> <i class="fa fa-camera text-secondary"></i> En Capture Ecran</a>
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
                                     </div>
                                 </div>
                             </div>
@@ -75,6 +89,12 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+    <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+        [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+        
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -123,7 +143,11 @@
                                 </select>
                             </div>
 
+<<<<<<< HEAD
                             <div class="col-lg-3">
+=======
+                            <div class="col-lg-3" *ngIf="isSchoolsList">
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
                                 <label for="school_id">Ecoles</label>
                                 <select class="form-control" name="school_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.school_id"
@@ -134,6 +158,20 @@
                                     </option>
                                 </select>
                             </div>
+<<<<<<< HEAD
+=======
+                            <div class="col-lg-3" *ngIf="!isSchoolsList">
+                                <label for="school_id">Ecoles</label>
+                                <select class="form-control" name="school_id" ngModel
+                                    [(ngModel)]="searchFeesBalanceParam.school_id"
+                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    <option value="">Tous</option>
+                                    <option value="{{schools.id}}">
+                                        {{schools.social_reason}}
+                                    </option>
+                                </select>
+                            </div>
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
 
                             <div class="col-lg-3">
                                 <label for="date_debut">Classe</label>
@@ -174,9 +212,15 @@
             </div>
             <div class="table-responsive">
                 <table
+<<<<<<< HEAD
                     class="table table-striped project-list-table align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
                     id="projectList-table">
                     <thead class="table-light">
+=======
+                    class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                    id="projectList-table">
+                    <thead>
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Matricule</th>
@@ -192,8 +236,12 @@
                     </thead>
                     <tbody>
                         <tr *ngIf="feesBalanceDatas?.length == 0" class="text-center">
+<<<<<<< HEAD
                             <td colspan="10">Aucune donnée trouvée
                                 !</td>
+=======
+                            <td colspan="10">Aucune donnée trouvée !</td>
+>>>>>>> ef9072aedbdbefca4b8b1603a39d91b197849f09
                         </tr>
                         <ng-container *ngIf="feesBalanceDatas?.length > 0">
                             <tr

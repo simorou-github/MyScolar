@@ -218,7 +218,8 @@
                             <input type="radio" id="{{i}}" required class="card-radio-input" formControlName="operator"
                                 value="{{operator.id}}">
                             <div class="card-radio">
-                                <i class="mdi mdi-currency-ils font-size-24 text-warning align-middle me-2"></i>
+                                <!-- <i class="mdi mdi-currency-ils font-size-24 text-warning align-middle me-2"></i> -->
+                                <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="50" height="30"> &nbsp;&nbsp;
                                 <span>{{operator.name}} {{operator.country.name}}</span>
                             </div>
                         </label>

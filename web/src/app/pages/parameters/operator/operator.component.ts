@@ -17,11 +17,11 @@ export class OperatorComponent implements OnInit {
 
   p: number = 1; schoolClasses: any; operatorForm!: FormGroup; modalRef?: BsModalRef; searchForm!: FormGroup;
   message: any; labelFormTitle: string; btnFormTitle: string; operatorId: any;
-  operatorName: any; isSearchForm: boolean = false;
+  operatorName: any; isSearchForm: boolean = false; selectedFile: File | null = null;
 
-  constructor(private fb: FormBuilder, private schoolInscriptionService: SchoolInscriptionService, private ngxLoader: NgxUiLoaderService, 
-    private parameterService: ParameterService, private toastr: ToastrService, private modalService: BsModalService){
-  
+  constructor(private fb: FormBuilder, private schoolInscriptionService: SchoolInscriptionService, private ngxLoader: NgxUiLoaderService,
+    private parameterService: ParameterService, private toastr: ToastrService, private modalService: BsModalService) {
+
   }
 
   ngOnInit() {
@@ -40,10 +40,14 @@ export class OperatorComponent implements OnInit {
     this.getAllOperators();
   }
 
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
   // Fonction pour afficher ou cacher le formulaire de recherche avancée
   displaySearchForm(status: boolean) {
     this.isSearchForm = status;
-    if(status === false){
+    if (status === false) {
       this.searchForm.reset();
       this.getAllOperators();
     }
@@ -68,11 +72,17 @@ export class OperatorComponent implements OnInit {
     );
   }
 
-  
+
 
   create() {
     this.isProcessing = true;
-    this.parameterService.createOperator(this.operatorForm.value).subscribe(
+    const formData = new FormData();
+    formData.append('name', this.operatorForm.get('name')?.value);
+    formData.append('country_id', this.operatorForm.get('country_id')?.value);
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+    this.parameterService.createOperator(formData).subscribe(
       {
         next: (v: any) => {
           this.message = v.message;
@@ -82,7 +92,7 @@ export class OperatorComponent implements OnInit {
             this.operatorForm.reset();
             this.getAllOperators();
             this.isProcessing = false;
-            
+
           } else {
             this.showError(this.message);
             this.isProcessing = false;
@@ -163,7 +173,7 @@ export class OperatorComponent implements OnInit {
       {
         next: (v: any) => {
           if (v.status == 200) {
-            this.showSuccess(v.message);            
+            this.showSuccess(v.message);
             this.getAllOperators();
             this.modalService.hide();
           } else {
@@ -195,7 +205,7 @@ export class OperatorComponent implements OnInit {
     this.operatorForm.reset();
   }
 
-  closeModalDeleting(){
+  closeModalDeleting() {
     this.modalService.hide();
   }
 
