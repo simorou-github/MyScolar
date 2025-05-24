@@ -11,12 +11,20 @@ use App\Models\SchoolClasse;
 use Illuminate\Http\Request;
 use App\Models\SchoolClasseFees;
 use App\Models\SchoolClasseFeesDetails;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\Student;
 use App\Models\StudentClasse;
 use Carbon\Carbon;
 use Exception;
+use PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
+
+
+use App\Exports\BalanceOfFees;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FeesManageController extends Controller
 {
@@ -378,7 +386,8 @@ class FeesManageController extends Controller
         }
     }
 
-    //Suivi des paiements
+    
+    //Suivi des soldes des paiements
     function getFeesBalanceFollowupData(Request $request)
     {
         try {
@@ -428,6 +437,57 @@ class FeesManageController extends Controller
                 'sum_balance' => $balanceFees->sum('balance'),
                 'message' => 'Balance'
             ],200);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'data' => [],
+                'message' => 'Une erreur interne est survenue',
+            ], 500);
+        }
+    }
+
+
+    //Export to Soldes des Paiements PDF/XLS
+    function getExportOfFeesBalance(Request $request)
+    {
+        try {
+            $params = [];
+            if (!$request->academic_year) {
+                $params[] = ['b.academic_year', '=', getActiveAcademicYear()];
+            }
+            if ($request->id) {
+                $params[] = ['b.id', '=', $request->id];
+            }
+            if ($request->fees_label) {
+                $params[] = ['b.fees_label', 'like', '%'.$request->fees_label.'%'];
+            }
+            if ($request->student_id) {
+                $params[] = ['b.student_id', '=', $request->student_id];
+            }
+            if ($request->classe_id) {
+                $params[] = ['b.classe_id', '=', $request->classe_id];
+            }
+            if ($request->type_fees_id) {
+                $params[] = ['b.type_fees_id', '=', $request->type_fees_id];
+            }
+            if ($request->school_id) {
+                $params[] = ['b.school_id', '=', $request->school_id];
+            }
+
+            if($request->type == 'xls'){
+                return FacadesExcel::download(new BalanceOfFees($params), "SoldesFrais_".date('Ymd').date('Hi').".xlsx");
+            } else {
+                $balanceFeesData = getFeesBalanceData($params);
+                $vewData = [
+                    'balanceFeesData' => $balanceFeesData['data'],
+                    'sum_fees' => $balanceFeesData['sum_fees'],
+                    'sum_balance' => $balanceFeesData['sum_balance'],
+                    'nbre_fees' => $balanceFeesData['nbre_fees']
+                ];
+                $pdf = PDF::loadView("payment.fees-balance-export", $vewData)->setPaper('a4', 'landscape');
+                return $pdf->download("SoldesFrais_".date('Ymd').date('Hi').".pdf");
+            }   
+
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json([

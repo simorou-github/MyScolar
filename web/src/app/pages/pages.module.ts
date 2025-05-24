@@ -68,8 +68,13 @@ import { ManagePermissionComponent } from './manage-permission/manage-permission
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { SchoolUserManagementComponent } from './school-user-management/school-user-management.component';
+<<<<<<< HEAD
 import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
 import { NgxCaptureService } from 'ngx-capture';
+=======
+import { NgxCaptureModule } from 'ngx-capture';
+import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
+>>>>>>> 4bc17fd19b064b462d55d6d26d599ee7079a64bb
 
 @NgModule({
   declarations: [CalendarComponent, ChatComponent, FilemanagerComponent, 
@@ -117,7 +122,11 @@ import { NgxCaptureService } from 'ngx-capture';
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     }),
+<<<<<<< HEAD
     NgxCaptureService
+=======
+    NgxCaptureModule
+>>>>>>> 4bc17fd19b064b462d55d6d26d599ee7079a64bb
   ],
   providers: [DatePipe]
 })
