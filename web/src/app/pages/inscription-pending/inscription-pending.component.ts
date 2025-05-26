@@ -95,7 +95,7 @@ export class InscriptionPendingComponent implements OnInit{
                 if(status === 'REJETE'){
                   this.rejectModalRef.hide();
                 }
-                this.getListInscriptionPending();
+                window.location.reload();
               } else {
                 this.isProcessing = false;
                 this.ngxLoader.stopLoader('loader-spin');

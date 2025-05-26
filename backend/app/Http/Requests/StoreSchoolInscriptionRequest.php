@@ -35,7 +35,7 @@ class StoreSchoolInscriptionRequest extends FormRequest
             'tel' => 'required',
             'phone_code' => 'required',
             'type' => 'required|string',
-            'document' => 'string'
+            'document' => 'required|max:10240'
         ];
     }
 

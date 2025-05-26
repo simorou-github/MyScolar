@@ -116,7 +116,7 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             '*.email'    => 'nullable|email',
             '*.date_de_naissance' => 'required|before:today|after:1900-01-01',
             '*.sexe'     => 'required|in:M,F',
-            '*.téléphone'     => 'nullable|numeric|min:8|max:20',
+            '*.telephone'     => 'nullable|numeric|min:8|max:20',
         ];
     }
 

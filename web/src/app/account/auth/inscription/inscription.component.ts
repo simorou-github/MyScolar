@@ -12,6 +12,7 @@ import { PasswordValidator } from '../../../validators/password.validator';
 import { SchoolInscriptionService } from 'src/app/services/school-inscription.service';
 import { SchoolService } from 'src/app/services/school.service';
 import { School } from 'src/app/interfaces/school';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-inscription',
@@ -27,7 +28,7 @@ export class InscriptionComponent {
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
     private inscriptionService: InscriptionService, private toastr: ToastrService,
-    private school_inscription_service: SchoolInscriptionService, private school_service: SchoolService) { }
+    private school_inscription_service: SchoolInscriptionService, private school_service: SchoolService, private ngxLoader: NgxUiLoaderService,) { }
   registerForm!: FormGroup; codeLenght: number = 0; loading: boolean = false; isProcessing: boolean = false;
   submitted: any = false; error: any = ''; returnUrl: string; school: School;
   // bread crumb items
@@ -66,7 +67,7 @@ export class InscriptionComponent {
     this.route.queryParams.subscribe(params => {
       if (params['sci']) {
         this.schoolId = params['sci'];
-        this.loading = true;
+        this.ngxLoader.startLoader('loader-spin');
         this.school_service.getSchoolDetail({ id: this.schoolId }).subscribe({
           next: (v: any) => {
             this.message = v.message;
@@ -79,11 +80,11 @@ export class InscriptionComponent {
               type: "ecole", code_verification: "123456"
             });
             this.getCityByCountry(this.registerForm.get('country_id').value);
-            this.loading = false;
+            this.ngxLoader.stopLoader('loader-spin');
 
           },
           error: (e) => {
-            this.loading = false;
+            this.ngxLoader.stopLoader('loader-spin');
             this.showError(this.message);
           }
         });
@@ -111,20 +112,20 @@ export class InscriptionComponent {
 
   sendEmailVerificationCode() {
     this.isProcessing = true;
-    this.loading = true;
+    this.ngxLoader.startLoader('loader-spin');
     this.inscriptionService.getConfirmationCode({ email: this.registerForm.value.email }).subscribe(
       {
         next: (v: any) => {
           this.message = v.message;
           this.isEmailSent = true;
-          this.loading = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.isProcessing = false;
           this.showSuccess(this.message);
         },
         error: (e) => {
           //console.error(e);
           this.isEmailSent = false;
-          this.loading = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.isProcessing = false;
           this.showError(e.error?.message);
         }
@@ -136,14 +137,14 @@ export class InscriptionComponent {
     if (code.length == 6) {
       this.registerForm.controls['code_verification'].disable();
       this.isProcessing = true;
-      this.loading = true;
+      this.ngxLoader.startLoader('loader-spin');
       this.inscriptionService.verificationCode({
         'email': this.registerForm.get('email').value,
         'code': code
       }).subscribe({
         next: (v: any) => {
           this.message = v.message;
-          this.loading = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.isProcessing = false;
           this.showSuccess(this.message);
           this.isEmailValid = true;
@@ -151,7 +152,7 @@ export class InscriptionComponent {
 
         error: (e) => {
           //console.error(e);
-          this.loading = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.registerForm.patchValue({ code_verification: '' });
           this.registerForm.controls['code_verification'].enable();
           this.isProcessing = false;
@@ -167,17 +168,17 @@ export class InscriptionComponent {
 
   resendEmailVerificationCode() {
     this.isProcessing = true;
-    this.loading = true;
+    this.ngxLoader.startLoader('loader-spin');
     this.inscriptionService.getNewConfirmationCode({ email: this.registerForm.get('email').value }).subscribe({
       next: (v: any) => {
         this.message = v.message;
-        this.loading = false;
+        this.ngxLoader.stopLoader('loader-spin');
         this.isProcessing = false;
         this.showSuccess(this.message);
       },
 
       error: (e) => {
-        this.loading = false;
+        this.ngxLoader.stopLoader('loader-spin');
         this.isProcessing = false;
         this.showError(e.error?.message);
       },
@@ -198,7 +199,7 @@ export class InscriptionComponent {
     // const formData = new FormData();
     // formData.append('document', this.file);
     this.isProcessing = true;
-    this.loading = true;
+    this.ngxLoader.startLoader('loader-spin');
     var myFormData = new FormData();
     myFormData.append('document', this.filedata);
     myFormData.append('email', this.registerForm.get('email').value);
@@ -219,11 +220,11 @@ export class InscriptionComponent {
     this.submitted = true;
     this.isProcessing = true;
     this.message = "";
-
+    console.log(myFormData);
     this.inscriptionService.createInscription(myFormData).subscribe({
       next: (v: any) => {
         this.message = v.message;
-        this.loading = false;
+        this.ngxLoader.stopLoader('loader-spin');
         this.isProcessing = false;
         this.showSuccess(this.message);
         setTimeout(() => {
@@ -234,7 +235,8 @@ export class InscriptionComponent {
       error: (e) => {
         console.error(e);
         this.isProcessing = false;
-        this.showError(e.error?.message);
+        this.showError(e.error?.error);
+        this.ngxLoader.stopLoader('loader-spin');
       }
     });
   }
@@ -281,14 +283,17 @@ export class InscriptionComponent {
 
   // Get countries list
   listCountries() {
+    this.ngxLoader.startLoader('loader-spin');
     this.school_inscription_service.countries().subscribe(
       {
         next: (v: any) => {
           this.countries = v.data;
+          this.ngxLoader.stopLoader('loader-spin');
         },
 
         error: (e) => {
           console.error(e);
+          this.ngxLoader.stopLoader('loader-spin');
         },
 
         complete: () => {
@@ -300,14 +305,17 @@ export class InscriptionComponent {
 
   // Get cities list
   listCities() {
+    this.ngxLoader.startLoader('loader-spin');
     this.school_inscription_service.cities().subscribe(
       {
         next: (v: any) => {
           this.cities = v.data;
+          this.ngxLoader.stopLoader('loader-spin');
         },
 
         error: (e) => {
           console.error(e);
+          this.ngxLoader.stopLoader('loader-spin');
         },
 
         complete: () => {

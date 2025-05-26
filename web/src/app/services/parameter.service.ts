@@ -54,4 +54,7 @@ export class ParameterService {
     return this.http.get(environment.apiUrl + '/parameter/distinct-years');
   }
 
+  getInscriptionPushNotification(body) {
+  	return this.http.get(environment.apiUrl + '/notifications/inscription', body);
+  }
 }

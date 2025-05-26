@@ -24,6 +24,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ScolarFaqComponent } from './scolar-faq/scolar-faq.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { CustomResetPasswordComponent } from './custom-reset-password/custom-reset-password.component';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 @NgModule({
   declarations: [LoginComponent, SignupComponent, PasswordresetComponent, Register2Component, Recoverpwd2Component, InscriptionComponent, PaiementScolaireComponent, ScolarFaqComponent, CustomResetPasswordComponent],
@@ -42,7 +43,7 @@ import { CustomResetPasswordComponent } from './custom-reset-password/custom-res
     SharedModule,
     PaginationModule.forRoot(),    
     NgxPaginationModule,
-
+    NgxUiLoaderModule,
     TabsModule.forRoot(),
   ],
   providers: [provideNgxMask()]

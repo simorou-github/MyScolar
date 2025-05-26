@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AdminSpace\MTNPaymentController;
 use App\Http\Controllers\AdminSpace\ParameterController;
+use App\Http\Controllers\AdminSpace\PermissionController;
+use App\Http\Controllers\AdminSpace\RoleController;
+use App\Http\Controllers\AdminSpace\ScolarController;
 use App\Http\Controllers\Authentication\AuthController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PushNotification\PushNotificationController;
+use App\Http\Controllers\SchoolSpace\AcademicYearController;
 use App\Http\Controllers\SchoolSpace\CityController;
 use App\Http\Controllers\SchoolSpace\ClasseController;
 use App\Http\Controllers\SchoolSpace\FeesManageController;
@@ -13,7 +15,6 @@ use App\Http\Controllers\SchoolSpace\PaymentController;
 use App\Http\Controllers\SchoolSpace\SchoolController;
 use App\Http\Controllers\SchoolSpace\SchoolDashboardController;
 use App\Http\Controllers\SchoolSpace\SchoolInscriptionController;
-use App\Http\Controllers\ScolarController;
 use App\Http\Controllers\UserContoller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -102,6 +103,11 @@ Route::prefix('classe')->middleware(['auth:api'])->group(function () {
     Route::post('create', [ClasseController::class, 'create']);
     Route::post('delete', [ClasseController::class, 'delete']);
     Route::post('search', [ClasseController::class, 'searchClasse']);
+});
+
+// All about push notifications of the system
+Route::prefix('notifications')->middleware(['auth:api'])->group(function () {
+    Route::get('inscription', [PushNotificationController::class, 'getInscriptionPushNotification']);
 });
 
 // // All parameters of the system

@@ -259,7 +259,7 @@
         </div> 
       </div> -->
 
-      <div class="dropdown d-none d-lg-inline-block ms-1">
+      <!-- <div class="dropdown d-none d-lg-inline-block ms-1">
         <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">
           <i class="bx bx-fullscreen" style="color: rgb(10, 10, 10) !important;"></i>
         </button>
@@ -270,23 +270,23 @@
           <i class="bx bx-bell bx-tada" style="color: rgb(17, 17, 17);"></i>
           <span class="badge bg-danger rounded-pill">{{inscriptions}}</span>
         </button>
-      </div>
-<!-- 
-      <div class="dropdown d-inline-block" dropdown>
+      </div> -->
+
+      <div class="dropdown d-inline-block" dropdown *ngIf="inscriptions > 0">
         <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
           dropdownToggle>
           <i class="bx bx-bell bx-tada"></i>
-          <span class="badge bg-danger rounded-pill">3</span>
+          <span class="badge bg-danger rounded-pill">{{inscriptions}}</span>
         </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" style="background-color: azure !important;"
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" style="background-color: rgb(235, 239, 239) !important;"
           aria-labelledby="page-header-notifications-dropdown" *dropdownMenu>
           <div class="p-3">
             <div class="row align-items-center">
               <div class="col">
-                <h6 class="m-0">{{ 'HEADER.NOTIFICATIONS.TITLE' | translate}} </h6>
+                <h6 class="m-0">Notifications</h6>
               </div>
               <div class="col-auto">
-                <a href="javascript: void(0);" class="small">{{ 'HEADER.NOTIFICATIONS.VIEW_ALL' | translate}}</a>
+                <a href="javascript: void(0);" class="small">Voir Tous</a>
               </div>
             </div>
           </div>
@@ -295,71 +295,21 @@
               <div class="d-flex">
                 <div class="avatar-xs me-3">
                   <span class="avatar-title bg-primary rounded-circle font-size-16">
-                    <i class="bx bx-cart"></i>
+                    <i class="bx bx-user-plus"></i>
                   </span>
                 </div>
                 <div class="flex-grow-1">
-                  <h6 class="mb-1">{{ 'HEADER.NOTIFICATIONS.FIRST.TITLE' | translate}}</h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ 'HEADER.NOTIFICATIONS.FIRST.TEXT' | translate}}</p>
-                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
-                      {{ 'HEADER.NOTIFICATIONS.FIRST.TIME' | translate}}</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href="javascript: void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <img src="assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{{ 'HEADER.NOTIFICATIONS.SECOND.TITLE' | translate}}</h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ 'HEADER.NOTIFICATIONS.SECOND.TEXT' | translate}}</p>
-                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i>{{ 'HEADER.NOTIFICATIONS.SECOND.TIME' |
-                      translate}}</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href="javascript: void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="avatar-xs me-3">
-                  <span class="avatar-title bg-success rounded-circle font-size-16">
-                    <i class="bx bx-badge-check"></i>
-                  </span>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{{ 'HEADER.NOTIFICATIONS.THIRD.TITLE' | translate}}</h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ 'HEADER.NOTIFICATIONS.THIRD.TEXT' | translate}}</p>
-                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i>{{ 'HEADER.NOTIFICATIONS.THIRD.TIME' |
-                      translate}}</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href="javascript: void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <img src="assets/images/users/avatar-4.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{{ 'HEADER.NOTIFICATIONS.FOUR.TITLE' | translate}}</h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ 'HEADER.NOTIFICATIONS.FOUR.TEXT' | translate}}</p>
-                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i>{{ 'HEADER.NOTIFICATIONS.FOUR.TIME' |
-                      translate}}</p>
+                  <h6 class="mb-1">Inscriptions en attentes</h6>
+                  <div class="font-size-13 text-muted">
+                    <p class="mb-1">{{ inscriptions }} nouvelle(s) inscription(s) en attente de validation.</p>
+                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> </p>
                   </div>
                 </div>
               </div>
             </a>
           </ngx-simplebar>
-          <div class="p-2 border-top d-grid">
-            <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
-              <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">{{
-                'HEADER.NOTIFICATIONS.LOAD_MORE' | translate}}</span>
-            </a>
-          </div>
         </div> 
-      </div>-->
+      </div>
       
       <div class="dropdown d-inline-block" dropdown style="color: rgb(12, 12, 12) !important;">
         <button type="button" class="btn header-item" dropdownToggle id="page-header-user-dropdown">

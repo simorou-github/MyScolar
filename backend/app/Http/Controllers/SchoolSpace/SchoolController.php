@@ -38,7 +38,7 @@ class SchoolController extends Controller
             $params[] = ['social_reason', 'like', '%' . $request->input('social_reason') . '%'];
         }
         if ($request->input('status')) {
-            $params[] = ['status', '=', $request->input('statut')];
+            $params[] = ['status', '=', $request->input('status')];
         }
         if ($request->input('ifu')) {
             $params[] = ['ifu', 'like', '%' . $request->input('ifu') . '%'];
@@ -51,11 +51,13 @@ class SchoolController extends Controller
         }
 
         try {
+            
             $data = School::with(['creater', 'updater', 'activater', 'approver', 'canceller', 'country'])
                 ->where($params)->whereNotIn('status', ['ANNULE', 'REJETE'])->orderBy('id', 'desc')->get();
             if ($request->input('id')) {
                 $data = $data->first();
             }
+            Log::info($data);
             return response()->json([
                 'data' => $data,
                 'nbr' => $data->count(),

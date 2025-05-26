@@ -84,9 +84,8 @@
                     </div> -->
 
                     <div>
-                        <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
                         <div class="table-responsive">
-                            <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
+                            <table 
                                 class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
                                 id="projectList-table">
                                 <thead class="table-light">
@@ -168,7 +167,7 @@
 <ng-template #paramsModal role="document" let-modal>
     <div class="modal-header">
         <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
-            <span class="sr-only pull-right">Loading...</span>
+            <span class="sr-only pull-right">Chargement en cours...</span>
         </div>
         <h5 class="modal-title" id="addOpertaorForm">{{labelFormTitle}}</h5>
         <button type="button" class="btn-close" (click)="closeModal()" data-dismiss="modal" aria-label="Close">
