@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d7edc7f98c92dd24212a341b89e0a5c",
+    "content-hash": "4c6b1f9ba5f24d7138b476dd1e7f5bb9",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -6695,6 +6695,67 @@
             "time": "2025-04-16T22:22:54+00:00"
         },
         {
+            "name": "v1p3r75/moov-money-api-sdk",
+            "version": "v3.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/v1p3r75/moov-money-api-php-sdk.git",
+                "reference": "e1aa4f78a937864f734f285827ce237050109814"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/v1p3r75/moov-money-api-php-sdk/zipball/e1aa4f78a937864f734f285827ce237050109814",
+                "reference": "e1aa4f78a937864f734f285827ce237050109814",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "psr/http-client": "^1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "dev-master",
+                "mockery/mockery": "2.0.x-dev",
+                "pestphp/pest": "3.x-dev",
+                "phpstan/phpstan": "2.0.x-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MoovMoney\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fortunatus KIDJE",
+                    "email": "elfriedv16@gmail.com",
+                    "homepage": "https://github.com/v1p3r75",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Moov Money PHP SDK is a library designed to facilitate the integration of the Moov Money API.",
+            "homepage": "https://github.com/v1p3r75/moov-money-api-php-sdk",
+            "keywords": [
+                "api",
+                "money",
+                "moov",
+                "moov-money-api",
+                "moov-money-php",
+                "moov-money-sdk",
+                "moov-money-sdk-php",
+                "php",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/v1p3r75/moov-money-api-php-sdk/issues",
+                "source": "https://github.com/v1p3r75/moov-money-api-php-sdk/tree/v3.6.0"
+            },
+            "time": "2024-12-11T13:27:53+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.2",
             "source": {
@@ -9441,5 +9502,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

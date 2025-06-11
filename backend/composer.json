@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "3.1.55",
         "spatie/laravel-permission": "^6.18",
-        "tymon/jwt-auth": "^2.2"
+        "tymon/jwt-auth": "^2.2",
+        "v1p3r75/moov-money-api-sdk": "^3.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
