@@ -51,7 +51,7 @@ class SchoolController extends Controller
         }
 
         try {
-            
+
             $data = School::with(['creater', 'updater', 'activater', 'approver', 'canceller', 'country'])
                 ->where($params)->whereNotIn('status', ['ANNULE', 'REJETE'])->orderBy('id', 'desc')->get();
             if ($request->input('id')) {
@@ -406,7 +406,7 @@ class SchoolController extends Controller
             $request->validate([
                 'file' => 'required|mimes:xlsx,csv,xls',
             ]);
-           
+
             $academic_year = $request->academic_year;
             $classe_id = $request->classe_id;
             $school_id = $request->school_id;
@@ -435,7 +435,7 @@ class SchoolController extends Controller
                 'message' => $messages[0],
                 'status' => 500
             ]);
-        }catch (ScolarException $ex) {
+        } catch (ScolarException $ex) {
             DB::rollBack();
 
             Log::error($ex->getMessage());
@@ -458,7 +458,7 @@ class SchoolController extends Controller
             $_data = SchoolClasse::with('classes', 'type_fees')->where('school_id', $school_id)
                 ->where('type_fees_id', $type_fees_id)
                 ->where('academic_year', $academic_year)->get();
-            
+
             if ($_data) {
                 return response()->json([
                     'data' => $_data,
@@ -532,6 +532,13 @@ class SchoolController extends Controller
         $code = trim($request->groupe['code']);
         $description = trim($request->groupe['description']);
         $school_id = $request->school_id;
+
+        if ($code == '' || $school_id == '') {
+            return response()->json([
+                'message' => 'Le code ne doit pas être vide.',
+                'status' => 500
+            ]);
+        }
 
         if (!$request->groupe['id']) {
             try {

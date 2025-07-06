@@ -22,7 +22,7 @@ class CityController extends Controller
             $data = $this->city_service->listCountries();
             return response()->json([
                 'data' => $data,
-                'nb_data' => $data->count(),
+                'nb_data' => count($data),
                 'message' => 'Liste des pays',
             ], 200); 
         } catch (Exception $e) {
@@ -40,7 +40,7 @@ class CityController extends Controller
             $data = $this->city_service->listCities();
             return response()->json([
                 'data' => $data,
-                'nb_data' => $data->count(),
+                'nb_data' => count($data),
                 'message' => 'Liste des villes',
             ], 200);            
         }catch(Exception $e){

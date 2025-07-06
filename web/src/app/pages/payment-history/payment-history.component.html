@@ -138,8 +138,8 @@
                                     currency:'XOF'}} </b></div>
                         </div>
                         <div class="table-responsive">
-                            <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
-                                class="table table-striped project-list-table align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                            <table 
+                                class="table table-striped"
                                 id="projectList-table">
                                 <thead class="table-light">
                                     <tr>
@@ -202,9 +202,9 @@
                                     nextLabel="Suivant"
                                     (pageChange)="p = $event"></pagination-controls>
                             </div>
-                            <ngx-ui-loader overlayColor="#ECF0F1"
+                            <!-- <ngx-ui-loader overlayColor="#ECF0F1"
                                 [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                                [loaderId]="'loader-spin'"></ngx-ui-loader>
+                                [loaderId]="'loader-spin'"></ngx-ui-loader> -->
 
                         </div>
                     </div>
@@ -220,7 +220,8 @@
         </div>
     </div>
 </div>
-
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
 <!--Start Details Modal -->
 <ng-template #detailsModal let-modal>
     <div class="modal-header">

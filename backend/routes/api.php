@@ -93,7 +93,7 @@ Route::prefix('manage-fees')->middleware(['auth:api'])->group(function () {
     Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
     Route::post('get-fees-details-data', [FeesManageController::class, 'getFeesDetails']);
     Route::get('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
-    Route::get('get-fees-balance-data-export',[FeesManageController::class, 'getExportOfFeesBalance']);    
+    Route::get('get-fees-balance-data-export', [FeesManageController::class, 'getExportOfFeesBalance']);
     Route::post('generate-balance/by-type-file', [FeesManageController::class, 'getExportOfFeesBalance']);
 });
 
@@ -153,10 +153,14 @@ Route::prefix('scolar')->middleware(['auth:api'])->group(function () {
 
 Route::get('/download-template', function () {
     $filePath = storage_path('app/public/modeles/ModelListeEleve.xlsx');
+    
     if (!file_exists($filePath)) {
+         Log::warning('Fichier modèle Excel introuvable : ' . $filePath);
         abort(404);
     }
-    return response()->download($filePath, 'ModelListeEleve.xlsx');
+    return response()->download($filePath, 'ModelListeEleve.xlsx', [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ]);
 });
 
 Route::prefix('user')->middleware(['auth:api'])->group(function () {

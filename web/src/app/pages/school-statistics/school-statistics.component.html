@@ -1,11 +1,13 @@
 <div class="container-fluid">
     <app-page-title title="STATISTIQUES | {{ schoolName }}"></app-page-title>
 
-    <div class="row" *ngIf="isProcessing">
+    <!-- <div class="row" *ngIf="isProcessing">
         <div class="col-lg-12">
             <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
         </div>
-    </div>
+    </div> -->
+    <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
 
     <div class="row">
         <div class="col-lg-6">
@@ -36,7 +38,7 @@
                             currency:'XOF'}}</b></h4>
                     <div class="table-responsive mt-3">
                         <table
-                            class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                            class="table table-striped"
                             id="projectList-table">
                             <thead class="table-light">
                                 <tr>
