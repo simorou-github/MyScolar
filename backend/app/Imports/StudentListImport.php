@@ -116,7 +116,7 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             '*.email'    => 'nullable|email',
             '*.date_de_naissance' => 'required|before:today|after:1900-01-01',
             '*.sexe'     => 'required|in:M,F',
-            '*.telephone'     => 'nullable|numeric|min:8|max:20',
+            '*.telephone'     => 'nullable|min:8|max:20',
         ];
     }
 
@@ -159,9 +159,9 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             '*.date_de_naissance.before'   => 'La date de naissance doit être dans le passé.',
             '*.date_de_naissance.after'    => 'La date de naissance est trop ancienne.',
             '*.sexe.in'           => 'Le sexe doit être H ou F dans la colonne :attribute.',
-            '*.teléphone.numeric' => 'Le numéro de téléphone doit être composé de chiffres.',
-            '*.téléphone.min' => 'Le numéro de téléphone doit comporter au moins 8 chiffres.',
-            '*.téléphone.max' => 'Le numéro de téléphone doit comporter au plus 20 chiffres.'
+           // '*.telephone.numeric' => 'Le numéro de téléphone doit être composé de chiffres.',
+            '*.telephone.min' => 'Le numéro de téléphone doit comporter au moins 8 chiffres.',
+            '*.telephone.max' => 'Le numéro de téléphone doit comporter au plus 20 chiffres.'
         ];
     }
 }
