@@ -23,9 +23,9 @@ class ScolarAdminSeeder extends Seeder
 
             $user = User::create([
                 'id' => generateDBTableId(15, "App\Models\User"),
-                'last_name' => 'GANIERO',
-                'first_name' => 'Levy',
-                'email' => 'florentganiero1@gmail.com',
+                'last_name' => 'ADMIN',
+                'first_name' => 'Scolar',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make("Admin@2025"),
                 'email_verified_at' => now(),
                 'is_admin' => 1,

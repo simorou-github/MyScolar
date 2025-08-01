@@ -16,6 +16,7 @@ use App\Http\Controllers\SchoolSpace\SchoolController;
 use App\Http\Controllers\SchoolSpace\SchoolDashboardController;
 use App\Http\Controllers\SchoolSpace\SchoolInscriptionController;
 use App\Http\Controllers\UserContoller;
+use App\Models\School;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -170,6 +171,14 @@ Route::prefix('user')->middleware(['auth:api'])->group(function () {
     Route::post('get-all-permission', [RoleController::class, 'getAllPermissions']);
     Route::post('get-permissions-of-role', [RoleController::class, 'getPermissionsOfRole']);
     Route::resource('permission', PermissionController::class);
+});
+
+// Frame for view document
+Route::get('school/get-file-path/{id}', function ($id) {
+    $school = School::find($id);
+    $file_path = 'storage/inscription_files/' . $school->document;
+
+    return response()->file(public_path($file_path));
 });
 
 Route::resource('roles', UserContoller::class);

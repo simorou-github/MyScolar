@@ -29,91 +29,46 @@ class SchoolInscriptionController extends Controller
     public function createInscription(StoreSchoolInscriptionRequest $request)
     {
 
-        try {
-            $user = $this->school_inscription_service->createSchoolInscription($request);
-            return response()->json([
-                'data' => [],
-                'message' => 'Inscription enregistrée avec succès. Le Groupe Scolar Plus traitera votre inscription.',
-            ], 201);
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
-        }
+        $user = $this->school_inscription_service->createSchoolInscription($request);
+        return response()->json([
+            'data' => [],
+            'message' => 'Inscription enregistrée avec succès. Le Groupe Scolar Plus traitera votre inscription.',
+        ], 201);
     }
 
     public function getCodeOfVerification(Request $request)
     {
-        try {
-            if ($request->email) {
-                $this->school_inscription_service->getCodeVerificarion($request);
 
-                return response()->json([
-                    'message' => 'Code de vérification envoyé par mail.',
-                ], 200);
-            }
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
+        if ($request->email) {
+            $this->school_inscription_service->getCodeVerificarion($request);
+
             return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
+                'message' => 'Code de vérification envoyé par mail.',
+            ], 200);
         }
     }
 
     //Verification
     public function codeVerification(Request $request)
     {
-        try {
-            $this->school_inscription_service->codeVerification($request);
 
-            return response()->json([
-                'message' => 'Code valide',
-            ], 200);
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
-        }
+        $this->school_inscription_service->codeVerification($request);
+
+        return response()->json([
+            'message' => 'Code valide',
+        ], 200);
     }
 
     //Resend verification code
     public function getNewCodeOfVerification(Request $request)
     {
-        try {
 
-            $this->school_inscription_service->getNewCodeOfVerification($request);
-            return response()->json([
-                'message' => 'Code de vérification renvoyé par mail',
-                'data' => '',
-            ], 200);
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
-        }
+
+        $this->school_inscription_service->getNewCodeOfVerification($request);
+        return response()->json([
+            'message' => 'Code de vérification renvoyé par mail',
+            'data' => '',
+        ], 200);
     }
 
     // Validate inscription and change status of school inscription

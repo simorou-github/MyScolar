@@ -32,6 +32,10 @@ class SchoolInscriptionService
             // 422 Erreur de validation Laravel (par défaut) et choisi pour les erreurs de Scolar
         }
 
+        // Vérification del'existance d'un code de validation mail pour l'enmail envoyé
+        if(!MailVerification::where('email', $school_request->email)->exists()){
+            throw new ScolarException("Cette adresse mail n'a pas été validée. Veuillez raffraichir votre page pour reprendre.");
+        }
         DB::beginTransaction();
 
         // Pour uploader le fichier joint
@@ -126,7 +130,7 @@ class SchoolInscriptionService
             'email' => $school_request->email,
             'code' => $code,
             // 30 min pour utiliser le code sinon regénérer
-            'expires_at' => Carbon::now()->addMinutes(30)
+            'expires_at' => Carbon::now()->addMinutes(env("EMAIL_CODE_VALIDITY_TIME"))
         ]);
         
         if ($response) {
@@ -137,7 +141,7 @@ class SchoolInscriptionService
                 'Vérification de compte mail',
                 env("APP_NAME"),
                 'Merci de taper le code reçu sur la page de vérification de mail sur notre plateforme pour continuer
-                        votre demande d\'inscription. Ce code expire dans 30 minutes.'
+                        votre demande d\'inscription. Ce code expire dans '.env("EMAIL_CODE_VALIDITY_TIME").' minutes.'
             );
         } else {
             throw new ScolarException("Une erreur est survenue. Merci de réessayer");
@@ -164,7 +168,7 @@ class SchoolInscriptionService
         $res = MailVerification::where('email', $request->email)->where('code', $request->code)
         ->where('expires_at', '>', now())->first();
         if (!$res) {
-            throw new ScolarException("Code invalide ou code expiré après 30 min");
+            throw new ScolarException("Code invalide ou code expiré après ".env("EMAIL_CODE_VALIDITY_TIME")." min");
         }
     }
 
@@ -183,7 +187,7 @@ class SchoolInscriptionService
             //Generate verification email code
             $code = $this->generateCodeOfVerification();
             $response = MailVerification::where('email', $request->email)->update(['code' => $code,
-        'expires_at' => Carbon::now()->addMinutes(30)]);
+        'expires_at' => Carbon::now()->addMinutes(env("EMAIL_CODE_VALIDITY_TIME"))]);
         // 'expires_at' => Carbon::now()->addMinutes(30)]);
             if ($response) {
                 EmailScolarTemplateJob::dispatch(
@@ -193,7 +197,7 @@ class SchoolInscriptionService
                     'Vérification de compte mail',
                     env("APP_NAME"),
                     'Merci de taper ce nouveau code reçu sur la page de vérification de mail sur notre plateforme pour continuer
-                        votre demande d\'inscription. Ce code expire dans 30 minutes.'
+                        votre demande d\'inscription. Ce code expire dans '.env("EMAIL_CODE_VALIDITY_TIME").' minutes.'
                 );
             } else {
                 throw new ScolarException("Merci de réessayer.");
