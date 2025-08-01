@@ -305,7 +305,7 @@ export class InscriptionComponent {
 
   // Get cities list
   listCities() {
-    this.ngxLoader.startLoader('loader-spin');
+    //this.ngxLoader.startLoader('loader-spin');
     this.school_inscription_service.cities().subscribe(
       {
         next: (v: any) => {
@@ -332,6 +332,7 @@ export class InscriptionComponent {
   }
 
   getCityByCountry(cntry: any) {
+    this.ngxLoader.startLoader('loader-spin');
     this.mask_template = '';
     this.school_inscription_service.citiesByCountryId({ 'country_id': (this.isTwiceSubmission) ? cntry : cntry.target.value }).subscribe(
       {
@@ -340,6 +341,8 @@ export class InscriptionComponent {
           this.num_code = v.data.country_infos.phone_code;
           this.registerForm.patchValue({ phone_code: this.num_code });
           this.mask_template = v.data.country_infos.masking;
+          this.ngxLoader.stopLoader('loader-spin');
+
         },
 
         error: (e) => {

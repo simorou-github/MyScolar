@@ -6,6 +6,7 @@ import { ClasseService } from 'src/app/services/classe.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TokenService } from 'src/app/shared/authentication/token.service';
 import { ChartType } from '../chart/apex/apex.model';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-school-statistics',
@@ -16,24 +17,24 @@ import { ChartType } from '../chart/apex/apex.model';
 export class SchoolStatisticsComponent implements OnInit {
 
   statForm!: FormGroup; display_stat: boolean = false; isProcessing: boolean = false; option_graphic: any;
-  
+
   message: any; amounts: any; displayPaymentByTypeFees: boolean = false; displayYearPaymentPerMonth: boolean = false;
-  
-  academicYear: string; schoolId: string; schoolName: string; stats: any; typeFees: any; classes: any;  distinctYears: any; 
-  
-  isFilter: boolean = false; paymentAggregationByTypeFeesData: any; p1: number = 1; totalOfPaymentAggregationByTypeFeesData = 0; 
-  
+
+  academicYear: string; schoolId: string; schoolName: string; stats: any; typeFees: any; classes: any; distinctYears: any;
+
+  isFilter: boolean = false; paymentAggregationByTypeFeesData: any; p1: number = 1; totalOfPaymentAggregationByTypeFeesData = 0;
+
   linewithDataChart: ChartType; simplePieChart: ChartType; paymentByYearData: any;
 
   constructor(private fb: FormBuilder, private tokenService: TokenService, private schoolService: SchoolService, private parameterService: ParameterService,
-    private classeService: ClasseService) {
+    private classeService: ClasseService, private ngxLoader: NgxUiLoaderService) {
     this.academicYear = this.tokenService.getAcademicYear;
     this.schoolId = this.tokenService.getSchoolId;
     this.schoolName = this.tokenService.getSocialReasonSchool;
-
+    this.ngxLoader.startLoader('loader-spin');
     this.pieChartStructure();
     this.linewithDataChartStructure();
-
+    this.ngxLoader.stopLoader('loader-spin');
   }
 
   pieChartStructure(fees_label: any = [], fees_amounts: any = []) {
@@ -85,7 +86,7 @@ export class SchoolStatisticsComponent implements OnInit {
       }
     });
   }
-  
+
   distinctAcademicYears(): void {
     this.parameterService.distinctAcademicYear().subscribe(
       {
@@ -103,11 +104,11 @@ export class SchoolStatisticsComponent implements OnInit {
   //Get Data for Graphique des Paiements reçus
   getPaymentAggregationByTypeFees() {
     this.isProcessing = true;
-    this.schoolService.getPaymentAggregationByTypeFees({'school_id': this.schoolId}).subscribe(
+    this.schoolService.getPaymentAggregationByTypeFees({ 'school_id': this.schoolId }).subscribe(
       {
         next: (v: any) => {
           this.paymentAggregationByTypeFeesData = v.data;
-          console.log(this.paymentAggregationByTypeFeesData)
+          // console.log(this.paymentAggregationByTypeFeesData)
           this.totalOfPaymentAggregationByTypeFeesData = v.total;
           this.amounts = v.amounts;
           this.pieChartStructure(this.amounts?.type_fees, this.amounts?.amount);
@@ -120,10 +121,10 @@ export class SchoolStatisticsComponent implements OnInit {
   //Total des Paiement Reçus dans l'année mois par mois
   getYearPaymentPerMonth() {
     this.isProcessing = true;
-    this.schoolService.getYearPaymentPerMonth({'school_id': this.schoolId}).subscribe(
+    this.schoolService.getYearPaymentPerMonth({ 'school_id': this.schoolId }).subscribe(
       {
         next: (v: any) => {
-          this.paymentByYearData = v.data;  
+          this.paymentByYearData = v.data;
           this.linewithDataChartStructure(this.paymentByYearData, v.max_amount);
           this.isProcessing = false
         },
@@ -138,17 +139,17 @@ export class SchoolStatisticsComponent implements OnInit {
         height: 480,
         type: 'line',
         zoom: {
-            enabled: false
+          enabled: false
         },
         toolbar: {
-            show: false
+          show: false
         }
       },
-      colors: ['#2874A6', '#145A32','#784212', '#545454', '#DC7633', '#AF7AC5', '#F1C40F'],
+      colors: ['#2874A6', '#145A32', '#784212', '#545454', '#DC7633', '#AF7AC5', '#F1C40F'],
       dataLabels: {
         enabled: true,
       },
-      
+
       stroke: {
         width: [3, 3],
         curve: 'straight'
@@ -157,7 +158,7 @@ export class SchoolStatisticsComponent implements OnInit {
         {
           name: 'High - 2018',
           data: [26000, 24000, 3200, 36000, 3300, 310, 33]
-      }
+        }
       ],
       title: {
         text: 'Evolution des transactions par type de frais',

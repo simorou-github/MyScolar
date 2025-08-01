@@ -8,9 +8,9 @@
             <div class="col-sm">
               <div class="d-inline-block">
                 <div class="position-relative">
-                  <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
+                  <!-- <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
                     (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
-                  </a>
+                  </a> -->
                   <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
                     (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
                   </a>
@@ -18,12 +18,12 @@
               </div>
             </div>
 
-            <div class="col-sm-auto">
+            <!-- <div class="col-sm-auto">
               <div>
                 <a class="btn btn-info" (click)="downloadTemplate()" (click)="infoOnModelUpload.show()"
-                  target="_self"><span class="mdi mdi-playlist-edit"></span>Modèle</a>
+                  target="_self"><i class="fas fa-file-download me-1"></i> Télécharger un Modèle</a>
               </div>
-            </div>
+            </div> -->
 
             <div class="col-sm-auto">
               <div class="text-sm-end">
@@ -36,7 +36,7 @@
           </div>
           <!-- end row -->
 
-          <div *ngIf="isSearchForm" class="col-lg-12">
+          <!-- <div *ngIf="isSearchForm" class="col-lg-12">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title mb-4">Recherche avancée</h5>
@@ -79,10 +79,10 @@
                   </div>
                 </form>
               </div>
-              <!-- end card body -->
+             
             </div>
-            <!-- end card -->
-          </div>
+         
+          </div> -->
 
           <div>
             <!--app-my-own-loader *ngIf="isProcessing"></app-my-own-loader-->
@@ -90,7 +90,7 @@
               <div class="col-md-12 h5">Liste des classes : ({{schoolClasses?.length}}) </div>
             </div>
             <div class="table-responsive">
-              <table class="table table-striped" id="projectList-table" ngxUiLoaderBlurred [loaderId]="'loader-class'">
+              <table class="table table-striped">
                 <thead class="table-light">
                   <tr>
                     <th scope="col" style="width: 8%">#</th>
@@ -120,9 +120,9 @@
                             [routerLink]="['/espace/gestion-classe/list-apprenant', schoolClasse?.id]"><i
                               class="mdi mdi-account-group font-size-18"></i></a>
 
-                          <a href="javascript:void(0);" tooltip="Charger" class="text-primary"
+                          <a href="javascript:void(0);" tooltip="Charger une liste" class="text-primary"
                             (click)="openViewUploadModal(schoolClasse, modalUploadStudent)"><i
-                              class="mdi mdi-playlist-edit font-size-18 text-info align-middle me-2"></i></a>
+                              class="mdi mdi-file-download-outline font-size-18 text-info align-middle me-2"></i></a>
 
                           <a href="javascript:void(0);" tooltip="Retirer" class="text-danger"
                             (click)="ConfirmClasseDelete(DeleteModalSchoolClasse, schoolClasse.classe)"><i
@@ -164,8 +164,8 @@
 
               </div>
 
-              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                [loaderId]="'loader-class'"></ngx-ui-loader>
+              <!-- <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+                [loaderId]="'loader-class'"></ngx-ui-loader> -->
 
             </div>
           </div>
@@ -182,6 +182,8 @@
   </div>
 </div>
 
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
 
 <!--Start Add Classe Modal -->
 <ng-template #addModal let-modal>

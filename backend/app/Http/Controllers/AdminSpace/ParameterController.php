@@ -189,7 +189,15 @@ class ParameterController extends Controller
     public function crudTypeFees(Request $request)
     {
         try {
-            if (!$request->input('id')) { //Create
+            if (!$request->input('id')) {
+                //Create
+                $req = TypeFees::where('label', $request->label)->where('school_id', $request->school_id)->first();
+                if ($req) {
+                    return response()->json([
+                        'message' => 'Ce frais existe déjà pour cette école.',
+                        'status' => 422
+                    ]);
+                }
                 TypeFees::create(array_merge($request->all(), ['id' => generateDBTableId(5, 'App\Models\TypeFees')]));
                 return response()->json([
                     'data' => null,

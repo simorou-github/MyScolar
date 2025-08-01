@@ -133,23 +133,23 @@ export class ClasseManagementComponent {
   }
 
   classeList() {
-    this.ngxLoader.startLoader('loader-class');
+    this.ngxLoader.startLoader('loader-spin');
     this.schoolService.listSchoolClasse({ school_id: this.schoolId }).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
           this.schoolClasses = v.data;
-          this.ngxLoader.stopLoader('loader-class');
+          this.ngxLoader.stopLoader('loader-spin');
         } else {
           this.showError(this.message);
-          this.ngxLoader.stopLoader('loader-class');
+          this.ngxLoader.stopLoader('loader-spin');
         }
       },
       error: (e) => {
         console.error(e);
         this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
         this.showError(this.message);
-        this.ngxLoader.stopLoader('loader-class');
+        this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {

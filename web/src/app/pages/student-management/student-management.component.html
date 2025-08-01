@@ -101,7 +101,7 @@
               <div class="col-md-12 h5">Liste des apprenants : ({{students?.length}}) </div>
             </div>
             <div class="table-responsive">
-              <table ngxUiLoaderBlurred [loaderId]="'loader-spin'" class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+              <table class="table table-striped"
                 id="projectList-table">
                 <thead class="table-light">
                   <tr>
@@ -151,7 +151,7 @@
                 <pagination-controls id="table1" previousLabel="Précédent" nextLabel="Suivant"
                   (pageChange)="p = $event"></pagination-controls>
               </div>
-              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-spin'"></ngx-ui-loader>
+              <!-- <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-spin'"></ngx-ui-loader> -->
 
             </div>
           </div>
@@ -167,6 +167,9 @@
     </div>
   </div>
 </div>
+
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
 
 <!--Start Details Modal -->
 <ng-template #detailsModal let-modal>

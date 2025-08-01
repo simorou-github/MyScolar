@@ -116,9 +116,10 @@
                                                         <i class="mdi mdi-dots-horizontal font-size-18"></i>
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                                                        
+                                                        <a class="dropdown-item" href="javascript: void(0);" (click)="update(modalGroupe, groupe)"><i class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i> Modifier</a>
                                                         <a class="dropdown-item" href="javascript: void(0);" (click)="confirm(groupe)"><i class="{{groupe?.status ? 'mdi mdi-lock-remove-outline' : 'mdi mdi-playlist-edit'}} font-size-7 {{groupe?.status ? 'text-danger' : 'text-success'}} align-middle me-2"></i> {{groupe?.status ?
                                                             'Désactiver' : 'Activer'}}</a>
-                                                        <a class="dropdown-item" href="javascript: void(0);" (click)="update(modalGroupe, groupe)"><i class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i> Modifier</a>
                                                         <a class="dropdown-item" href="javascript: void(0);" (click)="confirmDeletingGroupe(groupe)"><i class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i> Supprimer</a>
                                                     </div>
                                                 </div>

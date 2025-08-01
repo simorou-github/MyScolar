@@ -81,12 +81,12 @@ export const MENU: MenuItem[] = [
                 link: '/espace/statistiques',
                 parentId: 4
             },
-            {
-                id: 4007,
-                label: 'Mes Utilisateurs',
-                link: '/espace/user-management',
-                parentId: 4
-            },
+            // {
+            //     id: 4007,
+            //     label: 'Mes Utilisateurs',
+            //     link: '/espace/user-management',
+            //     parentId: 4
+            // },
 
             {
                 id: 4008,
