@@ -11,9 +11,7 @@ use App\Models\Student;
 use App\Models\StudentClasse;
 use Maatwebsite\Excel\Concerns\ToArray;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class StudentListImport implements ToArray, WithValidation, WithHeadingRow

@@ -29,6 +29,4 @@ export class ClasseService {
     return this.http.post(environment.apiUrl + '/classe/search', body);
   }
 
-  
-
 }

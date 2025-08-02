@@ -152,6 +152,9 @@ Route::prefix('scolar')->middleware(['auth:api'])->group(function () {
     Route::post('statistic/year-payment-per-month', [ScolarController::class, 'yearTransactionPerMonth']);
 });
 
+Route::get('/model-apprenant/export-xls', [SchoolController::class, 'exportApprenantModelExcel']);
+
+
 Route::get('/download-template', function () {
     $filePath = storage_path('app/public/modeles/ModelListeEleve.xlsx');
     

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SchoolSpace;
 
 use App\Exceptions\ScolarException;
+use App\Exports\AprenantListModel;
 use App\Http\Controllers\Controller;
 use App\Imports\StudentListImport;
 use Illuminate\Http\Request;
@@ -18,13 +19,12 @@ use App\Models\SchoolClasseFeesDetails;
 use App\Models\Student;
 use App\Models\StudentClasse;
 use App\Models\TypeFees;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SchoolController extends Controller
 {
@@ -926,5 +926,10 @@ class SchoolController extends Controller
             'message' => 'Une erreur interne est survenue',
             'status' => 500
         ]);
+    }
+
+    public function exportApprenantModelExcel(Request $request): BinaryFileResponse
+    {
+        return Excel::download(new AprenantListModel, 'users.xlsx');
     }
 }

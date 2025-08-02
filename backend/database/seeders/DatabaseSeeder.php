@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
             [
                 CountrySeeder::class,
                 CitySeeder::class,
+                ClasseSeeder::class,
                 RoleSeeder::class,
-                ScolarAdminSeeder::class
+                ScolarAdminSeeder::class,
+                CurrentAcademicYearSeeder::class
             ]
         );
     }

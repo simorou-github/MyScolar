@@ -286,19 +286,14 @@ export class ClasseManagementComponent {
       }
     });
   }
-
   downloadTemplate(): void {
-    this.schoolService.downloadTemplate().subscribe({
-      next: (blob: any) => {
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = 'ModelListeEleve.xlsx';
-        link.click();
-      },
-      error: (e: any) => {
-        console.log(e)
-      }
-
+    this.schoolService.downloadApprenantListModel().subscribe((blob) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'ModelListeApprenants.xlsx';
+      a.click();
+      URL.revokeObjectURL(objectUrl); // nettoyage mémoire
     });
   }
 
