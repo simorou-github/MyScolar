@@ -21,7 +21,7 @@ export class StatisticsService {
   }
   
   getFeesBalanceFollowupData(body){
-    return this.http.get(environment.apiUrl + '/manage-fees/get-fees-balance-follow-up-data', body);
+    return this.http.post(environment.apiUrl + '/manage-fees/get-fees-balance-follow-up-data', body);
   }
   
   exportJournal(body){

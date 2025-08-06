@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
                 ClasseSeeder::class,
                 RoleSeeder::class,
                 ScolarAdminSeeder::class,
-                CurrentAcademicYearSeeder::class
+                CurrentAcademicYearSeeder::class,
+                TypePaiementSeeder::class,
+                ParametreSeeder::class,
             ]
         );
     }

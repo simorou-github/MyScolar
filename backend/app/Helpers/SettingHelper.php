@@ -4,6 +4,7 @@ use App\Models\AcademicYear;
 use App\Models\Parameter;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 function generateStudentRegistration($school_country_code){

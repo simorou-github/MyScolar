@@ -87,13 +87,18 @@ Route::prefix('manage-dashboard')->middleware(['auth:api'])->group(function () {
     Route::post('verify-fees-assignement', [SchoolDashboardController::class, 'getUnassignedSchoolFees']);
 });
 
-// //Manage Fees   
+// Manage Public Search Fees  
+Route::prefix('manage-fees')->group(function () {
+    Route::post('public-search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
+});
+
+// Manage Fees   
 Route::prefix('manage-fees')->middleware(['auth:api'])->group(function () {
     Route::post('assign-fees-to-classe', [FeesManageController::class, 'assigneFeesToClasse']);
     Route::post('get-student-balance', [FeesManageController::class, 'getStudentFeesBalance']);
     Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
     Route::post('get-fees-details-data', [FeesManageController::class, 'getFeesDetails']);
-    Route::get('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
+    Route::post('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
     Route::get('get-fees-balance-data-export', [FeesManageController::class, 'getExportOfFeesBalance']);
     Route::post('generate-balance/by-type-file', [FeesManageController::class, 'getExportOfFeesBalance']);
 });

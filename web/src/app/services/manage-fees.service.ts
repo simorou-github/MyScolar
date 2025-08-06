@@ -25,4 +25,8 @@ export class ManageFeesService {
     return this.http.post(environment.apiUrl + '/manage-fees/search-student-balance', body);
   }
 
+  publicSearchStudentFeesBalanceForParentPayment(body: any) {
+    return this.http.post(environment.apiUrl + '/manage-fees/public-search-student-balance', body);
+  }
+
 }

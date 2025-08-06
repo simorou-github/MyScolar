@@ -40,8 +40,6 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit() {
     this.roles = this.tokenService.getRoles;
-    console.log('----------')
-    console.log(this.roles)
     this.initialize();
     this._scrollElement();
   }

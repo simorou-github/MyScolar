@@ -1,10 +1,9 @@
 <div class="container-fluid p-0">
     <div class="row g-0">
-
-        <div class="col-xl-5" id="bg" style="position: fixed;">
+        <!-- start col -->
+        <div class="col-xl-3" id="bg">
             <div class="auth-full-bg pt-lg-5 p-1">
                 <div class="w-100">
-                    <!--div class="bg-overlay"></div-->
                     <div class="d-flex flex-column" style="overflow:none; height: 100%;">
                         <div class="p-1 mt-auto">
                             <div class="row justify-content-center">
@@ -19,23 +18,19 @@
         <!-- end col -->
 
         <!-- Form -->
-        <div class="col-xl-7"
-            style="position: absolute; right: 0; float: right; overflow: auto; background-color: white;">
+        <div class="col-xl-9"
+            style="right: 0; float: right; overflow: auto;">
             <div class="auth-full-page-content p-md-2 p-1">
                 <div class="w-100">
 
                     <div class="d-flex flex-column h-100 p-2">
                         <div class="pt-1">
-                            <a class="d-block card-logo text-secondary mt-2">
-                                <span class="fa fa-wallet fa-2x"></span> <span class="h3"> &nbsp; Paiement
-                                    de frais</span>
+                            <a class="d-block card-logo text-warning mt-2">
+                                <span class="fa fa-wallet fa-2x"></span> <span class="h3"> &nbsp; Paiement en Caisse</span>
                                 <span class="card-logo-light h4">&nbsp;<br> <br>| Scolar Plus</span>
                             </a>
                             <p class="text-muted" style="text-align: justify; padding: 5px;">
-                                Etudiants et parents, avec Scolar Pay, vous pouvez payer tous
-                                vos frais scolaires et ceux de vos enfants. Pour payer un frais scolaire,
-                                vous devez rechercher l'apprenant à partir de son <b>Code Scolar</b>, sa <b>Date de
-                                    naissance</b> et l'<b>Année Académique ou Scolaire</b>.
+                                Recherchez l'apprenant suivants les critères ci-dessous pour botenir ces soldes à payer. En l'occurence l'<b>Année Académique ou Scolaire</b> sa <b>Classe </b> et son <b>Nom ou Prénoms</b>.
                             </p>
                         </div>
 
@@ -48,22 +43,7 @@
                                         <div class="row mt-3">
                                             <div class="col-lg-3">
                                                 <div>
-                                                    <label class="form-label">Code Scolar</label>
-                                                    <input class="form-control text-uppercase" type="text" ngModel
-                                                        required name="code_scolar" placeholder="Code Scolar">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div>
-                                                    <label class="form-label">Date de naissance</label>
-                                                    <input class="form-control" type="date" id="example-date-input"
-                                                        name="birthday" ngModel required
-                                                        placeholder="Date de naissance de l'apprenant">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div>
-                                                    <label class="form-label">Année</label>
+                                                    <label class="form-label">Année Scolaire/Académique</label>
                                                     <select class="form-select" name="academic_year" ngModel required>
                                                         <option *ngFor="let year of academic_years"
                                                             value="{{year.academic_year}}">{{year?.academic_year}}
@@ -71,9 +51,30 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-3">
+                                                <div>
+                                                    <label class="form-label">Classe</label>
+                                                    <select class="form-select" name="classe_id" ngModel required
+                                                        (change)="getAllApprenantOfSlectedClasse(searchForm.value)">
+                                                        <option *ngFor="let classe of school_classes"
+                                                            value="{{classe.id}}">{{classe?.classe?.code}}, {{classe?.groupe?.code}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div>
+                                                    <label class="form-label">Nom & Prénoms</label>
+                                                    <select class="form-select" name="apprenant_id" ngModel required>
+                                                        <option *ngFor="let apprenant of apprenants"
+                                                            value="{{apprenant.nom}}">{{apprenant?.prenom}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="col-lg-3 mt-3 text-right">
-                                                <div class="mt-2 text-center" style="margin-top: 12px !important;">
-                                                    <button type="submit" class="btn btn-secondary waves-light"
+                                                <div class="mt-2 text-center" style="margin-top: 15px !important;">
+                                                    <button type="submit" class="btn btn-warning waves-light"
                                                         title="Rechercher l'apprenant.." [disabled]="!searchForm.valid">
                                                         <i class="fa fa-search 2x"></i> Rechercher</button>
                                                 </div>

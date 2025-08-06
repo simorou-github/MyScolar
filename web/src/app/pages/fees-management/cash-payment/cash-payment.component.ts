@@ -3,28 +3,36 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
+import { ClasseService } from 'src/app/services/classe.service';
 import { ManageFeesService } from 'src/app/services/manage-fees.service';
 import { PaiementScolaireService } from 'src/app/services/paiement-scolaire.service';
+import { SchoolService } from 'src/app/services/school.service';
+import { TokenService } from 'src/app/shared/authentication/token.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-paiement-scolaire',
-  templateUrl: './paiement-scolaire.component.html',
-  styleUrls: ['./paiement-scolaire.component.scss']
+  selector: 'app-cash-payment',
+  templateUrl: './cash-payment.component.html',
+  styleUrls: ['./cash-payment.component.scss']
 })
-export class PaiementScolaireComponent {
+export class CashPaymentComponent {
   isProcessing: boolean = false; modalRef?: BsModalRef; message: any; data: any; curr_student: any;
   curr_fees: any; academic_years: any; currentAcademicYaer: any; academic_year = ''; balanceFees: any; student: any; student_classe: any;
   operators: any; selectedBalancesRows: Array<{ id: string, balance: number, montant: number, type_fees_id: string }> = [];
   totalFees: number; student_param: any; selected_fees: any[]; totalBalances: number; paymentForm!: FormGroup; batchPaymentForm!: FormGroup;
   p: number = 1; path_part = environment.domainUrl+'/storage/';
-  constructor(private authService: AuthService, private modalService: BsModalService, private paiementScolaireService: PaiementScolaireService,
-    private toastr: ToastrService, private managerFeesService: ManageFeesService, private fb: FormBuilder,) {
 
+  apprenants: any;  school_classes: any;  private school_id: string = '';
+
+  constructor(private authService: AuthService, private modalService: BsModalService, private paiementScolaireService: PaiementScolaireService,
+    private toastr: ToastrService, private managerFeesService: ManageFeesService, private fb: FormBuilder, private classeService: ClasseService,
+    private tokenService: TokenService, private schoolService: SchoolService,) {
+      this.school_id = this.tokenService?.getSchoolId;
   }
 
   ngOnInit(): void {
     this.getAllAcademicYear();
+    this.getAllClassesOfCurrentSchool();
     this.paymentForm = this.fb.group({
       id: [],
       operator: ['', [Validators.required]],
@@ -122,6 +130,58 @@ export class PaiementScolaireComponent {
         if (v.status == 200) {
           this.academic_years = v.data;
           this.academic_year = this.currentAcademicYaer;
+          this.isProcessing = false;
+        } else {
+          this.isProcessing = false;
+        }
+      },
+
+      error: (e) => {
+        console.error(e);
+        this.showError(this.message);
+      },
+
+      complete: () => {
+
+      }
+    });
+  }
+
+  //Get all Apprenant Of Selected School
+  getAllApprenantOfSlectedClasse(data) {
+    this.apprenants = [];
+    this.isProcessing = true;
+    this.schoolService.listStudents(data).subscribe({
+      next: (v: any) => {
+        this.message = v.message;
+        if (v.status == 200) {
+          console.log(v.data);
+          this.apprenants = v.data;
+          this.isProcessing = false;
+        } else {
+          this.isProcessing = false;
+        }
+      },
+
+      error: (e) => {
+        console.error(e);
+        this.showError(this.message);
+      },
+
+      complete: () => {
+
+      }
+    });
+  }
+
+  //Get all School's Classes
+  getAllClassesOfCurrentSchool() {
+    this.isProcessing = true;
+    this.classeService.listClasseOfSchool({school_id: this.school_id}).subscribe({
+      next: (v: any) => {
+        this.message = v.message;
+        if (v.status == 200) {
+          this.school_classes = v.data;
           this.isProcessing = false;
         } else {
           this.isProcessing = false;
@@ -258,3 +318,4 @@ export class PaiementScolaireComponent {
   }
 
 }
+

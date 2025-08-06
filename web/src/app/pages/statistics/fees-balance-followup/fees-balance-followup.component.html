@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <form #filterForm="ngForm" *ngIf="isFilter"
-                        (ngSubmit)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                        (ngSubmit)="getFeesBalanceFollowupData()">
 
                         <div class="row mt-1">
 
@@ -105,7 +105,7 @@
                                 <label for="academicyear">Année Acatémique</label>
                                 <select class="form-control" name="academicyear" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.academic_year"
-                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    (change)="getFeesBalanceFollowupData()">
                                     <option value="">Selection l'année</option>
                                     <option value="{{academicyear.academic_year}}"
                                         *ngFor="let academicyear of academicyears">
@@ -118,7 +118,7 @@
                                 <label for="type_fees_id">Type Frais</label>
                                 <select class="form-control" name="type_fees_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.type_fees_id"
-                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
                                     <option value="{{type_frais.id}}" *ngFor="let type_frais of types_frais">
                                         {{type_frais.label}}
@@ -130,7 +130,7 @@
                                 <label for="school_id">Ecoles</label>
                                 <select class="form-control" name="school_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.school_id"
-                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
                                     <option value="{{school.id}}" *ngFor="let school of schools">
                                         {{school.social_reason}}
@@ -141,7 +141,7 @@
                                 <label for="school_id">Ecoles</label>
                                 <select class="form-control" name="school_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.school_id"
-                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
                                     <option value="{{schools.id}}">
                                         {{schools.social_reason}}
@@ -153,7 +153,7 @@
                                 <label for="date_debut">Classe</label>
                                 <select class="form-control" name="classe_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.classe_id"
-                                    (change)="getFeesBalanceFollowupData(searchFeesBalanceParam)">
+                                    (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
                                     <option value="{{classe.id}}" *ngFor="let classe of classes">
                                         {{classe.classe.code}}-{{classe.groupe.code}}
@@ -166,7 +166,7 @@
                                 <input class="form-control" type="text" name="fees_label" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.fees_label"
                                     placeholder="Exp: Transche 1, Unique, Mois, etc."
-                                    (keyup.enter)="getHistoryOfPayment(seachPaymentForm)">
+                                    (keyup.enter)="getFeesBalanceFollowupData()">
                             </div>
                             <br>
                             <div class="col-lg-2 text-right">

@@ -142,7 +142,7 @@ class SchoolController extends Controller
             if ($request->input('classe_id')) {
                 $params[] = ['classe_id', '=', $request->input('classe_id')];
             }
-
+            Log::info($params);
             $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->whereRelation(
                 'student',
                 'school_id',

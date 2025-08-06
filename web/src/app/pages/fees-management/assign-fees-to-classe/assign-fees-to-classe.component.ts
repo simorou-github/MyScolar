@@ -30,6 +30,7 @@ export class AssignFeesToClasseComponent implements OnInit {
     this.breadCrumbItems = [{ label: 'ESPACE ECOLE' }, { label: 'AFFECTAION FRAIS', active: true }];
     this.scName = this.tokenService.getSocialReasonSchool;
     this.academic_year = this.tokenService.getAcademicYear;
+    console.log(this.academic_year);
     this.toDay = new Date();
     this.typeFeesList();
     this.typePaymentList();

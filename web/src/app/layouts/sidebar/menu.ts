@@ -157,11 +157,27 @@ export const MENU: MenuItem[] = [
 
     {
         id: 8,
-        label: 'Suivi des Paiements',
+        label: 'Suivi Paiements',
         icon: 'bx bx-wallet',
-        link: '/scolar/fees-balance-followup',
-        rolesAllowed: ['admin', 'super_admin']
+        rolesAllowed: ['admin', 'super_admin', 'treasurer'],
+        subItems: [
+            {
+                id: 8001,
+                label: 'Soldes et Transactions',
+                icon: 'bx bx-wallet',
+                link: '/scolar/fees-balance-followup',
+                rolesAllowed: ['admin', 'super_admin', 'treasurer']
 
+            },
+            {
+                id: 8002,
+                label: 'Paiement Caisse',
+                icon: 'bx  bx-currency-notes',
+                link: '/scolar/fees-cash-payment',
+                rolesAllowed: ['admin', 'super_admin', 'treasurer']
+
+            }
+        ]
     },
 ];
 

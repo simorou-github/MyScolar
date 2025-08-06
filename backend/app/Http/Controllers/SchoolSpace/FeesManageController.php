@@ -357,7 +357,7 @@ class FeesManageController extends Controller
                 ->where('school_id', $student->school_id)
                 ->where('classe_id', $student_classe->classe_id)
                 ->where('academic_year', $student_classe->academic_year)
-                ->orderBy('updated_at', 'ASC')->get();
+                ->orderBy('fees_label', 'ASC')->get();
 
             //Get School country's operator
             $operators = Operator::with('country')
@@ -457,7 +457,6 @@ class FeesManageController extends Controller
             if ($request->school_id) {
                 $params[] = ['b.school_id', '=', $request->school_id];
             }
-
             $balanceFees = DB::table('balance_fees as b')
                 ->leftJoin('type_fees as tf', 'b.type_fees_id', '=', 'tf.id')
                 ->leftJoin('schools as s', 'b.school_id', '=', 's.id')

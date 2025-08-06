@@ -36,15 +36,16 @@ export class FeesBalanceFollowupComponent {
     this.getAllTypesFrais();
     this.getAllSchools();
     this.getAllClasses();
-    this.getFeesBalanceFollowupData(this.searchFeesBalanceParam);
+    this.getFeesBalanceFollowupData();
     this.listAccademicYear();
   }
 
 
   //Get Data for Graphique des Paiements reçus
-  getFeesBalanceFollowupData(data) {
+  getFeesBalanceFollowupData() {
+    console.log(this.searchFeesBalanceParam);
     this.ngxLoader.startLoader('loader-spin');
-    this.scolarService.getFeesBalanceFollowupData(data).subscribe(
+    this.scolarService.getFeesBalanceFollowupData(this.searchFeesBalanceParam).subscribe(
       {
         next: (v: any) => {
           this.feesBalanceDatas = v.data;
