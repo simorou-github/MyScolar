@@ -16,7 +16,8 @@ export class ManagePermissionComponent {
   isProcessing: boolean; breadCrumbItems: Array<{}>; roles: any; academicYear: string; schoolId: string;
   message: any; roleForm!: FormGroup; roleSearchForm!: FormGroup; modalRef?: BsModalRef;
   isSearchForm: boolean; p: number = 1; permissionsTab: any[] = [];
-  rolePermissions: any;
+  term: string = '';
+  rolePermissions: any; 
   permissions: any; isRoleForm: boolean = false;
   isEditing: boolean = false; // Nouvelle variable pour gérer l'état d'édition
   currentRoleId: number | null = null; // Nouvelle variable pour stocker l'ID du rôle en cours d'édition
@@ -242,4 +243,15 @@ export class ManagePermissionComponent {
   isPermissionChecked(permissionName: string): boolean {
     return this.permissionsTab.includes(permissionName);
   }
+
+  searchData(): void {
+    if (this.term) {
+      this.roles = this.roles.filter((role: any) =>
+        role.label.toLowerCase().includes(this.term.toLowerCase())
+      );
+    } else {
+      this.getRoles({});
+    }
+  }
+
 }

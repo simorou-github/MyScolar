@@ -6,54 +6,28 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm">
-                            <div class="d-inline-block">
+                        <div class="col-sm-4">
+                            <div class="search-box me-2 mb-2 d-inline-block">
                                 <div class="position-relative">
-                                    <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
-                                        (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
-                                    </a>
-                                    <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
-                                        (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
-                                    </a>
+                                    <input type="text" class="form-control" autocomplete="off" id="searchTableList"
+                                        placeholder="Recherche..." [(ngModel)]="term" (ngModelChange)="searchData()"> <i
+                                        class="bx bx-search-alt search-icon"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-auto">
-                            <div>
 
-                            </div>
-                        </div>
-                        <!-- end col -->
-                        <div class="col-sm-auto">
+                        <div class="col-sm-8">
                             <div class="text-sm-end">
                                 <a class="btn btn-success" (click)="displayModalRole(modalRole)" id="addRole"><i
                                         class="fa fa-plus me-1"></i> Nouveau
                                 </a>
                             </div>
                         </div>
-                        <!-- end col -->
+
                     </div>
                     <!-- end row -->
 
-                    <div *ngIf="isSearchForm" class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-4">Recherche avancée</h5>
 
-                                <form class="row gy-2 gx-3 align-items-center" novalidate [formGroup]="roleSearchForm">
-
-                                    <div class="col-sm-1" style="margin-top: -2%;">
-                                        <button type="button" class="btn btn-primary"
-                                            (click)="getRoles(roleSearchForm.value)">
-                                            <i class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
 
                     <div>
                         <div class="table-responsive">
@@ -90,7 +64,7 @@
                                                         <i class="mdi mdi-dots-horizontal font-size-18"></i>
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-                                                        
+
                                                         <a class="dropdown-item" href="javascript: void(0);"
                                                             (click)="editRole(role)">
                                                             <i
@@ -147,8 +121,8 @@
                                         </h5>
                                     </div>
                                     <div class="col-3 text-right">
-                                        <button class="btn {{ isEditing ? 'btn-warning' : 'btn-primary' }} pull-right" style="margin-right: 10%"
-                                            type="submit" [disabled]="!roleForm.valid">
+                                        <button class="btn {{ isEditing ? 'btn-warning' : 'btn-primary' }} pull-right"
+                                            style="margin-right: 10%" type="submit" [disabled]="!roleForm.valid">
                                             <i class="bx bx-check"></i> {{ isEditing ? 'Modifier' : 'Enregistrer' }}
                                         </button>
                                         <button type="button" class="btn btn-danger pull-right"

@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminSpace\ParameterController;
 use App\Http\Controllers\AdminSpace\RoleController;
 use App\Http\Controllers\AdminSpace\ScolarController;
+use App\Http\Controllers\AdminSpace\UserContoller;
 use App\Http\Controllers\PushNotification\PushNotificationController;
 use App\Http\Controllers\SchoolSpace\AcademicYearController;
 use App\Http\Controllers\SchoolSpace\ClasseController;
 use App\Http\Controllers\SchoolSpace\PaymentController;
 use App\Http\Controllers\SchoolSpace\SchoolDashboardController;
-use App\Http\Controllers\UserContoller;
 
 // Authentification
 Route::post('auth/login', [AuthController::class, 'login']);
@@ -177,7 +177,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Utilisateurs & Rôles
     Route::get('permissions', [RoleController::class, 'getPermissions']);
-    Route::resource('users', UserContoller::class);
+    Route::post('manage-user/list', [UserContoller::class, 'userList']);
 
     Route::apiResource('roles', RoleController::class);
 });
