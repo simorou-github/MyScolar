@@ -13,76 +13,60 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * The list of the inputs that are never flashed to the session on validation exceptions.
-     *
-     * @var array<int, string>
-     */
     protected $dontFlash = [
         'current_password',
         'password',
         'password_confirmation',
     ];
 
-    /**
-     * Register the exception handling callbacks for the application.
-     */
     public function register(): void
     {
-        // Pour les appels API, on renvoie tout en JSON
-        $this->renderable(function (NotFoundHttpException $e, $request) {
+        // Gère toutes les exceptions dans les requêtes API
+        $this->renderable(function (Throwable $e, Request $request) {
             if ($request->expectsJson()) {
-                return response()->json([
-                    'error' => 'Ressource ou page non trouvée.',
-                    'code' => 404
-                ], 404);
-            }
-        });
+                // Définit le message d'erreur et le code HTTP par défaut
+                $message = 'Une erreur est survenue.';
+                $code = 500;
 
-        // Validation
-        $this->renderable(function (ValidationException $e, $request) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'error' => 'Les données fournies sont invalides.',
-                    'code' => 422,
-                ], 422);
-            }
-        });
+                // Spécifie les messages et codes pour des exceptions connues
+                if ($e instanceof NotFoundHttpException) {
+                    $message = 'Ressource ou page non trouvée.';
+                    $code = 404;
+                } elseif ($e instanceof ValidationException) {
+                    $message = 'Les données fournies sont invalides.';
+                    $code = 422;
+                    // Optionnel : renvoyer les erreurs de validation
+                    Log::error($e);
+                    return response()->json([
+                        'error' => $message,
+                        'code' => $code,
+                        'errors' => $e->errors(),
+                    ], $code);
+                } elseif ($e instanceof AuthenticationException) {
+                    $message = 'Accès non autorisé.';
+                    $code = 401;
+                } elseif ($e instanceof ThrottleRequestsException) {
+                    $retry_after = (int) $e->getHeaders()['Retry-After'];
+                    $minutes = ceil($retry_after / 60);
+                    $message = "Vous avez effectué trop de tentatives. Réessayez dans environ {$minutes} minute(s).";
+                    $code = 429;
+                }
+                // Si vous avez une ScolarException
+                elseif ($e instanceof ScolarException) {
+                    $message = $e->getMessage();
+                    $code = 422;
+                }
 
-        // Authentification
-        $this->renderable(function (AuthenticationException $e, $request) {
-            if ($request->expectsJson()) {
+                // Renvoie une réponse JSON générique
                 return response()->json([
-                    'error' => 'Accès non autorisé.',
-                    'code' => 401,
-                ], 401);
-            }
-        });
-
-        // Exception de Scolar
-        $this->renderable(function (ScolarException $e, Request $request) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'error' => $e->getMessage(),
-                    'code' => 422,
-                ], 422);
-            }
-        });
-
-        // Nombre limite de requêtes 
-        $this->renderable(function (ThrottleRequestsException $e, Request $request) {
-            if ($request->expectsJson()) {
-                $retry_after = (int) $e->getHeaders()['Retry-After'];
-                $minutes = ceil($retry_after / 60);
-                return response()->json([
-                    'message' => "Vous avez effectué trop de tentatives. Réessayez dans environ {$minutes} minute(s).",
-                    'retry_after' => $retry_after,
-                ], 429);
+                    'error' => $message,
+                    'code' => $code,
+                ], $code);
             }
         });
 
         $this->reportable(function (Throwable $e) {
-            //
+            // Log toutes les exceptions
         });
     }
 }

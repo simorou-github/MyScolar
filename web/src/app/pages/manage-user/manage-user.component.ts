@@ -49,7 +49,7 @@ export class ManageUserComponent implements OnInit {
 
   getRoles() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageRolePermission.roles({}).subscribe({
+    this.manageRolePermission.getRoles().subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.roles = v.data;

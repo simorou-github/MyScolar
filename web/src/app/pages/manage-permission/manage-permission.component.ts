@@ -4,7 +4,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageRolePermissionService } from 'src/app/services/manage-role-permission.service';
-import { ManageUserService } from 'src/app/services/manage-user.service';
 import { TokenService } from 'src/app/shared/authentication/token.service';
 import Swal from 'sweetalert2';
 
@@ -14,11 +13,13 @@ import Swal from 'sweetalert2';
   styleUrls: ['./manage-permission.component.scss']
 })
 export class ManagePermissionComponent {
-  isProcessing: boolean; breadCrumbItems: Array<{}>; roles: any;  academicYear: string;  schoolId: string;
+  isProcessing: boolean; breadCrumbItems: Array<{}>; roles: any; academicYear: string; schoolId: string;
   message: any; roleForm!: FormGroup; roleSearchForm!: FormGroup; modalRef?: BsModalRef;
-  isSearchForm: boolean;  p: number = 1; permissionsTab: any[] = [];
+  isSearchForm: boolean; p: number = 1; permissionsTab: any[] = [];
   rolePermissions: any;
   permissions: any; isRoleForm: boolean = false;
+  isEditing: boolean = false; // Nouvelle variable pour gérer l'état d'édition
+  currentRoleId: number | null = null; // Nouvelle variable pour stocker l'ID du rôle en cours d'édition
 
   constructor(private fb: FormBuilder, private manageRolePermission: ManageRolePermissionService, private tokenService: TokenService,
     private modalService: BsModalService, private toastr: ToastrService, private ngxLoader: NgxUiLoaderService) {
@@ -29,34 +30,28 @@ export class ManagePermissionComponent {
   ngOnInit() {
     this.breadCrumbItems = [{ label: 'ROLES ET PERMISSIONS' }, { label: 'Liste et Création', active: true }];
     this.getRoles({});
-    this.getPermissions(); 
+    this.getPermissions();
     this.roleForm = this.fb.group({
       id: [''],
-      name: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      type: ['', [Validators.required]],
+      label: ['', [Validators.required]],
     });
 
     this.roleSearchForm = this.fb.group({
       id: [''],
-      name: [''],
-      description: [''],
-      type: [''],
-      status: [''],
-      guard_name: [''],
+      label: [''],
     });
   }
 
   getRoles(param: any) {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageRolePermission.roles(param).subscribe({
+    this.manageRolePermission.getRoles().subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.roles = v.data;
           this.message = v.message;
           this.ngxLoader.stopLoader('loader-spin');
         } else {
-          this.ngxLoader.stopLoader('loader-spin')
+          this.ngxLoader.stopLoader('loader-spin');
         }
       },
       error: (e) => {
@@ -65,16 +60,14 @@ export class ManagePermissionComponent {
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
       },
-
       complete: () => {
-
       }
     });
   }
 
   getPermissions() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageRolePermission.permissions({}).subscribe({
+    this.manageRolePermission.getPermissions().subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.permissions = v.data;
@@ -90,92 +83,100 @@ export class ManagePermissionComponent {
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
       },
-
       complete: () => {
-
       }
     });
   }
 
-  getPermissionsOfRole(role_id) {
-    this.ngxLoader.startLoader('loader-spin');
-    this.manageRolePermission.getPermissionsOfRoles({ role_id: role_id }).subscribe({
-      next: (v: any) => {
-        if (v.status == 200) {
-          this.rolePermissions = v.data;
-          this.message = v.message;
-          this.ngxLoader.stopLoader('loader-spin');
-        } else {
-          this.ngxLoader.stopLoader('loader-spin')
-        }
-      },
-      error: (e) => {
-        console.log(e);
-        this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
-        this.showError(this.message);
-        this.ngxLoader.stopLoader('loader-spin');
-      },
 
-      complete: () => {
-
-      }
+  editRole(role: any) {
+    this.isRoleForm = true;
+    this.isEditing = true;
+    this.currentRoleId = role.id;
+    this.permissionsTab = role.permissions.map((p: any) => p.name); // Récupère les noms des permissions
+    this.roleForm.patchValue({
+      id: role.id,
+      label: role.label,
     });
   }
 
-  checkBox(event, perm) {
-    if(event.target.checked){
+  checkBox(event: any, perm: any) {
+    if (event.target.checked) {
       this.permissionsTab.push(perm);
+    } else {
+      this.permissionsTab = this.permissionsTab.filter(element => element !== perm);
     }
-
-    if(!event.target.checked){
-      this.permissionsTab.forEach((element, index) => {
-        if(element === perm){
-          this.permissionsTab.splice(index, 1);
-        }
-      });
-    }
-
   }
 
   saveRoles() {
     this.ngxLoader.startLoader('loader-spin');
-    console.log(this.roleForm.value);
-    this.manageRolePermission.saveRole({role: this.roleForm.value, perms: this.permissionsTab}).subscribe({
-      next: (v: any) => {
-        if (v.status == 200) {
-          this.rolePermissions = v.data;
-          this.message = v.message;
-          this.showSuccess(this.message)
-          this.getRoles({});
+    const roleData = {
+      label: this.roleForm.get('label')?.value,
+      permissions: this.permissionsTab,
+    };
+
+    if (this.isEditing) {
+      this.manageRolePermission.updateRole(this.currentRoleId, roleData).subscribe({
+        next: (v: any) => {
+          if (v.status === 200) {
+            this.message = 'Rôle mis à jour avec succès.';
+            this.showSuccess(this.message);
+            this.getRoles({});
+            this.ngxLoader.stopLoader('loader-spin');
+            this.closeModalRole();
+          } else {
+            this.message = 'Une erreur est survenue lors de la mise à jour.';
+            this.showError(this.message);
+            this.ngxLoader.stopLoader('loader-spin');
+          }
+        },
+        error: (e) => {
+          console.log(e);
+          this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
+          this.showError(this.message);
           this.ngxLoader.stopLoader('loader-spin');
-          this.isRoleForm = false;
-        } else {
-          this.message = v.message;
-          this.showError(this.message)
-          this.ngxLoader.stopLoader('loader-spin')
-        }
-      },
-      error: (e) => {
-        console.log(e);
-        this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
-        this.showError(this.message);
-        this.ngxLoader.stopLoader('loader-spin');
-      },
-
-      complete: () => {
-
-      }
-    });
+        },
+        complete: () => { }
+      });
+    } else {
+      this.manageRolePermission.createRole(roleData).subscribe({
+        next: (v: any) => {
+          if (v.status == 200) {
+            this.message = 'Rôle créé avec succès.';
+            this.showSuccess(this.message);
+            this.getRoles({});
+            this.ngxLoader.stopLoader('loader-spin');
+            this.closeModalRole();
+          } else {
+            this.message = 'Une erreur est survenue lors de la création.';
+            this.showError(this.message);
+            this.ngxLoader.stopLoader('loader-spin');
+          }
+        },
+        error: (e) => {
+          console.log(e);
+          this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
+          this.showError(this.message);
+          this.ngxLoader.stopLoader('loader-spin');
+        },
+        complete: () => { }
+      });
+    }
   }
 
   closeModalRole() {
     this.modalService.hide();
     this.roleForm.reset();
     this.isRoleForm = false;
-  }  
+    this.isEditing = false;
+    this.permissionsTab = [];
+    this.currentRoleId = null;
+  }
 
-  displayModalRole(modalRole: any) {
+  displayModalRole() {
     this.isRoleForm = true;
+    this.isEditing = false;
+    this.permissionsTab = [];
   }
 
   showSuccess(msg: string) {
@@ -193,15 +194,15 @@ export class ManagePermissionComponent {
   displaySearchForm(status: boolean) {
     this.isSearchForm = status;
   }
-  
-  closeModalDeleting(){
+
+  closeModalDeleting() {
     this.modalService.hide();
   }
 
-  confirmDeletingUser(user: any) {
+  confirmDeletingRole(role: any) {
     let testResponse = '';
-    testResponse = 'Voulez-vous supprimer ce groupe ?';  
-    
+    testResponse = 'Voulez-vous supprimer ce rôle ?';
+
     Swal.fire({
       title: 'Confirmation !',
       text: `${testResponse}`,
@@ -214,29 +215,31 @@ export class ManagePermissionComponent {
     }).then(result => {
       if (result.value) {
         this.isProcessing = true;
-        this.manageRolePermission.roles({id: user?.id}).subscribe(
-          {
-            next: (v: any) => {
-              if (v.status == 200) {
-                this.showSuccess(v.message);
-                this.getRoles({});
-              } else {
-                this.showError(v.message);
-                this.isProcessing = false;
-              }
-            },
-
-            error: (e) => {
-              console.error(e);
-              this.isProcessing = false;
-            },
-
-            complete: () => {
-
+        this.manageRolePermission.deleteRole(role.id).subscribe({
+          next: (v: any) => {
+            if (v.status === 200) {
+              this.showSuccess(v.message);
+              this.getRoles({}); 
+            } else {
+              this.message = v.message || 'Une erreur est survenue lors de la suppression.';
+              this.showError(this.message);
             }
+          },
+          error: (e) => {
+            console.error(e);
+            this.message = 'Une erreur interne est survenue. Veuillez contacter le support.';
+            this.showError(this.message);
+          },
+          complete: () => {
+            this.isProcessing = false;
+            this.ngxLoader.stopLoader('loader-spin');
           }
-        )
+        });
       }
     });
+  }
+
+  isPermissionChecked(permissionName: string): boolean {
+    return this.permissionsTab.includes(permissionName);
   }
 }

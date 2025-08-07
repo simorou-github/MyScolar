@@ -41,36 +41,10 @@
                                 <h5 class="card-title mb-4">Recherche avancée</h5>
 
                                 <form class="row gy-2 gx-3 align-items-center" novalidate [formGroup]="roleSearchForm">
-                                    <div class="col-sm-4">
-                                        <label class="visually-hidden" for="autoSizingSelect">Nom rôle</label>
-                                        <input type="text" id="description" class="form-control"
-                                            formControlName="description" placeholder="Nom du rôle" />
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label class="visually-hidden" for="autoSizingSelect">Code rôle</label>
-                                        <input type="text" id="code_scolar" class="form-control"
-                                            formControlName="name" placeholder="Code du rôle" />
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label class="visually-hidden" for="autoSizingSelect">Statut</label>
-                                        <select class="form-select" id="autoSizingSelect" formControlName="status">
-                                            <option selected>Sélectionnez</option>
-                                            <option value="1">Actif</option>
-                                            <option value="0">Inactif</option>
-                                        </select>
-                                    </div>
 
-                                    <div class="col-sm-2">
-                                        <label class="visually-hidden" for="autoSizingSelect">Type</label>
-                                        <select class="form-select" formControlName="type" 
-                                            id="autoSizingSelect" (change)="getRoles(roleSearchForm.value)">
-                                            <option selected value="">Sélectionnez</option>
-                                            <option value="admin">Géré par l'administrateur Scolar</option>
-                                            <option value="school">Peut être géré par l'administrateur école aussi</option>
-                                        </select>
-                                    </div>
                                     <div class="col-sm-1" style="margin-top: -2%;">
-                                        <button type="button" class="btn btn-primary" (click)="getRoles(roleSearchForm.value)">
+                                        <button type="button" class="btn btn-primary"
+                                            (click)="getRoles(roleSearchForm.value)">
                                             <i class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
                                         </button>
                                     </div>
@@ -82,19 +56,15 @@
                     </div>
 
                     <div>
-                        <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
                         <div class="table-responsive">
-                            <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
-                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                            <table class="table table-striped align-middle dt-responsive nowrap w-100 table-borderless"
                                 id="projectList-table">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Role</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Code</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Statut</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Permissions</th>
+                                        <th scope="col">Ecole</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -103,15 +73,14 @@
                                         <tr
                                             *ngFor="let role of roles | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
                                             <td>{{i+1}}</td>
-                                            <td>{{role.description}}</td>
-                                            <td>{{role.guard_name}}</td>
-                                            <td>{{role.name}}</td>
-                                            <td>{{role.type}}</td>
+                                            <td>{{role.label}}</td>
                                             <td>
-                                                <span
-                                                    class="badge {{(role.status == 1) ? 'bg-success' : 'bg-danger'}}">{{(role.status
-                                                    == 1) ? 'Actif' : 'Inactif'}}</span>
+                                                <span *ngFor="let permission of role.permissions">
+                                                    <span class="badge bg-primary me-2">{{ permission.label }}</span>
+                                                </span>
                                             </td>
+                                            <td>-</td>
+
 
                                             <td class="text-center">
 
@@ -121,19 +90,15 @@
                                                         <i class="mdi mdi-dots-horizontal font-size-18"></i>
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+                                                        
                                                         <a class="dropdown-item" href="javascript: void(0);"
-                                                            (click)="confirm(role)">
+                                                            (click)="editRole(role)">
                                                             <i
-                                                                class="{{user?.status ? 'mdi mdi-lock-remove-outline text-danger' : 'mdi mdi-playlist-edit text-success'}}"></i>&nbsp;
-                                                            &nbsp;{{user?.status ? 'Désactiver' : 'Activer'}}
+                                                                class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i>
+                                                            Modifier
                                                         </a>
                                                         <a class="dropdown-item" href="javascript: void(0);"
-                                                            (click)="update(modalUser, user)">
-                                                            <i
-                                                                class="mdi mdi-pencil font-size-7 text-primary align-middle me-2"></i>
-                                                            Modifier</a>
-                                                        <a class="dropdown-item" href="javascript: void(0);"
-                                                            (click)="confirmDeletingUser(user)">
+                                                            (click)="confirmDeletingRole(role)">
                                                             <i
                                                                 class="mdi mdi-trash-can-outline text-danger align-middle me-2"></i>
                                                             Supprimer</a>
@@ -145,8 +110,6 @@
                                 </tbody>
 
                             </table>
-                            <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                                [loaderId]="'loader-spin'"></ngx-ui-loader>
 
                             <div class="pagination-style">
                                 <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
@@ -166,8 +129,11 @@
         </div>
     </div>
 
+    <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+        [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+
     <div class="row" *ngIf="isRoleForm">
-        <div class="col-lg-12"  ngxUiLoaderBlurred [loaderId]="'loader-spin'">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
                     <div class="col-lg-12">
@@ -181,53 +147,39 @@
                                         </h5>
                                     </div>
                                     <div class="col-3 text-right">
-                                        <button class="btn btn-primary pull-right" style="margin-right: 10%"
-                                            type="submit" [disabled]="!roleForm.valid"><i class="bx bx-check" [disabled]=""></i> Enregistrer</button>
-                                        <button class="btn btn-danger pull-right" (click)="closeModalRole()"><i
-                                                class="bx bx-x"></i> Fermer</button>
+                                        <button class="btn {{ isEditing ? 'btn-warning' : 'btn-primary' }} pull-right" style="margin-right: 10%"
+                                            type="submit" [disabled]="!roleForm.valid">
+                                            <i class="bx bx-check"></i> {{ isEditing ? 'Modifier' : 'Enregistrer' }}
+                                        </button>
+                                        <button type="button" class="btn btn-danger pull-right"
+                                            (click)="closeModalRole()"><i class="bx bx-x"></i> Fermer</button>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-6">
                                         <label for="">Nom<span class="required_color">*</span></label>
-                                        <input type="text" id="name" class="form-control" formControlName="name"
+                                        <input type="text" id="label" class="form-control" formControlName="label"
                                             placeholder="Nom du rôle" />
                                     </div>
 
-                                    <div class="col-5">
-                                        <label for="">Description<span class="required_color">*</span></label>
-                                        <input type="text" id="description" class="form-control"
-                                            formControlName="description" placeholder="Description du rôle" />
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="">Type<span class="required_color">*</span></label>
-                                        <select class="form-select" formControlName="type" 
-                                            id="autoSizingSelect">
-                                            <option selected value="">Sélectionnez</option>
-                                            <option value="admin">Géré par l'administrateur Scolar</option>
-                                            <option value="school">Peut être géré par l'administrateur école aussi</option>
-                                        </select>
-                                    </div>
                                     <hr>
                                     <h5 class="mt-2 mb-2"><i class="fa fa-magic text-warning"></i> Permissions du
                                         Rôle</h5>
                                     <ng-container *ngFor="let perm of permissions; let i = index;">
-                                    <div class="col-3">
-                                        <input class="form-check-input" type="checkbox" name="formRadio{{i}}"
-                                            id="formRadio{{i}}" (change)="checkBox($event, perm.name)">&nbsp;&nbsp;
-                                        <label class="form-check-label" for="formRadio{{i}}">
-                                            {{perm.description}}
-                                        </label>
-                                    </div>
-                                </ng-container>
+                                        <div class="col-3">
+                                            <input class="form-check-input" type="checkbox"
+                                                [checked]="isPermissionChecked(perm.name)"
+                                                (change)="checkBox($event, perm.name)">&nbsp;&nbsp;
+                                            <label class="form-check-label" for="formRadio{{i}}">
+                                                {{perm.label}}
+                                            </label>
+                                        </div>
+                                    </ng-container>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-            [loaderId]="'loader-spin'"></ngx-ui-loader>
         </div>
     </div>
+
 </div>

@@ -3,165 +3,118 @@
 namespace App\Http\Controllers\AdminSpace;
 
 use App\Http\Controllers\Controller;
-use App\Models\Permission;
-use App\Models\RoleHasPermission;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
+use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    //
-
-    //Roles List
-    public function show(Request $request)
+   
+    public function index()
     {
-        try {
-            $params = [];
-            if ($request->name) {
-                $params[] = ['email', 'like', '%' . $request->name . '%'];
-            }
-            if ($request->status) {
-                $params[] = ['status', '=', $request->status];
-            }
-            $data = Role::with('permission')->orderBy('id', 'DESC')->get();
+        Log::info('est ici 1');
+        $user = auth()->user(); 
+        $school_id = $user->school_id;
 
-            return response()->json([
-                'data' => $data,
-                'message' => 'Liste des roles',
-                'status' => 200
-            ]);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'data' => [],
-                'message' => 'Une erreur interne est survenue',
-                'status' => 500
-            ]);
+        if ($school_id) {
+            $roles = Role::where('school_id', $school_id)
+                ->orWhereNull('school_id') 
+                ->with('permissions')
+                ->get();
+        } else {
+            $roles = Role::with('permissions')->get();
         }
+        return response()->json([
+            'data' => $roles,
+            'status' => 200
+        ]);
     }
 
-    //Roles List
-    public function getAllRole(Request $request)
+   
+    public function store(StoreRoleRequest $request)
     {
-        try {
-            
-            $params = [];
-            if ($request->name) {
-                $params[] = ['name', 'like', '%' . $request->name . '%'];
-            }
-            if ($request->description) {
-                $params[] = ['description', 'like', '%' . $request->description . '%'];
-            }
-            if ($request->status) {
-                $params[] = ['status', '=', $request->status];
-            }
-            if ($request->type) {
-                $params[] = ['type', '=', $request->type];
-            }
-            
-            $data = Role::where($params)->orderBy('created_at', 'DESC')->get();
+        $user = auth()->user();
 
-            return response()->json([
-                'data' => $data,
-                'message' => 'Liste des roles',
-                'status' => 200
-            ]);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'data' => [],
-                'message' => 'Une erreur interne est survenue',
-                'status' => 500
-            ]);
-        }
+        $role = Role::create([
+            'name' => $this->createSlug($request->label),
+            'label' => $request->label,
+            'guard_name' => 'api',
+            'school_id' => $user->school_id,
+        ]);
+
+        $role->givePermissionTo($request->permissions);
+
+        return response()->json([
+            'message' => 'Rôle créé avec succès',
+            'data' => $role->load('permissions'),
+            'status' => 200
+        ]);
     }
 
-    //Permissions of a role List
-    public function getPermissionsOfRole(Request $request)
+ 
+    public function show(Role $role)
     {
-        try {
-            $data = RoleHasPermission::where('role_id', $request->role_id)->with(['role', 'permission'])->orderBy('id', 'DESC')->get();
-            return response()->json([
-                'data' => $data,
-                'message' => 'Liste des permissions',
-                'status' => 200
-            ]);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'data' => [],
-                'message' => 'Une erreur interne est survenue',
-                'status' => 500
-            ]);
-        }
+        return response()->json($role->load('permissions'));
     }
 
-
-    //Permissions List
-    public function getAllPermissions(Request $request)
+ 
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        try {
-            $params = [];
-            if ($request->name) {
-                $params[] = ['name', 'like', '%' . $request->name . '%'];
-            }
-            if ($request->description) {
-                $params[] = ['description', 'like', '%' . $request->description . '%'];
-            }
-            if ($request->status) {
-                $params[] = ['status', '=', $request->status];
-            }
-            $data = Permission::where($params)->orderBy('id', 'DESC')->get();
+        $role->update(['label' => $request->label]);
+        $role->syncPermissions($request->permissions);
 
-            return response()->json([
-                'data' => $data,
-                'message' => 'Liste des permissions',
-                'status' => 200
-            ]);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'data' => [],
-                'message' => 'Une erreur interne est survenue',
-                'status' => 500
-            ]);
-        }
+        return response()->json([
+            'message' => 'Rôle mis à jour avec succès',
+            'data' => $role->load('permissions'),
+            'status' => 200
+        ]);
     }
 
-
-    //Save Role
-    public function saveRole(Request $request)
+    
+    public function destroy(Role $role)
     {
-        try {
-            if ($role = Role::where('name', trim($request->role['name']))->orWhere('description', trim($request->role['description']))->first()) {
-
-                return response()->json([
-                    'data' => null,
-                    'message' => 'Ce role existe déjà.',
-                    'status' => 300
-                ]);
-            }
-
-            if ($role = Role::create($request->role)) {
-                foreach ($request->perms as $value) {
-                    $role->givePermissionTo($value);
-                }
-
-                return response()->json([
-                    'data' => [],
-                    'message' => 'Role enregistré avec succès.',
-                    'status' => 200
-                ]);
-            }
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'data' => [],
-                'message' => 'Une erreur interne est survenue',
-                'status' => 500
-            ]);
-        }
+        $role->delete();
+        return response()->json([
+            'message' => 'Rôle supprimé avec succès',
+            'data' => null,
+            'status' => 200
+        ]);
     }
+
+   
+    public function getPermissions()
+    {
+        $permissions = Permission::all();
+        return response()->json([
+            'data' => $permissions,
+            'status' => 200
+        ]);
+    }
+
+    function createSlug($string)
+    {
+        // Convertir la chaîne en minuscules
+        $slug = strtolower($string);
+
+        // Remplacer les caractères accentués par leur équivalent non accentué
+        $slug = iconv('UTF-8', 'us-ascii//TRANSLIT', $slug);
+
+        // Supprimer tous les caractères spéciaux (sauf les lettres, les chiffres et les espaces)
+        $slug = preg_replace('/[^a-z0-9\s]/', '', $slug);
+
+        // Remplacer les espaces par des tirets
+        $slug = preg_replace('/\s+/', '-', $slug);
+
+        // Supprimer les tirets multiples
+        $slug = preg_replace('/-+/', '-', $slug);
+
+        // Supprimer les tirets au début et à la fin
+        $slug = trim($slug, '-');
+
+        return $slug;
+    }
+
+    
 }
