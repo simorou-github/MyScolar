@@ -33,8 +33,8 @@ class ScolarAdminSeeder extends Seeder
                 'school_id' => null
             ]);
 
-            $user->assignRole(Role::findByName('school_admin', 'api'));
-            $user->assignRole(Role::findByName('admin', 'api'));
+            $user->assignRole(Role::findByName('school-admin', 'api'));
+            $user->assignRole(Role::findByName('super-admin', 'api'));
 
             DB::commit();
         } catch (Exception $e) {

@@ -148,7 +148,7 @@ export const MENU: MenuItem[] = [
             },
             {
                 id: 7004,
-                label: 'Roles Permissions',
+                label: 'Roles & Permissions',
                 link: '/scolar/manage-permission',
                 parentId: 7
             }

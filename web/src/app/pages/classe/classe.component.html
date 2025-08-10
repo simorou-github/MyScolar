@@ -84,8 +84,8 @@
                         </div>
                         <div class="table-responsive">
                             <table
-                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
-                                id="projectList-table" ngxUiLoaderBlurred [loaderId]="'loader-spin'">
+                                class="table table-striped align-middle table-nowrap"
+                                id="projectList-table">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 8%">#</th>
@@ -130,8 +130,6 @@
                                 <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
                                     (pageChange)="p = $event"></pagination-controls>
                             </div>
-                            <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                                [loaderId]="'loader-spin'"></ngx-ui-loader>
 
                         </div>
                     </div>
@@ -148,6 +146,10 @@
     </div>
 
 </div>
+
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+
 
 <!--Start Classe Modal -->
 <ng-template #modalClasse role="document" let-modal>
