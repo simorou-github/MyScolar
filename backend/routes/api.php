@@ -96,11 +96,12 @@ Route::prefix('manage-fees')->group(function () {
 Route::prefix('manage-fees')->middleware(['auth:api'])->group(function () {
     Route::post('assign-fees-to-classe', [FeesManageController::class, 'assigneFeesToClasse']);
     Route::post('get-student-balance', [FeesManageController::class, 'getStudentFeesBalance']);
-    Route::post('search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
+    Route::post('search-student-balance-for-caisse', [FeesManageController::class, 'searchStudentFeesBalanceForCaissePayment']);
     Route::post('get-fees-details-data', [FeesManageController::class, 'getFeesDetails']);
     Route::post('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
     Route::get('get-fees-balance-data-export', [FeesManageController::class, 'getExportOfFeesBalance']);
     Route::post('generate-balance/by-type-file', [FeesManageController::class, 'getExportOfFeesBalance']);
+
 });
 
 // // All about classe of the system
@@ -146,6 +147,8 @@ Route::middleware(['auth:api'])->post('payment/get-details', [PaymentController:
 
 Route::group(['prefix' => 'payment'], function () {
     Route::post('create-token', [MTNPaymentController::class, 'createAccessToken']);
+    Route::post('process-unique-caisse-payment', [FeesManageController::class, 'requestToUniqueCaissePayment']);
+    Route::post('process-batch-caisse-payment', [FeesManageController::class, 'requestToBatchCaissePayment']);
     Route::post('process-unique-payment', [MTNPaymentController::class, 'requestToUniquePayment']);
     Route::post('process-batch-payment', [MTNPaymentController::class, 'requestToBatchPayment']);
     Route::get('account-balance', [MTNPaymentController::class, 'requestToAccountBalance']);

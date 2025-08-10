@@ -30,7 +30,6 @@ export class AssignFeesToClasseComponent implements OnInit {
     this.breadCrumbItems = [{ label: 'ESPACE ECOLE' }, { label: 'AFFECTAION FRAIS', active: true }];
     this.scName = this.tokenService.getSocialReasonSchool;
     this.academic_year = this.tokenService.getAcademicYear;
-    console.log(this.academic_year);
     this.toDay = new Date();
     this.typeFeesList();
     this.typePaymentList();
@@ -56,10 +55,10 @@ export class AssignFeesToClasseComponent implements OnInit {
             this.schoolClasseForm.reset();
             this.showSuccess(this.message);
             this.router.navigate(['espace/gestion-frais']);
-           //this.ngxLoader.stopLoader('loader-fees');
+           this.ngxLoader.stopLoader('loader-fees');
           } else {
             this.showError(this.message);
-           //this.ngxLoader.stopLoader('loader-fees');
+           this.ngxLoader.stopLoader('loader-fees');
           }
         },
 
@@ -89,12 +88,12 @@ export class AssignFeesToClasseComponent implements OnInit {
         }else{
           this.feesList.push(this.createFeesGroup(this.schoolClasseForm.value.type_payment.label +' ' + (i+1), this.schoolClasseForm.value.amount_fees / due_date_number));
         }
-      }
+      }
     } else {
       this.schoolClasseForm.get('type_payment').patchValue("");
       this.showWarning('Veuillez sélectionner un fais et saisir le montant correspondant en premier.');
     }
-  }
+  }
 
   public get feesList(): FormArray {
     return <FormArray>this.schoolClasseForm.get('fees');

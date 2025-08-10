@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\AdminSpace;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\PaymentJob;
 use App\Models\BalanceFees;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
-use App\Models\TypeFees;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -74,7 +72,6 @@ class MTNPaymentController extends Controller
             ]);
         }
     }
-
 
     //Process Batch Payment
     public function requestToBatchPayment(Request $request)
@@ -290,7 +287,6 @@ class MTNPaymentController extends Controller
         }
     }
 
-
     //Process Unique Payment
     public function requestToUniquePayment(Request $request)
     {
@@ -485,7 +481,7 @@ class MTNPaymentController extends Controller
     }
 
     //Account Balance 
-    public function requestToAccountBalance()
+    public function requestToAccountBalance(Request $request)
     {
         $access_token = $this->createAccessToken($request)->access_token;
         $environment = 'sandbox';

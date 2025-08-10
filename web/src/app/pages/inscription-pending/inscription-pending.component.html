@@ -36,27 +36,20 @@
 
                                 <form class="row gy-2 gx-3 align-items-center" [formGroup]="searchForm"
                                     (ngSubmit)="getListInscriptionPending()">
-                                    <div class="col-sm-3">
-                                        <label class="visually-hidden" for="autoSizingSelect">Raison sociale</label>
-                                        <input type="text" id="social_reason" class="form-control"
-                                            formControlName="social_reason" placeholder="Raison sociale" />
+                                    <div class="col-sm-5">
+                                        <label class="visually-hidden" for="autoSizingSelect">Ecoles</label>
+                                        <select class="form-select" id="autoSizingSelect" formControlName="owner">
+                                            <option selected value="">Ecoles</option>
+                                            <option *ngFor="let school of schools" value="{{school.id}}">
+                                                {{school.social_reason}}</option>
+                                        </select>
                                     </div>
-
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label class="visually-hidden" for="autoSizingSelect">Pays</label>
                                         <select class="form-select" id="autoSizingSelect" formControlName="country_id">
                                             <option selected value="">Pays</option>
                                             <option *ngFor="let country of countries" value="{{country.id}}">
                                                 {{country.name}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <label class="visually-hidden" for="autoSizingSelect">Propriétaire</label>
-                                        <select class="form-select" id="autoSizingSelect" formControlName="owner">
-                                            <option selected value="">Propriétaire</option>
-                                            <option *ngFor="let school of inscriptionsValidated" value="{{school.id}}">
-                                                {{school.owner}}</option>
                                         </select>
                                     </div>
 

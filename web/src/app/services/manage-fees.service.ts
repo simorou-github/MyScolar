@@ -21,8 +21,8 @@ export class ManageFeesService {
     return this.http.post(environment.apiUrl + '/manage-fees/get-fees-details-data', body);
   }
 
-  searchStudentFeesBalanceForParentPayment(body: any) {
-    return this.http.post(environment.apiUrl + '/manage-fees/search-student-balance', body);
+  searchStudentFeesBalanceForCaissePayment(body: any) {
+    return this.http.post(environment.apiUrl + '/manage-fees/search-student-balance-for-caisse', body);
   }
 
   publicSearchStudentFeesBalanceForParentPayment(body: any) {

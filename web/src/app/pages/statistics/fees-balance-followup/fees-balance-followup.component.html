@@ -103,7 +103,7 @@
 
                             <div class="col-lg-3">
                                 <label for="academicyear">Année Acatémique</label>
-                                <select class="form-control" name="academicyear" ngModel
+                                <select class="form-control form-select" name="academicyear" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.academic_year"
                                     (change)="getFeesBalanceFollowupData()">
                                     <option value="">Selection l'année</option>
@@ -116,7 +116,7 @@
 
                             <div class="col-lg-3">
                                 <label for="type_fees_id">Type Frais</label>
-                                <select class="form-control" name="type_fees_id" ngModel
+                                <select class="form-control  form-select" name="type_fees_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.type_fees_id"
                                     (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
@@ -128,7 +128,7 @@
 
                             <div class="col-lg-3" *ngIf="isSchoolsList">
                                 <label for="school_id">Ecoles</label>
-                                <select class="form-control" name="school_id" ngModel
+                                <select class="form-control form-select" name="school_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.school_id"
                                     (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
@@ -139,7 +139,7 @@
                             </div>
                             <div class="col-lg-3" *ngIf="!isSchoolsList">
                                 <label for="school_id">Ecoles</label>
-                                <select class="form-control" name="school_id" ngModel
+                                <select class="form-control form-select" name="school_id" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.school_id"
                                     (change)="getFeesBalanceFollowupData()">
                                     <option value="">Tous</option>
@@ -219,7 +219,7 @@
                                 <td>{{balance.fees_label}}</td>
                                 <td>{{balance.fees_amount | currency:'XOF'}}</td>
                                 <td>
-                                    <span *ngIf="balance.balance==0" class="badge bg-success blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
+                                    <span *ngIf="balance.balance==0" class="badge bg-success blog-badge p-2"><i class="fa fa-check-circle"></i> Soldé</span>
                                     <span *ngIf="balance.balance>0 && balance.balance<balance.fees_amount" class="badge bg-warning blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
                                     <span *ngIf="balance.balance>0 && balance.balance==balance.fees_amount" class="badge bg-danger blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
                                 </td>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AuthService } from 'src/app/services/auth.service';
 import { ClasseService } from 'src/app/services/classe.service';
 import { ManageFeesService } from 'src/app/services/manage-fees.service';
@@ -22,12 +23,12 @@ export class CashPaymentComponent {
   totalFees: number; student_param: any; selected_fees: any[]; totalBalances: number; paymentForm!: FormGroup; batchPaymentForm!: FormGroup;
   p: number = 1; path_part = environment.domainUrl+'/storage/';
 
-  apprenants: any;  school_classes: any;  private school_id: string = '';
+  apprenants: any;  school_classes: any;  private school_id: string = '';  userEmail: any;
 
   constructor(private authService: AuthService, private modalService: BsModalService, private paiementScolaireService: PaiementScolaireService,
     private toastr: ToastrService, private managerFeesService: ManageFeesService, private fb: FormBuilder, private classeService: ClasseService,
-    private tokenService: TokenService, private schoolService: SchoolService,) {
-      this.school_id = this.tokenService?.getSchoolId;
+    private tokenService: TokenService, private schoolService: SchoolService, private ngxLoader: NgxUiLoaderService) {
+      this.school_id = this.tokenService?.getSchoolId; this.userEmail = tokenService.getUserEmail
   }
 
   ngOnInit(): void {
@@ -55,8 +56,8 @@ export class CashPaymentComponent {
     });
   }
 
-  openPayementModal(student: any, fees: any, content: any) {
-    this.curr_student = student;
+  openPayementModal(fees: any, content: any) {
+    this.curr_student = this.student_classe.student;
     this.curr_fees = fees;
     this.paymentForm.controls.phone.setValue(this.curr_student.phone);
     this.paymentForm.controls.email.setValue(this.curr_student.email);
@@ -67,7 +68,7 @@ export class CashPaymentComponent {
   }
 
   openPayementMultipleRowModal(content: any) {
-    this.curr_student = this.student;
+    this.curr_student = this.student_classe.student;
     this.selected_fees = this.selectedBalancesRows;
     this.batchPaymentForm.controls.phone.setValue(this.curr_student.phone);
     this.batchPaymentForm.controls.email.setValue(this.curr_student.email);
@@ -80,19 +81,17 @@ export class CashPaymentComponent {
   //Get Data for payment
   getDataForPayment(data: any) {
     this.student_param = data;
-    this.isProcessing = true;
+    this.ngxLoader.startLoader('loader-spin');
     this.selectedBalancesRows = [];
     this.totalBalances = 0;
-    this.managerFeesService.publicSearchStudentFeesBalanceForParentPayment(data.value).subscribe({
+    this.managerFeesService.searchStudentFeesBalanceForCaissePayment(data.value).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
           this.balanceFees = v.balanceFees;
-          this.student = v.student;
           this.student_classe = v.student_classe;
-          // console.log(this.student_classe);
           this.operators = v.operators;
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.showSuccess(this.message);
           this.paymentForm = this.fb.group({
             id: [],
@@ -105,7 +104,7 @@ export class CashPaymentComponent {
             details: [],
           });
         } else {
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.showError(this.message);
         }
       },
@@ -113,6 +112,7 @@ export class CashPaymentComponent {
       error: (e) => {
         console.error(e);
         this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
@@ -123,22 +123,23 @@ export class CashPaymentComponent {
 
   //Get all Academic Year
   getAllAcademicYear(data: any = {}) {
-    this.isProcessing = true;
+    this.ngxLoader.startLoader('loader-spin');
     this.authService.listAccademicYear(data).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
           this.academic_years = v.data;
           this.academic_year = this.currentAcademicYaer;
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
         } else {
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
         }
       },
 
       error: (e) => {
         console.error(e);
         this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
@@ -149,23 +150,22 @@ export class CashPaymentComponent {
 
   //Get all Apprenant Of Selected School
   getAllApprenantOfSlectedClasse(data) {
+    this.ngxLoader.startLoader('loader-spin');
     this.apprenants = [];
-    this.isProcessing = true;
     this.schoolService.listStudents(data).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
-          console.log(v.data);
+          this.ngxLoader.stopLoader('loader-spin');
           this.apprenants = v.data;
-          this.isProcessing = false;
         } else {
-          this.isProcessing = false;
-        }
+          this.ngxLoader.stopLoader('loader-spin');        }
       },
 
       error: (e) => {
         console.error(e);
         this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
@@ -176,21 +176,22 @@ export class CashPaymentComponent {
 
   //Get all School's Classes
   getAllClassesOfCurrentSchool() {
-    this.isProcessing = true;
+    this.ngxLoader.startLoader('loader-spin');
     this.classeService.listClasseOfSchool({school_id: this.school_id}).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
           this.school_classes = v.data;
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
         } else {
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
         }
       },
 
       error: (e) => {
         console.error(e);
         this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
@@ -214,8 +215,8 @@ export class CashPaymentComponent {
 
   //Process Unique Payment
   processUniquePayment(data: any) {
-    this.isProcessing = true;
-    this.paiementScolaireService.processUniquePayment({
+    this.ngxLoader.startLoader('loader-spin');
+    this.paiementScolaireService.processUniqueCaissePayment({
       'amount': data.amount,
       'phone': data.phone,
       'email': data.email,
@@ -227,17 +228,18 @@ export class CashPaymentComponent {
       'type_fees_id': this.curr_fees.type_fees_id,
       'academic_year': this.curr_fees.academic_year,
       'balance_id': this.curr_fees.id,
+      'user_email': this.userEmail
     }).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
           this.data = v.data;
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.showSuccess(this.message);
           this.getDataForPayment(this.student_param);
           this.modalService.hide();
         } else {
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.showError(this.message);
         }
       },
@@ -255,9 +257,10 @@ export class CashPaymentComponent {
 
   //Process Batch Payment
   processBatchPayment(data) {
-    this.isProcessing = true;
-    this.paiementScolaireService.processBatchPayment({
+    this.ngxLoader.startLoader('loader-spin');
+    this.paiementScolaireService.processBatchCaissePayment({
       'data': data,
+      'user_email': this.userEmail,
       'balance_rows': this.selectedBalancesRows,
       'additional_fields': {
         'student_id': this.curr_student.id,
@@ -270,13 +273,13 @@ export class CashPaymentComponent {
         this.message = v.message;
         if (v.status == 200) {
           this.data = v.data;
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.showSuccess(this.message);
           this.getDataForPayment(this.student_param);
           this.selectedBalancesRows = []; this.totalBalances = 0;
           this.modalService.hide();
         } else {
-          this.isProcessing = false;
+          this.ngxLoader.stopLoader('loader-spin');
           this.showError(this.message);
         }
       },
@@ -284,6 +287,7 @@ export class CashPaymentComponent {
       error: (e) => {
         console.error(e);
         this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
@@ -309,7 +313,6 @@ export class CashPaymentComponent {
       this.totalFees = this.totalFees + element.montant;
     });
   }
-
 
   closeModal() {
     this.paymentForm.reset();

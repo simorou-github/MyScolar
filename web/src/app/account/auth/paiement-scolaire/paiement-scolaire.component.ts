@@ -183,6 +183,7 @@ export class PaiementScolaireComponent {
       },
 
       error: (e) => {
+        this.isProcessing = false;
         console.error(e);
         this.showError(this.message);
       },
@@ -222,6 +223,7 @@ export class PaiementScolaireComponent {
       },
 
       error: (e) => {
+        this.isProcessing = false;
         console.error(e);
         this.showError(this.message);
       },
