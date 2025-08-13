@@ -60,6 +60,15 @@
                                     </div>
 
                                     <div class="col-sm-2">
+                                        <label class="visually-hidden" for="autoSizingSelect">Mode Opérateur</label>
+                                        <select class="form-select" id="autoSizingSelect" formControlName="is_cash_mode">
+                                            <option selected value="">Mode</option>
+                                            <option value="1">Caisse</option>
+                                            <option value="0">Mobile <output></output> Bancaire</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-2">
                                         <label class="visually-hidden" for="autoSizingSelect">Statut</label>
                                         <select class="form-select" id="autoSizingSelect" formControlName="status">
                                             <option selected value="">Statut</option>
@@ -94,8 +103,9 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 8%">#</th>
-                                        <th scope="col" style="width: 30%">Nom</th>
-                                        <th scope="col" style="width: 30%">Pays</th>
+                                        <th scope="col" style="width: 20%">Nom</th>
+                                        <th scope="col" style="width: 20%">Pays</th>
+                                        <th scope="col" style="width: 20%">Mode Opérateur</th>
                                         <th scope="col" style="width: 10%">Statut</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -117,6 +127,12 @@
                                             <td style="width: 30%">{{operator.country?.name}}</td>
                                             <td style="width: 10%">
                                                 <span
+                                                    class="badge {{(operator.is_cash_mode == 1) ? 'bg-warning' : 'bg-success'}}">{{(operator.is_cash_mode
+                                                    == 1) ? 'Caisse' :
+                                                    'Mobile & Bancaire'}}</span>
+                                            </td>
+                                            <td style="width: 10%">
+                                                <span
                                                     class="badge {{(operator.status == 1) ? 'bg-success' : 'bg-danger'}}">{{(operator.status
                                                     == 1) ? 'Actif' :
                                                     'Inactif'}}</span>
@@ -133,10 +149,13 @@
                                                             (click)="update(modalOperator, operator)"><i
                                                                 class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i>
                                                             Modifier</a>
-                                                        <a class="dropdown-item" href="javascript: void(0);"
-                                                            (click)="ConfirmDeleteModal(StaticDeleteModal, operator)"><i
-                                                                class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i>
-                                                            Supprimer</a>
+                                                        <a class="dropdown-item" href="javascript: void(0);" title="Supression Logique"
+                                                            (click)="ConfirmDeleteModal(StaticDeleteModal, operator)">
+                                                            <i *ngIf="operator.status == 1" class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i>
+                                                            <i *ngIf="operator.status == 0" class="mdi mdi-undo text-success font-size-7 align-middle me-2"></i>
+                                                            <span *ngIf="operator.status == 1"> Désactiver</span>
+                                                            <span *ngIf="operator.status == 0"> Activer</span>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -222,7 +241,22 @@
                         caractères.</span>
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="code" class="form-label">Mode Opérateur <span class="required_color">*</span></label>
+                <select class="form-select mb-2" formControlName="is_cash_mode" id="is_cash_mode"
+                    [ngClass]="{ 'is-invalid': operatorForm.get('is_cash_mode')?.touched && !operatorForm.get('is_cash_mode')?.valid }">
+                    <option disabled value="" selected>Selectionnez un
+                        mode pour l'opérateur</option>
+                    <option value="0">Mobile ou Bancaire</option>
+                    <option value="1">Caisse</option>
+                </select>
+                <div class="space-between-validator"
+                    *ngIf="operatorForm.get('is_cash_mode')?.touched && operatorForm.get('is_cash_mode').hasError('required')">
+                    <span class="required_color">Selectionnez un
+                        mode pour l'opérateur.</span>
+                </div>
 
+            </div>
             <div class="mb-3">
                 <label for="logo" class="form-label">Logo </label>
 
@@ -253,11 +287,11 @@
             (click)="closeModalDeleting()"></button>
     </div>
     <div class="modal-body text-center">
-        <p class="h5 text-danger">Voulez-vous vraiment supprimer l'operator : {{
+        <p class="h5 text-danger">Voulez-vous vraiment mettre à jour le statut de l'operator : {{
             operatorName }} ?</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="closeModalDeleting()">Non</button>
-        <button type="button" class="btn btn-danger" (click)="delete()">Supprimer</button>
+        <button type="button" class="btn btn-danger" (click)="delete()">Mettre à jour</button>
     </div>
 </ng-template>

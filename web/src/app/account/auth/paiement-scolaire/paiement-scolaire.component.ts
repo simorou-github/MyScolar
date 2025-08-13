@@ -116,7 +116,7 @@ export class PaiementScolaireComponent {
   //Get all Academic Year
   getAllAcademicYear(data: any = {}) {
     this.isProcessing = true;
-    this.authService.listAccademicYear(data).subscribe({
+    this.authService.publicListAccademicYear(data).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
@@ -129,6 +129,7 @@ export class PaiementScolaireComponent {
       },
 
       error: (e) => {
+        this.isProcessing = false;
         console.error(e);
         this.showError(this.message);
       },

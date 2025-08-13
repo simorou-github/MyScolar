@@ -8,10 +8,20 @@ label{
     //font-weight: lighter !important;
 }
 
-input, td, th{
-    font-size: 12px !important;
-    font-weight:200 !important;
-    color: black !important;
+input{
+    font-size: 14px !important;
+}
+
+th{
+    font-size: 14px !important;
+    background: #0a6ffd;
+    color: azure;
+    font-weight: bold;
+}
+
+td{
+    font-size: 13px !important;
+    color: black;
 }
 
 .text-warning{
@@ -21,6 +31,8 @@ input, td, th{
 .btn-warning{
     background-color: #0a6ffd !important;
     border-color: #0a6ffd !important;
+    color: azure;
+    font-weight: bold;
 }
 
 .h3, h4{

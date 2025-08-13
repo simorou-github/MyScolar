@@ -162,9 +162,9 @@
                                                     <td title="Montant restant à payer"> 
                                                         <b *ngIf="balance.balance > 0 && balance.balance < balance.fees_amount" class="text-primary">{{balance.balance | currency:'XOF'}}</b>
                                                         <b *ngIf="balance.balance == balance.fees_amount" class="text-danger">{{balance.balance | currency:'XOF'}}</b>
-                                                        <b *ngIf="balance.balance == 0" class="text-success"><i class="fa fa-check-circle"></i> Soldé ({{balance.balance | currency:'XOF'}})</b> </td>
+                                                        <b *ngIf="balance.balance == 0" class="text-success"><i class="fa fa-check-circle"></i> Soldé ({{balance.balance | currency:'XOF'}})</b> 
+                                                    </td>
                                                     <td title="Date échéance pour le paiement"> <b>{{balance.due_date | date:'dd/MM/yyyy'}}</b> </td>
-                                                    <!--td title="Année academique"> {{balance.academic_year}} </td-->
                                                     <td class="text-center ">
                                                         <button type="button" class="btn btn-warning"
                                                             *ngIf="balance.balance > 0"

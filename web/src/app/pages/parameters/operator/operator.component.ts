@@ -29,12 +29,14 @@ export class OperatorComponent implements OnInit {
     this.operatorForm = this.fb.group({
       id: [],
       country_id: ['', [Validators.required]],
+      is_cash_mode: ['', [Validators.required]],
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
     });
     this.searchForm = this.fb.group({
       name: [''],
       country_id: [''],
       status: [''],
+      is_cash_mode: [''],
     });
     this.listCountries();
     this.getAllOperators();
@@ -78,6 +80,8 @@ export class OperatorComponent implements OnInit {
     this.isProcessing = true;
     const formData = new FormData();
     formData.append('name', this.operatorForm.get('name')?.value);
+    formData.append('id', this.operatorForm.get('id')?.value);
+    formData.append('is_cash_mode', this.operatorForm.get('is_cash_mode')?.value);
     formData.append('country_id', this.operatorForm.get('country_id')?.value);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -163,13 +167,14 @@ export class OperatorComponent implements OnInit {
     this.operatorForm.patchValue({
       id: operator?.id,
       country_id: operator?.country_id,
-      name: operator?.name
+      name: operator?.name,
+      is_cash_mode: operator?.is_cash_mode
     });
   }
 
 
   delete() {
-    this.parameterService.deleteOperator({ 'id': this.classe_id }).subscribe(
+    this.parameterService.deleteOperator({ 'id': this.operatorId }).subscribe(
       {
         next: (v: any) => {
           if (v.status == 200) {
