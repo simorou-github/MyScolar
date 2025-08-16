@@ -8,9 +8,9 @@ export const environment = {
   // domainUrl: 'https://coopstats.coopdicpa.com',
   // baseUrl: 'https://web.scolarco.com/#/',
   // apiUrl: 'https://scolar-plus.coopdicpa.com/service/public/api',  
-  // //apiUrl: 'https://scolar.coopdicpa.com/service/public/api',  
+  // //apiUrl: 'https://web.scolarco.com/service/public/api',  
   // baseUrl: 'https://scolar-plus.coopdicpa.com',
-  // //baseUrl: 'https://scolar.coopdicpa.com',
+  // //baseUrl: 'https://web.scolarco.com',
   // // IMPORTANT to download model file
   // domainUrl: 'https://scolar-plus.coopdicpa.com',
   // IMPORTANT

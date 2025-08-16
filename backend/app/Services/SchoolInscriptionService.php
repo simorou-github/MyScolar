@@ -36,6 +36,13 @@ class SchoolInscriptionService
         if(!MailVerification::where('email', $school_request->email)->exists()){
             throw new ScolarException("Cette adresse mail n'a pas été validée. Veuillez raffraichir votre page pour reprendre.");
         }
+
+
+        // Si la raison sociale existe déjà
+        if (School::where('social_reason', $school_request->social_reason)->where('country_id', $school_request->country_id)->first()) {
+            throw new ScolarException("Une école existe déjà avec ce nom pour le pays choisi.");
+        }
+
         DB::beginTransaction();
 
         // Pour uploader le fichier joint

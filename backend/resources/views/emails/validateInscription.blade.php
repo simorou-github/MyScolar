@@ -152,8 +152,8 @@
                         <td bgcolor="#ffffff" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;">Pour accéder à votre espace de travail en ligne, veuillez cliquer sur le bouton ci-dessous. </p>
                             <a style="background-color: blue;color: white;margin-top: 10px;padding: 10px 20px;border-radius: 40px;text-align: center;text-decoration: none;display: inline-block;" 
-                            href="https://scolar.coopdicpa.com/web" target="_blank">ESPACE DE TRAVAIL</a>
-                            <!-- <p style="margin: 0;">Cliquez <a href="https://scolar.coopdicpa.com/web">ici</a> pour directement accéder à l'application.</p> -->
+                            href="https://web.scolarco.com/web" target="_blank">ESPACE DE TRAVAIL</a>
+                            <!-- <p style="margin: 0;">Cliquez <a href="https://web.scolarco.com/web">ici</a> pour directement accéder à l'application.</p> -->
                         </td>
                     </tr>
                     @endif

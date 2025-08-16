@@ -80,14 +80,9 @@ class User extends Authenticatable implements JWTSubject
         // Récupérer l'utilisateur connecté
         $user = User::with('school')->where('email', $this->email)->first();
         $roles = $user->getRoleNames(); 
-        Log::info($roles);
         return [
             'id' => $user->id,
-<<<<<<< HEAD
             'roles' => $roles, 
-=======
-            'roles' => $roles,
->>>>>>> 7376667d9159aaad64390f6c5a997d24ed148df0
             'last_name' => $user->last_name,
             'first_name' => $user->first_name,
             'email' => $user->email,
