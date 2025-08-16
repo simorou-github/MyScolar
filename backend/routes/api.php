@@ -274,10 +274,6 @@ Route::middleware(['auth:api'])->group(function () {
     // Utilisateurs & Rôles
     Route::get('permissions', [RoleController::class, 'getPermissions']);
     Route::post('manage-user/list', [UserContoller::class, 'userList']);
-<<<<<<< HEAD
     Route::post('manage-user/add-by-admin', [UserContoller::class, 'addUserByAdmin']);
-
-=======
->>>>>>> 7376667d9159aaad64390f6c5a997d24ed148df0
     Route::apiResource('roles', RoleController::class);
 });
