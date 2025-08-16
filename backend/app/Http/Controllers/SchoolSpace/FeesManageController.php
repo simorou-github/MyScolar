@@ -363,7 +363,8 @@ class FeesManageController extends Controller
 
             //Get School country's operator
             $operators = Operator::with('country')
-                ->where('country_id', $student->school->country_id)->get();
+                ->where('country_id', $student->school->country_id)->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
+                ->whereNotNull('balance_request_url')->get();
 
             return response()->json([
                 'balanceFees' => $balanceFees,
@@ -401,7 +402,7 @@ class FeesManageController extends Controller
                     'status' => 400
                 ]);
             }
-            if (!$operators = Operator::where('name', 'like', '%caisse%')->get()) {
+            if (!$operators = Operator::where('status', '=', true)->where('is_cash_mode', '=', true)->get()) {
                 return response()->json([
                     'data' => null,
                     'message' => 'Le mode opérateur Caisse n\'est pas encore configuré. Veuillez contacter l\'administrateur',
@@ -559,17 +560,19 @@ class FeesManageController extends Controller
     public function requestToUniqueCaissePayment(Request $request)
     {
         //Log::info($request->school_id);
-        $scolar_rate = getScolarPlusRate();
-        if (!$request->operator) {
+        
+        if (!$operator = Operator::where('id',$request->operator)
+            ->whereNull('api_key')->whereNull('token_url')->whereNull('pay_request_url')
+                ->whereNull('balance_request_url')->first()) {
             return response()->json([
                 'data' => null,
-                'message' => 'Veuillez sélectionner un mode de paiement correct.',
+                'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
                 'status' => 300
             ]);
         }
 
         //Generate an Internal ID 8 digits
-        $external_id = rand(10000000, 99999999);
+        $external_id = rand(100000000000000, 999999999999999);
 
         //Check balance
         DB::beginTransaction();
@@ -581,9 +584,10 @@ class FeesManageController extends Controller
                             $request->except(['type_fees_id']),
                             [
                                 'id' => generateDBTableId(25, 'App\Models\Payment'),
-                                'scolar_commission' => $request->amount * $scolar_rate,
+                                'scolar_commission' => $request->amount * $operator->scolar_rate,
                                 'operation_date' => Carbon::now(),
                                 'transaction_status' => true,
+                                'operator' => $operator->id,
                                 'transaction_id' => $external_id,
 
                             ]
@@ -594,12 +598,12 @@ class FeesManageController extends Controller
                                 'id' => generateDBTableId(25, 'App\Models\Payment'),
                                 'payment_id' => $payment->id,
                                 'school_id' => $request->school_id,
-                                'operator_id' => $request->operator,
+                                'operator_id' => $operator->id,
                                 'classe_id' => $request->classe_id,
                                 'student_id' => $request->student_id,
                                 'academic_year' => $request->academic_year,
                                 'balance_fees_id' => $request->balance_id,
-                                'scolar_commission' => $request->amount * $scolar_rate,
+                                'scolar_commission' => $request->amount * $operator->scolar_rate,
                                 'fees_amount' => $request->amount,
                                 'type_fees_id' => $request->type_fees_id,
                                 'school_classe_fees_id' => $balance_fees->school_classe_fees_id
@@ -697,7 +701,16 @@ class FeesManageController extends Controller
             ]);
         }
 
-        $scolar_rate = getScolarPlusRate();
+        if (!$operator = Operator::where('id',$request->data['operator'])
+            ->whereNull('api_key')->whereNull('token_url')->whereNull('pay_request_url')
+                ->whereNull('balance_request_url')->first()) {
+            return response()->json([
+                'data' => null,
+                'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
+                'status' => 300
+            ]);
+        }
+
         if (!$request->data['operator']) {
             return response()->json([
                 'data' => null,
@@ -707,8 +720,7 @@ class FeesManageController extends Controller
         }
 
         //Generate an External ID 8 digits
-        $external_id = rand(10000000, 99999999);
-
+        $external_id = rand(100000000000000, 999999999999999);
             try {
                 DB::beginTransaction();
                 //Save payment
@@ -722,12 +734,12 @@ class FeesManageController extends Controller
                         'classe_id' => $request->additional_fields['classe_id'],
                         'school_id' => $request->additional_fields['school_id'],
                         'student_id' => $request->additional_fields['student_id'],
-                        'operator' => $request->data['operator'],
+                        'operator' => $operator->id,
                         'academic_year' => $request->additional_fields['academic_year'],
                         'operation_date' => Carbon::now(),
                         'transaction_id' => $external_id,
                         'transaction_status' => true,
-                        'scolar_commission' => $request->data['amount'] * $scolar_rate
+                        'scolar_commission' => $request->data['amount'] * $operator->scolar_rate
                     ]
                 )) {
                     // Update Balance Fees
@@ -740,7 +752,7 @@ class FeesManageController extends Controller
                             'id' => generateDBTableId(25, 'App\Models\PaymentDetail'),
                             'payment_id' => $payment->id,
                             'school_id' => $request->additional_fields['school_id'],
-                            'operator_id' => $request->data['operator'],
+                            'operator_id' => $operator->id,
                             'classe_id' => $request->additional_fields['classe_id'],
                             'student_id' => $request->additional_fields['student_id'],
                             'academic_year' => $request->additional_fields['academic_year'],
@@ -748,7 +760,7 @@ class FeesManageController extends Controller
                             'type_fees_id' => $value['type_fees_id'],
                             'fees_amount' => $value['balance'],
                             'school_classe_fees_id' => $balance_fees?->school_classe_fees_id,
-                            'scolar_commission' => $value['balance'] * $scolar_rate
+                            'scolar_commission' => $value['balance'] * $operator->scolar_rate
                         ]);
 
                         //Update balance fees
@@ -803,7 +815,7 @@ class FeesManageController extends Controller
     public function generatePDFInvoice($id)
     {
         $size = 100;
-        if ($payment = Payment::with(['student', 'classe', 'school'])->where('id', $id)->first()) {
+        if ($payment = Payment::with(['student', 'classe.classe', 'school'])->where('id', $id)->first()) {
             
             // Set options of page and load data in blade file
             $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])

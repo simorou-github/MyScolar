@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\SchoolClasse;
 use App\Models\SchoolClasseFees;
 use App\Models\TypeFees;
-use Exception;
 use Illuminate\Support\Facades\Log;
 
 class SchoolDashboardController extends Controller
@@ -27,7 +26,6 @@ class SchoolDashboardController extends Controller
         //Fees not assigned
         $scFees1 = SchoolClasseFees::where('school_id', $request->school_id)
             ->where('academic_year', getActiveAcademicYear())->get('type_fees_id');
-            Log::info($scFees1);
             
         $feesNotAssigned = TypeFees::whereNotIn('id', $scFees1)->where('school_id', $request->school_id)->get();
         //Log::info($feesNotAssigned);

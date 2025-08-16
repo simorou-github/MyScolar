@@ -15,6 +15,14 @@ return new class extends Migration
             $table->char('id', 15)->primary();
             $table->string('name', 60);
             $table->string('path_logo')->nullable();
+            $table->string('token_url')->nullable();
+            $table->string('pay_request_url')->nullable();
+            $table->string('balance_request_url')->nullable();
+            $table->string('api_key')->nullable();
+            $table->string('reference_id')->nullable();
+            $table->string('secondary_key')->nullable();
+            $table->double('scolar_rate')->default(0.01);
+            $table->boolean('is_cash_mode')->default(0);
             $table->boolean('status')->default(false);
             $table->unsignedBigInteger('country_id')->nullable();
             $table->char('create_id', 30)->nullable();

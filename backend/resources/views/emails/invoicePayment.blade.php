@@ -59,7 +59,7 @@
             <td><b>Numéro</b>: {{ $payment->phone }}</td>
         </tr>
         <tr>
-            <td><b>Classe</b>: {{ $payment->classe->code }}</td>
+            <td><b>Classe</b>: {{ $payment->classe->classe->code }}</td>
             <td><b>Date</b>: {{ \Carbon\Carbon::parse($payment->created_at)->format('d-m-Y') }}</td>
         </tr>
     </table>

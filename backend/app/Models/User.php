@@ -80,7 +80,6 @@ class User extends Authenticatable implements JWTSubject
         return [
             'id' => $user->id,
             'roles' => $roles,
-            //'permissions' => $permissions,
             'last_name' => $user->last_name,
             'first_name' => $user->first_name,
             'email' => $user->email,

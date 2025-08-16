@@ -216,6 +216,7 @@ export class CashPaymentComponent {
   //Process Unique Payment
   processUniquePayment(data: any) {
     this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.paiementScolaireService.processUniqueCaissePayment({
       'amount': data.amount,
       'phone': data.phone,
@@ -238,15 +239,18 @@ export class CashPaymentComponent {
           this.showSuccess(this.message);
           this.getDataForPayment(this.student_param);
           this.modalService.hide();
+          this.isProcessing = false;
         } else {
           this.ngxLoader.stopLoader('loader-spin');
           this.showError(this.message);
+          this.isProcessing = false;
         }
       },
 
       error: (e) => {
         console.error(e);
         this.showError(this.message);
+        this.isProcessing = false;
       },
 
       complete: () => {
@@ -258,6 +262,7 @@ export class CashPaymentComponent {
   //Process Batch Payment
   processBatchPayment(data) {
     this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.paiementScolaireService.processBatchCaissePayment({
       'data': data,
       'user_email': this.userEmail,
@@ -278,9 +283,11 @@ export class CashPaymentComponent {
           this.getDataForPayment(this.student_param);
           this.selectedBalancesRows = []; this.totalBalances = 0;
           this.modalService.hide();
+          this.isProcessing = false;
         } else {
           this.ngxLoader.stopLoader('loader-spin');
           this.showError(this.message);
+          this.isProcessing = false;
         }
       },
 
@@ -288,6 +295,7 @@ export class CashPaymentComponent {
         console.error(e);
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
+        this.isProcessing = false;
       },
 
       complete: () => {

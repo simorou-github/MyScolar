@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { getFirebaseBackend } from '../../authUtils';
 
 import { User } from '../models/auth.models';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 
@@ -10,7 +11,7 @@ export class AuthenticationService {
 
     user: User;
 
-    constructor() {
+    constructor(private router: Router) {
     }
 
     /**
@@ -60,7 +61,9 @@ export class AuthenticationService {
      */
     logout() {
         // logout the user
-        getFirebaseBackend().logout();
+        //getFirebaseBackend().logout();
+        localStorage.removeItem('token');
+        this.router.navigate(['/auth/login']); // redirection
     }
 }
 

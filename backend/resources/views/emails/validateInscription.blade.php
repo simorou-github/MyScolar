@@ -172,7 +172,7 @@
 
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Cliquez <a href="https://scolar.coopdicpa.com/web/auth/inscription?sci={{$data['school_id']}}">ici</a> pour soumettre à nouveau votre inscription en prenant en compte le motif du rejet précédent.</p>
+                            <p style="margin: 0;">Cliquez <a href="https://web.scolarco.com/#/auth/inscription?sci={{$data['school_id']}}">ici</a> pour soumettre à nouveau votre inscription en prenant en compte le motif du rejet précédent.</p>
                         </td>
                     </tr>
                     @endif

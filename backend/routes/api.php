@@ -88,7 +88,11 @@ Route::prefix('manage-fees')->middleware(['auth:api'])->group(function () {
     Route::post('get-fees-balance-follow-up-data', [FeesManageController::class, 'getFeesBalanceFollowupData']);
     Route::get('get-fees-balance-data-export', [FeesManageController::class, 'getExportOfFeesBalance']);
     Route::post('generate-balance/by-type-file', [FeesManageController::class, 'getExportOfFeesBalance']);
+});
 
+// Publics Routes
+Route::prefix('public')->group(function () {
+    Route::post('academic-year/public-list', [ParameterController::class, 'listAcademicYear']);
 });
 
 // // All about classe of the system
@@ -244,9 +248,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('create', [ParameterController::class, 'createOperator']);
             Route::post('delete', [ParameterController::class, 'deleteOperator']);
         });
-
         Route::get('type-payment/list', [ParameterController::class, 'listTypePayment']);
-        Route::post('academic-year/list', [ParameterController::class, 'listAcademicYear']);
     });
 
     // Années académiques
@@ -271,6 +273,5 @@ Route::middleware(['auth:api'])->group(function () {
     // Utilisateurs & Rôles
     Route::get('permissions', [RoleController::class, 'getPermissions']);
     Route::post('manage-user/list', [UserContoller::class, 'userList']);
-
     Route::apiResource('roles', RoleController::class);
 });

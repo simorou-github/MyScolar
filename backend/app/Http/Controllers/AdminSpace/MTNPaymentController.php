@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminSpace;
 
 use App\Http\Controllers\Controller;
 use App\Models\BalanceFees;
+use App\Models\Operator;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MTNPaymentController extends Controller
 {
@@ -23,15 +25,19 @@ class MTNPaymentController extends Controller
     private $api_key = '5f9a11757aa74a4e8c8646b0e9b3b7f1';
 
     //Create access token
-    public function createAccessToken(Request $request)
+    public function createAccessToken($token_url, $reference_id, $api_key, $secondary_key)
     {
+        if(!$token_url || !$reference_id || !$api_key || !$secondary_key){
+            Log::error("Paramètre d'accès au token non fournis.");
+            return null;  
+        }
 
-        $url = "https://sandbox.momodeveloper.mtn.com/collection/token/";
+        $url = $token_url;
 
         //Set Header
         $header = array(
-            'Authorization : Basic ' . base64_encode($this->reference_id . ':' . $this->api_key),
-            'Ocp-Apim-Subscription-Key: ' . $this->secondary_key
+            'Authorization : Basic ' . base64_encode($reference_id . ':' . $api_key),
+            'Ocp-Apim-Subscription-Key: ' . $secondary_key
         );
 
         //Initialize cURL
@@ -47,15 +53,10 @@ class MTNPaymentController extends Controller
 
         //Execute the cURL request
         $response = curl_exec($curl);
-
         //check for cURL error
         if (curl_errno($curl)) {
             Log::error(curl_error($curl));
-            return response()->json([
-                'data' => [],
-                'message' => 'Une erreur interne est survenue',
-                'status' => 500
-            ]);
+            return null;
         }
 
         //Close cURL session
@@ -65,20 +66,16 @@ class MTNPaymentController extends Controller
         if ($data) {
             return $data;
         } else {
-            return response()->json([
-                'data' => [],
-                'message' => "Impossible d'obtenir un token.",
-                'status' => 500
-            ]);
+            return null;
         }
     }
 
     //Process Batch Payment
     public function requestToBatchPayment(Request $request)
     {
-        //Log::info($request);
         $validated = $request->validate([
             'data' => ['required'],
+            'data.operator' => ['required'],
             'balance_rows' => ['required'],
             'additional_fields' => ['required'],
         ]);
@@ -87,6 +84,16 @@ class MTNPaymentController extends Controller
                 'data' => null,
                 'message' => 'Les champs requis ne sont pas tous fournis.',
                 'status' => 500
+            ]);
+        }
+
+        if (!$operator = Operator::where('id',$request->data['operator'])
+            ->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
+                ->whereNotNull('balance_request_url')->first()) {
+            return response()->json([
+                'data' => null,
+                'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
+                'status' => 300
             ]);
         }
 
@@ -103,18 +110,12 @@ class MTNPaymentController extends Controller
             ]);
         }
 
-        $scolar_rate = getScolarPlusRate();
-        if (!$request->data['operator']) {
-            return response()->json([
-                'data' => null,
-                'message' => 'Veuillez sélectionner un mode de paiement correct.',
-                'status' => 300
-            ]);
-        }
-        $access_token = $this->createAccessToken($request)->access_token;
+        $scolar_rate = $operator->scolar_rate;
+
+        $access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token;
         $environment = 'sandbox';
         $reference_uuid = Str::uuid();
-        $url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay";
+        $url = $operator->pay_request_url; //URL de paiement
 
         //Set Header
         $header = array(
@@ -126,7 +127,7 @@ class MTNPaymentController extends Controller
         );
 
         //Generate an External ID 8 digits
-        $external_id = rand(10000000, 99999999);
+        $external_id = rand(100000000000000, 999999999999999);
 
         //Set the request body
         $body = array(
@@ -190,7 +191,7 @@ class MTNPaymentController extends Controller
                         'classe_id' => $request->additional_fields['classe_id'],
                         'school_id' => $request->additional_fields['school_id'],
                         'student_id' => $request->additional_fields['student_id'],
-                        'operator' => $request->data['operator'],
+                        'operator' => $operator->id,
                         'academic_year' => $request->additional_fields['academic_year'],
                         'operation_date' => Carbon::now(),
                         'transaction_id' => $external_id,
@@ -208,7 +209,7 @@ class MTNPaymentController extends Controller
                             'id' => generateDBTableId(25, 'App\Models\PaymentDetail'),
                             'payment_id' => $payment->id,
                             'school_id' => $request->additional_fields['school_id'],
-                            'operator_id' => $request->data['operator'],
+                            'operator_id' => $operator->id,
                             'classe_id' => $request->additional_fields['classe_id'],
                             'student_id' => $request->additional_fields['student_id'],
                             'academic_year' => $request->additional_fields['academic_year'],
@@ -235,19 +236,6 @@ class MTNPaymentController extends Controller
                     $data["title"] = "Paiement Scolar Plus";
                     $data["payment"] = $payment;
                     $data["payment_details"] = $payment_details;
-                    //$receipt_path = public_path('storage/factures/Recu_SP_' . $data["payment"]["id"] . '.pdf');
-                    //$file_name = 'Recu_SP_' . $data["payment"]["id"] . '.pdf';
-
-                    //Sending Mail
-                    // PaymentJob::dispatch(
-                    //     $data["email"],
-                    //     ['data' => $data],
-                    //     'emails.paymentNotificationdd',
-                    //     $data["title"],
-                    //     env("APP_NAME"),
-                    //     $receipt_path,
-                    //     $file_name
-                    // );
 
                     Mail::send('emails.paymentNotification', ['data' => $data], function ($message) use ($data) {
                         $message->to($data["email"])
@@ -290,19 +278,45 @@ class MTNPaymentController extends Controller
     //Process Unique Payment
     public function requestToUniquePayment(Request $request)
     {
-        //Log::info($request->school_id);
-        $scolar_rate = getScolarPlusRate();
-        if (!$request->operator) {
+        $validated = $request->validate([
+            'operator' => ['required'],
+            'amount' => ['required'],
+            'school_id' => ['required'],
+            'classe_id' => ['required'],
+            'student_id' => ['required'],
+            'academic_year' => ['required'],
+            'type_fees_id' => ['required'],
+        ]);
+
+        if (!$validated) {
             return response()->json([
                 'data' => null,
-                'message' => 'Veuillez sélectionner un mode de paiement correct.',
+                'message' => 'Les champs requis ne sont pas tous fournis.',
+                'status' => 500
+            ]);
+        }
+
+        if (!$operator = Operator::where('id',$request->operator)
+            ->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
+                ->whereNotNull('balance_request_url')->first()) {
+            return response()->json([
+                'data' => null,
+                'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
                 'status' => 300
             ]);
         }
-        $access_token = $this->createAccessToken($request)->access_token;
+        //Get MTN Token
+        if(!$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token){
+            return response()->json([
+                'data' => [],
+                'message' => "Impossible de joindre l'opérateur. Veuillez contacter le Groupe Scolar Plus.",
+                'status' => 500
+            ]);
+        }
+
         $environment = 'sandbox';
         $reference_uuid = Str::uuid();
-        $url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay";
+        $url = $operator->pay_request_url;
 
         //Set Header
         $header = array(
@@ -314,7 +328,7 @@ class MTNPaymentController extends Controller
         );
 
         //Generate an External ID 8 digits
-        $external_id = rand(10000000, 99999999);
+        $external_id = rand(100000000000000, 999999999999999);
 
         //Set the request body
         $body = array(
@@ -376,7 +390,7 @@ class MTNPaymentController extends Controller
                             $request->except(['type_fees_id']),
                             [
                                 'id' => generateDBTableId(25, 'App\Models\Payment'),
-                                'scolar_commission' => $request->amount * $scolar_rate,
+                                'scolar_commission' => $request->amount * $operator->scolar_rate,
                                 'operation_date' => Carbon::now(),
                                 'transaction_status' => true,
                                 'transaction_id' => $external_id,
@@ -389,16 +403,15 @@ class MTNPaymentController extends Controller
                                 'id' => generateDBTableId(25, 'App\Models\Payment'),
                                 'payment_id' => $payment->id,
                                 'school_id' => $request->school_id,
-                                'operator_id' => $request->operator,
+                                'operator_id' => $operator->id,
                                 'classe_id' => $request->classe_id,
                                 'student_id' => $request->student_id,
                                 'academic_year' => $request->academic_year,
                                 'balance_fees_id' => $request->balance_id,
-                                'scolar_commission' => $request->amount * $scolar_rate,
+                                'scolar_commission' => $request->amount * $operator->scolar_rate,
                                 'fees_amount' => $request->amount,
                                 'type_fees_id' => $request->type_fees_id,
                                 'school_classe_fees_id' => $balance_fees->school_classe_fees_id
-
                             ]);
 
                             // Update Balance Fees
@@ -415,18 +428,6 @@ class MTNPaymentController extends Controller
                             $data["title"] = "Paiement Scolar Plus";
                             $data["payment"] = $payment;
                             $data["payment_details"] = $payment_details;
-                            // $receipt_path = public_path('storage/factures/Recu_SP_' . $data["payment"]["id"] . '.pdf');
-                            // $file_name = 'Recu_SP_' . $data["payment"]["id"] . '.pdf';
-
-                            // PaymentJob::dispatch(
-                            //     $data["email"],
-                            //     ['data' => $data],
-                            //     'emails.paymentNotificationdd',
-                            //     $data["title"],
-                            //     env("APP_NAME"),
-                            //     $receipt_path,
-                            //     $file_name,
-                            // );
 
                             Mail::send('emails.paymentNotification', ['data' => $data], function ($message) use ($data) {
                                 $message->to($data["email"])
@@ -483,7 +484,7 @@ class MTNPaymentController extends Controller
     //Account Balance 
     public function requestToAccountBalance(Request $request)
     {
-        $access_token = $this->createAccessToken($request)->access_token;
+        /*$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token;
         $environment = 'sandbox';
         $url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/account/balance";
 
@@ -530,23 +531,25 @@ class MTNPaymentController extends Controller
 
         //get http status code
         $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+        curl_close($curl);*/
+        return null;
     }
 
     public function generatePDFInvoice($id)
     {
-
-        if ($payment = Payment::with(['student', 'classe', 'school'])->where('id', $id)->first()) {
+        $size = 100;
+        if ($payment = Payment::with(['student', 'classe.classe', 'school'])->where('id', $id)->first()) {
             // Set options of page and load data in blade file
             $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])
                 ->where('payment_id', $payment->id)->get();
+            $qrSvg = QrCode::format('svg')->size($size)->generate($payment->id);
             $pdf = PDF::setOptions([
                 'isJavascriptEnabled' => true,
                 'isHtml5ParserEnabled' => true,
                 'isRemoteEnabled' => true,
                 'isPhpEnabled' => true,
                 "dpi" => 96,
-            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details]);
+            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details, 'qrSvg' => $qrSvg]);
 
             //Log::info($payment_details);
             // Name of file

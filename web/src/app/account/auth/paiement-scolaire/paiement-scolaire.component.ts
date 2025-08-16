@@ -82,7 +82,6 @@ export class PaiementScolaireComponent {
           this.balanceFees = v.balanceFees;
           this.student = v.student;
           this.student_classe = v.student_classe;
-          // console.log(this.student_classe);
           this.operators = v.operators;
           this.isProcessing = false;
           this.showSuccess(this.message);

@@ -1,8 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://services.scolarco.com/public/api',
+  timeoutInMs: 60 * 60 * 1000, // 60 minutes
+  /*apiUrl: 'https://services.scolarco.com/public/api',
   domainUrl: 'https://services.scolarco.com',
-  baseUrl: 'https://web.scolarco.com',
+  baseUrl: 'https://web.scolarco.com',*/
   // apiUrl: 'https://coopstats.coopdicpa.com/scolar_service/public/api',
   // domainUrl: 'https://coopstats.coopdicpa.com',
   // baseUrl: 'https://web.scolarco.com/#/',
@@ -13,10 +14,10 @@ export const environment = {
   // // IMPORTANT to download model file
   // domainUrl: 'https://scolar-plus.coopdicpa.com',
   // IMPORTANT
-  //apiUrl: 'http://127.0.0.1:8000/api',
-  //domainUrl: 'http://127.0.0.1:8000',
+  apiUrl: 'http://127.0.0.1:8000/api',
+  domainUrl: 'http://127.0.0.1:8000',
   // IMPORTANT to download model file
-  //baseUrl: 'http://localhost:4200',
+  baseUrl: 'http://localhost:4200',
 
   landingPageUrl: 'https://portal.scolarco.com',
   defaultauth: 'fackbackend',
