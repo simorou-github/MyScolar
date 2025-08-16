@@ -94,7 +94,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'label' => $permission['label']]);
             }
 
-            // Schoo admin
+            // School admin
             $role_school_admin = Role::firstOrCreate(['label' => 'Administrateur Ecole', 'name' => 'school-admin', 'guard_name' => 'api']);
             $role_school_admin->givePermissionTo([
                 'create users',
@@ -119,6 +119,27 @@ class RolesAndPermissionsSeeder extends Seeder
             // Administrateur
             $role_super_admin = Role::firstOrCreate(['label' => 'Super Administrateur', 'name' => 'super-admin', 'guard_name' => 'api']);
             $role_super_admin->syncPermissions(Permission::all());
+
+            $roleAccountant = Role::firstOrCreate(['label' => 'Comptable', 'name' => 'accountant', 'guard_name' => 'api']);
+            $roleAccountant->givePermissionTo([
+                'create users',
+                'edit users',
+                'view users',
+                'delete users',
+                'create groups',
+                'edit groups',
+                'view groups',
+                'delete groups',
+                'create fees',
+                'edit fees',
+                'view fees',
+                'delete fees',
+                'create students',
+                'edit students',
+                'view students',
+                'delete students',
+            ]);
+
 
             Log::info('Rôles et permissions chargées avec succès');
             DB::commit();

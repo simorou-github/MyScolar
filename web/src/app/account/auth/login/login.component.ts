@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted: any = false;
   error: any = '';
-
+  email: string = '';
   // set the currenr year
   year: number = new Date().getFullYear();
   message: any; isProcessing: boolean = false;
@@ -40,72 +40,43 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]],
     });
 
-    // reset login status
-    // this.authenticationService.logout();
-    // get return url from route parameters or default to '/'
-    // tslint:disable-next-line: no-string-literal
-    //this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-
-  // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
-  /**
-   * Form submit
-   */
-  /*onSubmit() {
-    this.submitted = true;
-
-    // stop here if form is invalid
-    if (this.loginForm.invalid) {
-      return;
-    } else {
-      if (environment.defaultauth === 'firebase') {
-        this.authenticationService.login(this.f.username.value, this.f.password.value).then((res: any) => {
-          this.router.navigate(['/dashboard']);
-        })
-          .catch(error => {
-            this.error = error ? error : '';
-          });
-      } else {
-        this.authFackservice.login(this.f.username.value, this.f.password.value)
-          .pipe(first())
-          .subscribe(
-            data => {
-              this.router.navigate(['/dashboard']);
-            },
-            error => {
-              this.error = error ? error : '';
-            });
-      }
-    }
-  }*/
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {      
+    if (this.loginForm.invalid) {
       this.showError("Veillez rafraichir la page et réessayer.");
     } else {
       this.isProcessing = true;
+      this.email = this.loginForm.get('email')?.value;
       this.authService.login(this.loginForm.value).subscribe({
         next: (v: any) => {
           if (v.status == 200) {
             this.message = v.message;
             this.showSuccess(this.message);
             this.tokenService.handleToken(v.access_token);
-            this.authState.changeAuthStatus(true);  
+            this.authState.changeAuthStatus(true);
             this.isProcessing = false;
-            this.router.navigate(['dashboard']);          
             this.loginForm.reset();
 
-          }else{
+            if (v.is_true_password == 0 || v.is_true_password == false) {
+              // Rediriger vers la page de changement de mot de passe
+              this.router.navigate(['/activation-account'], { queryParams: { email: this.email } });
+            } else {
+              // Rediriger vers le tableau de bord normal
+              this.router.navigate(['/dashboard']);
+            }
+
+          } else {
             this.message = v.message;
             this.loginForm.patchValue({
               password: ''
             });
             this.showError(this.message);
             this.isProcessing = false;
-          }      
+          }
 
         },
         error: (error: any) => {

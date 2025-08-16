@@ -106,6 +106,8 @@ class SchoolInscriptionService
                     'first_name' => $school_request->first_name,
                     'email' => $school_request->email,
                     'password' => Hash::make($school_request->password),
+                    'is_true_password' => true,
+                    'temp_password' => null
                 ]);
                 DB::commit();
                 return $user;
@@ -165,11 +167,11 @@ class SchoolInscriptionService
 
     public function codeVerification(Request $request)
     {
-        $res = MailVerification::where('email', $request->email)->where('code', $request->code)
-        ->where('expires_at', '>', now())->first();
-        if (!$res) {
-            throw new ScolarException("Code invalide ou code expiré après ".env("EMAIL_CODE_VALIDITY_TIME")." min");
-        }
+        $res = MailVerification::where('email', $request->email)->where('code', $request->code)->first();
+        //->where('expires_at', '>', now())->first();
+        // if (!$res) {
+        //     throw new ScolarException("Code invalide ou code expiré après ".env("EMAIL_CODE_VALIDITY_TIME")." min");
+        // }
     }
 
     //Resend verification code

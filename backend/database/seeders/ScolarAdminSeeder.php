@@ -30,10 +30,12 @@ class ScolarAdminSeeder extends Seeder
                 'email_verified_at' => now(),
                 'is_admin' => 1,
                 'status' => 1,
-                'school_id' => null
+                'school_id' => null,
+                'is_true_password' => true,
+                'temp_password' =>  null
             ]);
 
-            $user->assignRole(Role::findByName('school-admin', 'api'));
+            //$user->assignRole(Role::findByName('school-admin', 'api'));
             $user->assignRole(Role::findByName('super-admin', 'api'));
 
             DB::commit();
