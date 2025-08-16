@@ -11,7 +11,7 @@ export const environment = {
   apiUrl: 'http://127.0.0.1:8000/api',
   domainUrl: 'http://127.0.0.1:8000',
   baseUrl: 'http://localhost:4200',
-  timeoutInMs: 5 * 60 * 1000, // 5 minutes
+  timeoutInMs: 15 * 60 * 1000, // 5 minutes
   // IMPORTANT
   landingPageUrl: 'file:///C:/xampp/htdocs/scolarpay/scolarland/index.html',
   defaultauth: 'sf',
