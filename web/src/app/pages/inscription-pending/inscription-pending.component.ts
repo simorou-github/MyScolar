@@ -12,6 +12,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as $ from "jquery";
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { SchoolService } from 'src/app/services/school.service';
 
 
 @Component({
@@ -22,9 +23,11 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 export class InscriptionPendingComponent implements OnInit{
   breadCrumbItems: Array<{}>; message: any; searchForm!: FormGroup; rejectForm!: FormGroup; inscriptionsPending: any; isProcessing: boolean = false; p: number = 1;
   academicYear: string; schoolId: string; schoolName: string; isSearchForm: boolean = false; modalRef?: BsModalRef; rejectModalRef?: BsModalRef; fileUrl: any; currentSchoolName: string = "";
+  countries: any;
+  schools: any;
   
-  constructor(private fb: FormBuilder, private ngxLoader: NgxUiLoaderService, public toastr: ToastrService, private router: Router, private inscriptionService: SchoolInscriptionService,
-    private modalService: BsModalService) {
+  constructor(private schoolService: SchoolService, private fb: FormBuilder, private ngxLoader: NgxUiLoaderService, public toastr: ToastrService, private router: Router, private inscriptionService: SchoolInscriptionService,
+    private modalService: BsModalService, private school_inscription_service: SchoolInscriptionService,) {
     //this.academicYear = this.tokenService.getAcademicYear;
     // this.schoolId = this.tokenService.getSchoolId;
     // this.schoolName = this.tokenService.getSocialReasonSchool;
@@ -40,11 +43,28 @@ export class InscriptionPendingComponent implements OnInit{
       status: [''],
     });
     this.getListInscriptionPending();
+    this.listCountries(); this.getAllSchools();
     this.rejectForm = this.fb.group({
       school_id: ['', [Validators.required]],
       reject_reason: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(700)]]
     });
    
+  }
+
+  // School List
+  getAllSchools(): void {
+    this.schoolService.getAllSchool({}).subscribe(
+      {
+        next: (v: any) => {
+          this.schools = v.data;
+        },
+        error: (e) => {
+          console.error(e);
+        },
+        complete: () => {
+        }
+      }
+    );
   }
 
   /**
@@ -114,6 +134,26 @@ export class InscriptionPendingComponent implements OnInit{
         )
       }
     });
+  }
+
+  
+  // Get countries list
+  listCountries() {
+    this.school_inscription_service.countries().subscribe(
+      {
+        next: (v: any) => {
+          this.countries = v.data;
+        },
+
+        error: (e) => {
+          console.error(e);
+        },
+
+        complete: () => {
+        }
+      }
+
+    );
   }
 
   /**

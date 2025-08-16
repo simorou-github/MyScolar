@@ -1,24 +1,11 @@
 <div class="container-fluid p-0">
+    
+    <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>   
+    
     <div class="row g-0">
-        <!-- start col -->
-        <div class="col-xl-3" id="bg">
-            <div class="auth-full-bg pt-lg-5 p-1">
-                <div class="w-100">
-                    <div class="d-flex flex-column" style="overflow:none; height: 100%;">
-                        <div class="p-1 mt-auto">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-12">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end col -->
-
         <!-- Form -->
-        <div class="col-xl-9"
+        <div class="col-xl-12"
             style="right: 0; float: right; overflow: auto;">
             <div class="auth-full-page-content p-md-2 p-1">
                 <div class="w-100">
@@ -65,9 +52,9 @@
                                             <div class="col-lg-3">
                                                 <div>
                                                     <label class="form-label">Nom & Prénoms</label>
-                                                    <select class="form-select" name="apprenant_id" ngModel required>
+                                                    <select class="form-select" name="student_classe_id" ngModel required>
                                                         <option *ngFor="let apprenant of apprenants"
-                                                            value="{{apprenant.nom}}">{{apprenant?.prenom}}
+                                                            value="{{apprenant?.student?.id}}"> {{apprenant?.student?.last_name}} {{apprenant?.student?.first_name}}
                                                         </option>
                                                     </select>
                                                 </div>
@@ -78,43 +65,41 @@
                                                         title="Rechercher l'apprenant.." [disabled]="!searchForm.valid">
                                                         <i class="fa fa-search 2x"></i> Rechercher</button>
                                                 </div>
-                                            </div>
-                                            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-                                        </div>
+                                            </div>                                 </div>
                                     </form>
-                                    <div *ngIf="student">
+                                    <div *ngIf="student_classe" class="mt-4">
                                         <h5><i class="fa fa-user-graduate text-secondary"></i> Détail de
                                             l'apprenant</h5>
-                                        <table class="table table-nowrap align-middle mb-0" *ngIf="student">
+                                        <table class="table table-nowrap align-middle mb-0">
                                             <tbody>
                                                 <tr>
-                                                    <td title="Code Scolar"> <b>{{student.code_scolar}}</b> </td>
-                                                    <td title="Nom et Prénoms"> {{student.last_name}}
-                                                        {{student.first_name}} </td>
-                                                    <td title="Classe">
+                                                    <td title="Code Scolar"> <b>{{student_classe?.student?.code_scolar}}</b> </td>
+                                                    <td title="Nom et Prénoms"> {{student_classe?.student?.last_name}}
+                                                        {{student_classe?.student?.first_name}} </td>
+                                                    <!--td title="Classe">
                                                         <button type="button"
                                                             class="btn btn-soft-dark  btn-rounded waves-effect waves-light">
-                                                            <b>{{student_classe.classe?.classe?.code }} -
-                                                                {{student_classe.classe?.groupe?.code }} </b>
+                                                            <b>{{student_classe?.classe?.code }} -
+                                                                {{student_classe?.groupe?.code }} </b>
                                                         </button>
-                                                    </td>
-                                                    <td title="Date de naissance"> {{student.birthday |
+                                                    </td-->
+                                                    <td title="Date de naissance"> {{student_classe?.student?.birthday |
                                                         date:'dd/MM/yyyy'}} </td>
                                                     <td title="Ecole">
                                                         <button type="button"
-                                                            class="btn btn-soft-dark  btn-rounded waves-effect waves-light"><b>{{student.school?.social_reason
+                                                            class="btn btn-soft-dark  btn-rounded waves-effect waves-light"><b>{{student_classe?.student?.school?.social_reason
                                                                 }}</b></button>
                                                     </td>
                                                     <td title="Sexe">
                                                         <button type="button"
-                                                            class="btn btn-soft-dark  btn-rounded waves-effect waves-light"><b>{{student.sex
+                                                            class="btn btn-soft-dark  btn-rounded waves-effect waves-light"><b>{{student_classe?.student?.sex
                                                                 }}</b></button>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class=" mt-3 mb-3" *ngIf="totalBalances > 0">
+                                    <div class=" mt-4 mb-3" *ngIf="totalBalances > 0">
                                         <h5><i class="fa fa-wallet text-danger"></i> Paiemennt par lot</h5>
                                         <table class="table table-nowrap align-middle mb-0">
                                             <tbody>
@@ -134,46 +119,45 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div *ngIf="balanceFees">
-                                        <table class="table table-nowrap align-middle mb-0"
-                                            style="border-radius: 15px !important;" *ngIf="balanceFees">
-                                            <tbody style="border-radius: 15px !important;">
+                                    <div class=" mt-5 mb-3" *ngIf="student_classe">
+                                        <table class="table table-nowrap align-middle mb-0">
+                                            <tbody>
                                                 <tr class="bg-warning">
-                                                    <th class="btn-warning text-white" style="color: white !important;">#</th>
-                                                    <th class="btn-warning text-white" style="color: white !important;"><b>Frais</b></th>
-                                                    <th class="btn-warning text-white" style="color: white !important;"><b>Montant</b></th>
-                                                    <th class="btn-warning text-white" style="color: white !important;"><b>Solde</b></th>
-                                                    <th class="btn-warning text-white" style="color: white !important;"><b>Echéance</b></th>
-                                                    <!--th class="btn-warning text-white"><b>Année</b></th-->
-                                                    <th class="btn-warning text-white" style="color: white !important;">Action</th>
+                                                    <th class="text-bg-warning text-white">#</th>
+                                                    <th class="text-bg-warning text-white"><b>Frais</b></th>
+                                                    <th class="text-bg-warning text-white"><b>Montant</b></th>
+                                                    <th class="text-bg-warning text-white"><b>Solde</b></th>
+                                                    <th class="text-bg-warning text-white"><b>Echéance</b></th>
+                                                    <th class="text-bg-warning text-white">Action</th>
                                                 </tr>
-                                                <tr
-                                                    *ngFor="let balance of balanceFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                                                <tr *ngIf="!balanceFees">
+                                                    <td colspan="6" class="text-warning">Aucun solde de frais n'est disponible pour cet apprenant !</td>
+                                                </tr>
+                                                <tr *ngFor="let balance of balanceFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
                                                     <td class="text-center">
-                                                        <input type="checkbox" class="mt-3"
-                                                            [disabled]="balance.balance == 0"
-                                                            (change)="selectBalanceRow($event, balance)"
-                                                            style="width: 15px; height: 15px;">
+                                                        <input type="checkbox" class="" style="width: 15px; height: 15px;"
+                                                            [disabled]="balance.balance == 0" 
+                                                            (change)="selectBalanceRow($event, balance)">
                                                     </td>
                                                     <td title="Frais à payer"> {{balance.type_fees?.label}}
                                                         <b>{{balance.fees_label}}</b>
                                                     </td>
                                                     <td title="Montant du fais"> <b>{{balance.fees_amount |
                                                             currency:'XOF'}}</b> </td>
-                                                    <td title="Montant restant à payer"> <b
-                                                            class="text-danger">{{balance.balance |
-                                                            currency:'XOF'}}</b> </td>
-                                                    <td title="Date échéance pour le paiement"> <b>{{balance.due_date |
-                                                            date:'dd/MM/yyyy'}}</b> </td>
-                                                    <!--td title="Année academique"> {{balance.academic_year}} </td-->
+                                                    <td title="Montant restant à payer"> 
+                                                        <b *ngIf="balance.balance > 0 && balance.balance < balance.fees_amount" class="text-primary">{{balance.balance | currency:'XOF'}}</b>
+                                                        <b *ngIf="balance.balance == balance.fees_amount" class="text-danger">{{balance.balance | currency:'XOF'}}</b>
+                                                        <b *ngIf="balance.balance == 0" class="text-success"><i class="fa fa-check-circle"></i> Soldé ({{balance.balance | currency:'XOF'}})</b> 
+                                                    </td>
+                                                    <td title="Date échéance pour le paiement"> <b>{{balance.due_date | date:'dd/MM/yyyy'}}</b> </td>
                                                     <td class="text-center ">
                                                         <button type="button" class="btn btn-warning"
                                                             *ngIf="balance.balance > 0"
-                                                            (click)="openPayementModal(student, balance, paiement)"><i
+                                                            (click)="openPayementModal(balance, paiement)"><i
                                                                 class="fa fa-wallet-o"></i>
                                                             <i class="fa fa-wallet"></i> <span> Payer</span></button>
                                                         <span class="text-success text-center"
-                                                            *ngIf="balance.balance == 0"> Payé</span>
+                                                            *ngIf="balance.balance == 0"> <i class="fa fa-check-circle"></i> Soldé</span>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -192,7 +176,6 @@
         </div>
         <!-- end col -->
     </div>
-    <!-- end row -->
 </div>
 <!-- end container-fluid -->
 
@@ -220,15 +203,13 @@
                                 value="{{operator.id}}">
                             <div class="card-radio">
                                 <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="50" height="30"> &nbsp;&nbsp;
-                                <span>{{operator.name}} {{operator.country.name}}</span>
+                                <span>{{operator.name}}</span>
                             </div>
                         </label>
                     </div>
 
                 </div>
             </div>
-
-            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
 
             <div class="row">
                 <div class="col-lg-4">
@@ -309,8 +290,6 @@
                     </div>
                 </div>
             </div>
-
-            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
 
             <div class="row">
                 <div class="col-lg-4">

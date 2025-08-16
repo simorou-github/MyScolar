@@ -91,7 +91,11 @@ export class TokenService {
     return this.decodePayload(this.getToken()).school_id;
   }
 
-  get getSocialReasonSchool() {
+  get getUserId(){
+    return this.decodePayload(this.getToken()).id;
+  }
+
+  get getSocialReasonSchool(){
     return this.decodePayload(this.getToken()).social_reason;
   }
 

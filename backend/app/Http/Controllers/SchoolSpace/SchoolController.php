@@ -139,22 +139,17 @@ class SchoolController extends Controller
     {
         try {
             $params = [];
-            if ($request->input('classe_id')) {
-                $params[] = ['classe_id', '=', $request->input('classe_id')];
+            if ($request->classe_id) {
+                $params[] = ['classe_id', '=', $request->classe_id];
             }
-            Log::info($params);
-            $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->whereRelation(
-                'student',
-                'school_id',
-                $request->school_id,
-                'academic_year',
-                '=',
-                $request->academic_year
-            )->where($params)->get();
+            if ($request->academic_year) {
+                $params[] = ['academic_year', '=', $request->academic_year];
+            }
+            $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params)->get();
 
             // C'est le school classe id qui représente classe id ici
-            if ($request->input('classe_id')) {
-                $true_classe_id = SchoolClasse::where('id', $request->input('classe_id'))->first()['classe_id'];
+            if ($request->classe_id && !$request->academic_year) {
+                $true_classe_id = SchoolClasse::where('id', $request->classe_id)->first()['classe_id'];
                 $classe = Classe::where('id', $true_classe_id)->first()['code'];
             } else {
                 $classe = '';

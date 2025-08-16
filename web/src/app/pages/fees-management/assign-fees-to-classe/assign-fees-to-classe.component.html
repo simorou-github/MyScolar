@@ -108,7 +108,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                                                 
                             </ng-container>
+                            <div *ngIf="feesList.errors?.datesNotInOrder" class="text-danger mt-2">
+                                Les dates doivent être croissantes. Chaque échéance doit être postérieure à la précédente.
+                              </div>
 
                         </div>
                         <div class="col-lg-12">
@@ -121,9 +125,6 @@
                         </div>
 
                     </form>
-
-                    
-
                 </div>
             </div>
             <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"

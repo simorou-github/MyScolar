@@ -9,11 +9,11 @@ use App\Models\Operator;
 use App\Models\Parameter;
 use App\Models\TypeFees;
 use App\Models\TypePayment;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use PHPUnit\Framework\Attributes\Group;
 
 class ParameterController extends Controller
 {
@@ -140,6 +140,9 @@ class ParameterController extends Controller
         $params = [];
         if ($request->country_id) {
             $params[] = ['country_id', '=', $request->country_id];
+        }
+        if ($request->is_cash_mode) {
+            $params[] = ['is_cash_mode', '=', $request->is_cash_mode];
         }
         if ($request->input('name')) {
             $params[] = ['name', 'like', '%' . $request->input('name') . '%'];
@@ -349,16 +352,23 @@ class ParameterController extends Controller
             'country_id' => 'required',
             'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
-
+        
         $path = null;
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('logos_operateurs', 'public');
         }
 
-        if (!$request->id) {
+        if(!$user = User::where('id', $request->user_id)->first()){
+            return response()->json([
+                'message' => 'Votre compte n\'est pas autorisé.',
+                'status' => 300
+            ]);
+        }
+
+        if ($request->id == 'null') {
             try {
-                $result = Operator::where('name', $name)->Where('country_id', $country_id)->first();
+                $result = Operator::where('name', $name)->where('country_id', $country_id)->first();
                 if ($result != null) {
                     return response()->json([
                         'message' => 'Cet opérateur existe déjà pour ce pays',
@@ -369,8 +379,17 @@ class ParameterController extends Controller
                         'id' => generateDBTableId(15, "App\Models\Operator"),
                         'name' => $name,
                         'country_id' => $country_id,
+                        'is_cash_mode' => $request->is_cash_mode,
                         'path_logo' => $path,
-                        'status' => 1
+                        'status' => true,
+                        'token_url' => $request->token_url,
+                        'pay_request_url' => $request->pay_request_url,
+                        'balance_request_url' => $request->balance_request_url,
+                        'api_key' => $request->api_key,
+                        'reference_id' => $request->reference_id,
+                        'secondary_key' => $request->secondary_key,
+                        'scolar_rate' => $request->scolar_rate,
+                        'create_id' => $user->id
                     ]);
 
                     return response()->json([
@@ -416,7 +435,7 @@ class ParameterController extends Controller
                     $data->path_logo = $request->file('image')->store('logos_operateurs', 'public');
                 }
 
-                $data->update($request->all());
+                $data->update(array_merge($request->all(), ['update_id' => $user->id]));
 
                 return response()->json([
                     'data' => $data,
@@ -454,7 +473,8 @@ class ParameterController extends Controller
                     ]);
                 }
 
-                $data->delete($request->all());
+                $data->status = !$data->status;
+                $data->save();
 
                 return response()->json([
                     'data' => $data,
@@ -465,7 +485,7 @@ class ParameterController extends Controller
                 Log::error($ex->getMessage());
                 return response()->json([
                     'data' => [],
-                    'message' => 'Une erreur interne est survenue',
+                    'message' => 'Opération interdite. Une erreur interne est survenue',
                     'status' => 500
                 ]);
             }
