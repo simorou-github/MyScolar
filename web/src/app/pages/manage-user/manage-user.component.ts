@@ -36,6 +36,7 @@ export class ManageUserComponent implements OnInit {
       last_name: ['', [Validators.required]],
       first_name: ['', [Validators.required]],
       status: [0],
+      temp_password: ['']
     });
 
     this.userSearchForm = this.fb.group({
@@ -44,6 +45,17 @@ export class ManageUserComponent implements OnInit {
       first_name: ['', [Validators.required]],
       school_id: [''],
     });
+  }
+
+  generatePassword() {
+    const length = 10; 
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+    let password = "";
+    for (let i = 0, n = charset.length; i < length; ++i) {
+      password += charset.charAt(Math.floor(Math.random() * n));
+    }
+    this.userForm.patchValue({ temp_password: password });
+    //this.toastr.info('Un nouveau mot de passe a été généré. N\'oubliez pas de le sauvegarder !', 'Information');
   }
 
 
@@ -74,7 +86,7 @@ export class ManageUserComponent implements OnInit {
 
   userList() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageUserService.userList({ }).subscribe({
+    this.manageUserService.userList({}).subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.users = v.data;
@@ -114,9 +126,13 @@ export class ManageUserComponent implements OnInit {
     }
   }
 
+  StaticModal(StaticDataModal: any) {
+    this.modalRef = this.modalService.show(StaticDataModal);
+  }
+
   addUserByAdmin() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageUserService.addUserByAdmin({ user: this.userForm.value, roles: this.rolesTab }).subscribe({
+    this.manageUserService.addUserByAdmin({ user: this.userForm.value, roles: this.rolesTab, schoolId: this.schoolId }).subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.message = v.message;
@@ -216,7 +232,6 @@ export class ManageUserComponent implements OnInit {
   }
 
   confirm(user) {
-    console.log(user)
     let testResponse = '';
     if (user.status) {
       testResponse = 'Voulez-vous désactiver l\'utilisateur ' + user.last_name + ' ' + user.first_name + ' ?';

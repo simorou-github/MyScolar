@@ -21,6 +21,7 @@ use App\Http\Controllers\SchoolSpace\SchoolDashboardController;
 
 // Authentification
 Route::post('auth/login', [AuthController::class, 'login']);
+Route::post('change-pwd', [AuthController::class, 'changePassword']);
 
 // Inscription
 Route::post('school/create-inscription', [SchoolInscriptionController::class, 'createInscription']);
@@ -178,6 +179,7 @@ Route::middleware(['auth:api'])->group(function () {
     // Utilisateurs & Rôles
     Route::get('permissions', [RoleController::class, 'getPermissions']);
     Route::post('manage-user/list', [UserContoller::class, 'userList']);
+    Route::post('manage-user/add-by-admin', [UserContoller::class, 'addUserByAdmin']);
 
     Route::apiResource('roles', RoleController::class);
 });

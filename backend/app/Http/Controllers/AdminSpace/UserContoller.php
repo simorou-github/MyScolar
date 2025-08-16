@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\AdminSpace;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserCreatedWithTemporaryPassword;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
 
 class UserContoller extends Controller
 {
@@ -141,7 +147,7 @@ class UserContoller extends Controller
     public function addUserByAdmin(Request $request)
     {
         try {
-            if (User::where('email', trim($request->email))->first()) {
+            if (User::where('email', trim($request->user['email']))->first()) {
 
                 return response()->json([
                     'data' => null,
@@ -152,31 +158,24 @@ class UserContoller extends Controller
 
             DB::beginTransaction();
 
-            $user = User::create(array_merge($request->user, ['id' => generateDBTableId(30, 'App\Models\User')]));
+            $user_created = User::create([
+                'id' => generateDBTableId(30, 'App\Models\User'),
+                'temp_password' => $request->user['temp_password'],
+                'password' => Hash::make($request->user['temp_password']),
+                'email' => $request->user['email'],
+                'last_name' => $request->user['last_name'],
+                'first_name' => $request->user['first_name'],
+                'is_true_password' => false,
+                'email_verified_at' => Carbon::now(),
+                'school_id' => $request->schoolId ? $request->schoolId : null
+            ]);
 
             if ($request->roles) {
-                $user->assignRole($request->roles);
+                $user_created->assignRole($request->roles);
             }
 
-            sendMail(
-                [
-                    env("ADMIN_MAIL_1"),
-                    env("ADMIN_MAIL_2"),
-                    $user->email
-                ],
-                [
-                    'last_name' => $user->last_name,
-                    'first_name' => $user->first_name,
-                    'email' => $user->email,
-                    'code' => password_hash($user->last_name . $user->first_name, PASSWORD_DEFAULT)
-                ],
-                'emails.activateAccount',
-                'Activation de compte',
-                env("APP_NAME"),
-                "Un compte vient d'être créé avec votre adresse mail. Veuillez cliquer sur le bouton ci-dessous
-                afin de l'activer en définissant votre mot de passe."
-            );
-
+            Mail::to($request->user['email'])->send(new UserCreatedWithTemporaryPassword($user_created, $request->user['temp_password']));
+            
             DB::commit();
             return response()->json([
                 'data' => [],

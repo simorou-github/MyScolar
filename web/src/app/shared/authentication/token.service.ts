@@ -62,46 +62,67 @@ export class TokenService {
   }
 
   // Décoder la charge utile
-  decodePayload(token:any){
+  decodePayload(token: any) {
     const payl = this.payload(token);
     return JSON.parse(atob(payl));
   }
 
-  get getAcademicYear(){
+  get getAcademicYear() {
     return this.decodePayload(this.getToken()).ac;
   }
 
-  get getUserEmail(){
+  get getUserEmail() {
     return this.decodePayload(this.getToken()).email;
   }
 
-  get getUserLastName(){
+  get getUserLastName() {
     return this.decodePayload(this.getToken()).last_name;
   }
 
-  get getUserFirstName(){
+  get getUserFirstName() {
     return this.decodePayload(this.getToken()).first_name;
   }
 
-  get getUserStatus(){
+  get getUserStatus() {
     return this.decodePayload(this.getToken()).status;
   }
 
-  get getSchoolId(){
+  get getSchoolId() {
     return this.decodePayload(this.getToken()).school_id;
   }
 
-  get getSocialReasonSchool(){
+  get getSocialReasonSchool() {
     return this.decodePayload(this.getToken()).social_reason;
   }
 
-  get getRoles(){
-    return this.decodePayload(this.getToken()).roles;
+  get getRoles(): string[] {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        return []; // Retourne un tableau vide si aucun token n'est présent
+      }
+      const payload = this.decodePayload(token);
+      // On s'assure que 'roles' existe et qu'il s'agit bien d'un tableau
+      return (payload && Array.isArray(payload.roles)) ? payload.roles : [];
+    } catch (error) {
+      // Gérer les erreurs de décodage du token
+      console.error("Erreur lors du décodage du token JWT:", error);
+      return [];
+    }
   }
 
-  get getTokenType(){
+  get getTokenType() {
     return this.decodePayload(this.getToken()).token_type;
   }
 
-  
+  hasRole(rolesAllowed: string[]): boolean {
+    const userRoles = this.getRoles;
+    if (!userRoles || userRoles.length === 0) {
+      return false;
+    }
+    // Vérifie si un des rôles de l'utilisateur est autorisé
+    return userRoles.some(userRole => rolesAllowed.includes(userRole));
+  }
+
+
 }

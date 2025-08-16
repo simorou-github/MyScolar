@@ -15,7 +15,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
     public $incrementing = false;
-    public $keyType = 'string'; 
+    public $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -30,7 +30,9 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'status',
         'email_verified_at',
-        'school_id'
+        'school_id',
+        'is_true_password',
+        'temp_password'
     ];
 
     /**
@@ -43,7 +45,8 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
-    public function school(){
+    public function school()
+    {
         return $this->belongsTo('App\Models\School', 'school_id');
     }
 
@@ -74,22 +77,21 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-       $user = User::with('school', 'roles')->where('email', $this->email)->first();
-        $roles = $user->getRoleNames();
+        // Récupérer l'utilisateur connecté
+        $user = User::with('school')->where('email', $this->email)->first();
+        $roles = $user->getRoleNames(); 
         Log::info($roles);
         return [
             'id' => $user->id,
-            'roles' => $roles,
-            //'permissions' => $permissions,
+            'roles' => $roles, 
             'last_name' => $user->last_name,
             'first_name' => $user->first_name,
             'email' => $user->email,
             'status' => $user->status,
             'school_id' => $user->school?->id,
             'social_reason' => $user->school?->social_reason,
-            'ac' =>  getActiveAcademicYear(),
+            'ac' => getActiveAcademicYear(),
             'token_type' => 'bearer',
-
         ];
     }
 }
