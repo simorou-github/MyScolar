@@ -27,7 +27,6 @@ export class OperatorComponent implements OnInit {
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: 'Paramètre' }, { label: 'Operateurs', active: true }];
-    console.log(localStorage.getItem('user'));
     this.operatorForm = this.fb.group({
       id: [],
       country_id: ['', [Validators.required]],

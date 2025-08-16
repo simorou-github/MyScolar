@@ -79,6 +79,10 @@ export class TokenService {
     return this.decodePayload(this.getToken()).last_name;
   }
 
+  get getUserID(){
+    return this.decodePayload(this.getToken()).id;
+  }
+
   get getUserFirstName(){
     return this.decodePayload(this.getToken()).first_name;
   }
