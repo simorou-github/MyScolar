@@ -25,8 +25,8 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
     private tokenService: TokenService,
     public translate: TranslateService
   ) {
-    // Activation du menu à chaque changement de route
-    router.events.forEach((event) => {
+    // écoute changement de route
+    this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.activateMenu();
         this.scrollToActive();
@@ -54,13 +54,12 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  // Initialise le menu filtré par rôle
+  // init menu filtré par rôle
   initializeMenu(): void {
     this.menuItems = this.filterMenuByRoles(MENU);
     this.resetActive(this.menuItems);
   }
 
-  // Réinitialise l'état actif
   resetActive(items: MenuItem[]) {
     items.forEach(item => {
       item.isActive = false;
@@ -94,10 +93,9 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   hasItems(item: MenuItem): boolean {
-    return item.subItems && item.subItems.length > 0;
+    return !!item.subItems && item.subItems.length > 0;
   }
 
-  // Toggle menu: ferme tous les autres menus sauf celui cliqué
   toggleMenu(item: MenuItem) {
     this.menuItems.forEach(i => {
       if (i !== item) this.closeAll(i);
@@ -105,21 +103,23 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
     item.isOpen = !item.isOpen;
   }
 
-  // Ferme le menu et tous ses sous-menus
   closeAll(item: MenuItem) {
     item.isOpen = false;
     item.isActive = false;
     if (item.subItems) item.subItems.forEach(sub => this.closeAll(sub));
   }
 
-  // Active le menu selon la route courante
+  /**
+   * Active menu en fonction de la route
+   */
   activateMenu() {
-    const currentUrl = this.router.url;
+    const currentUrl = this.router.url.split('?')[0]; // enlève query params
 
     const activateRecursively = (items: MenuItem[]): boolean => {
       let anyChildActive = false;
 
       items.forEach(item => {
+        // reset
         item.isActive = false;
         item.isOpen = false;
 
@@ -128,17 +128,16 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
           childActive = activateRecursively(item.subItems);
         }
 
-        // Vérifie si la route correspond exactement
-        if (item.link && currentUrl.startsWith(item.link)) {
+        // match exact
+        if (item.link && currentUrl === item.link) {
           item.isActive = true;
-          childActive = true;
+          anyChildActive = true;
         }
 
+        // si un enfant est actif => parent actif + ouvert
         if (childActive) {
-          item.isOpen = true;  // ouvre le parent
-        }
-
-        if (item.isActive || childActive) {
+          item.isActive = true;
+          item.isOpen = true;
           anyChildActive = true;
         }
       });
@@ -149,29 +148,6 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
     activateRecursively(this.menuItems);
   }
 
-
-  // Ouvre tous les parents du menu actif
-  openParents(item: MenuItem) {
-    let parent = this.findParent(item, this.menuItems);
-    while (parent) {
-      parent.isOpen = true; // Ouvre pour afficher le sous-menu
-      parent = this.findParent(parent, this.menuItems);
-    }
-  }
-
-  // Recherche récursive du parent
-  findParent(child: MenuItem, items: MenuItem[]): MenuItem {
-    for (let item of items) {
-      if (item.subItems?.includes(child)) return item;
-      if (item.subItems) {
-        const found = this.findParent(child, item.subItems);
-        if (found) return found;
-      }
-    }
-    return null;
-  }
-
-  // Scroll jusqu'à l'élément actif
   scrollToActive() {
     setTimeout(() => {
       const activeEl = document.querySelector('.mm-active, .active');

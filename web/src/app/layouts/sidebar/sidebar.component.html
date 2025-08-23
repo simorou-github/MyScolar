@@ -4,72 +4,80 @@
       <div id="sidebar-menu">
         <ul class="metismenu list-unstyled" #sideMenu>
           <ng-container *ngFor="let item of menuItems">
-            
-            <!-- Menu title -->
+
+            <!-- Titre -->
             <li class="menu-title" *ngIf="item.isTitle">
               {{ item.label | translate }}
             </li>
 
-            <!-- Menu item -->
-            <li *ngIf="!item.isTitle && !item.isLayout">
+            <!-- Item racine -->
+            <li *ngIf="!item.isTitle && !item.isLayout"
+                [class.mm-active]="item.isActive">
 
-              <!-- Parent menu -->
+              <!-- Parent -->
               <a *ngIf="hasItems(item)"
                  href="javascript:void(0);"
                  class="is-parent"
-                 [ngClass]="{'has-arrow': true, 'mm-active': item.isOpen}"
+                 [ngClass]="{'has-arrow': true, 'active': item.isActive}" 
                  (click)="toggleMenu(item)">
                 <i class="bx {{ item.icon }}" *ngIf="item.icon"></i>
                 <span>{{ item.label | translate }}</span>
               </a>
 
-              <!-- Single link -->
+              <!-- Lien simple -->
               <a *ngIf="!hasItems(item)"
                  [routerLink]="item.link"
                  routerLinkActive="active"
+                 [routerLinkActiveOptions]="{ exact: true }"
                  class="side-nav-link-ref">
                 <i class="bx {{ item.icon }}" *ngIf="item.icon"></i>
                 <span>{{ item.label | translate }}</span>
               </a>
 
-              <!-- Submenu -->
+              <!-- Sous-menu -->
               <ul *ngIf="hasItems(item)"
                   class="sub-menu"
-                  [ngClass]="{'mm-show': item.isOpen}">
-                <li *ngFor="let subitem of item.subItems">
+                  [class.mm-show]="item.isOpen">
+                <li *ngFor="let subitem of item.subItems"
+                    [class.mm-active]="subitem.isActive">
 
-                  <!-- Sub-item link -->
+                  <!-- Sous-item lien final -->
                   <a *ngIf="!hasItems(subitem)"
                      [routerLink]="subitem.link"
                      routerLinkActive="active"
+                     [routerLinkActiveOptions]="{ exact: true }"
                      class="side-nav-link-ref">
                     {{ subitem.label | translate }}
                   </a>
 
-                  <!-- Sub-item parent -->
+                  <!-- Sous-item parent -->
                   <a *ngIf="hasItems(subitem)"
                      href="javascript:void(0);"
                      class="has-arrow"
-                     [ngClass]="{'mm-active': subitem.isOpen}"
+                     [ngClass]="{'active': subitem.isActive}" 
                      (click)="toggleMenu(subitem)">
                     {{ subitem.label | translate }}
                   </a>
 
-                  <!-- Nested sub-menu -->
+                  <!-- Sous-sous-menu -->
                   <ul *ngIf="hasItems(subitem)"
                       class="sub-menu"
-                      [ngClass]="{'mm-show': subitem.isOpen}">
-                    <li *ngFor="let subSubitem of subitem.subItems">
+                      [class.mm-show]="subitem.isOpen">
+                    <li *ngFor="let subSubitem of subitem.subItems"
+                        [class.mm-active]="subSubitem.isActive">
                       <a [routerLink]="subSubitem.link"
                          routerLinkActive="active"
+                         [routerLinkActiveOptions]="{ exact: true }"
                          class="side-nav-link-ref">
                         {{ subSubitem.label | translate }}
                       </a>
                     </li>
                   </ul>
+
                 </li>
               </ul>
             </li>
+
           </ng-container>
         </ul>
       </div>
