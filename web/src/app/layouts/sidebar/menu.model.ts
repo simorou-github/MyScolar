@@ -3,10 +3,12 @@ export interface MenuItem {
     label?: string;
     icon?: string;
     link?: string;
-    subItems?: any;
+    subItems?: MenuItem[];   
     isTitle?: boolean;
     badge?: any;
     parentId?: number;
     isLayout?: boolean;
     rolesAllowed: string[];
+    isOpen?: boolean;      
+    isActive?: boolean;     
 }
