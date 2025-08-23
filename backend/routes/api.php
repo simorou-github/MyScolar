@@ -171,22 +171,7 @@ Route::get('school/get-file-path/{id}', function ($id) {
 Route::middleware(['auth:api'])->group(function () {
     // Routes spécifiques aux écoles
     Route::prefix('school')->group(function () {
-        Route::post('detail', [SchoolController::class, 'getSchoolDetail']);
-        Route::post('list-inscription-pending', [SchoolInscriptionController::class, 'listInscriptionsPending']);
-        Route::post('list-inscription-validated', [SchoolInscriptionController::class, 'listInscriptionsValidated']);
-        Route::post('change-inscription-status', [SchoolInscriptionController::class, 'changeStatus']);
-        Route::post('change-status', [SchoolInscriptionController::class, 'changeStatus']);
-        Route::post('list-classe', [SchoolController::class, 'listSchoolClasse']);
-        Route::post('list-student', [SchoolController::class, 'listStudent']);
-        Route::post('get-student-with-param', [SchoolController::class, 'getSchoolStudentsWithParam']);
-        Route::post('add-one-student', [SchoolController::class, 'addStudentToClasse']);
-        Route::post('add-list-student', [SchoolController::class, 'addStudentListToClasse']);
-        Route::post('get-fees-details', [SchoolController::class, 'getFeesDetailsById']);
-        Route::post('list', [SchoolController::class, 'list']);
-        Route::post('create', [SchoolController::class, 'create']);
-        Route::post('update', [SchoolController::class, 'update']);
-        Route::post('delete', [SchoolController::class, 'delete']);
-
+        
         // Groupes
         Route::prefix('groupe')->group(function () {
             Route::post('list', [SchoolController::class, 'listGroupe']);
