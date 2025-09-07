@@ -1,0 +1,17 @@
+TRUNCATE TABLE balance_fees;
+TRUNCATE TABLE groupes;
+TRUNCATE TABLE mail_verifications;
+TRUNCATE TABLE failed_jobs;
+TRUNCATE TABLE operators;
+TRUNCATE TABLE payment_details;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE failed_jobs;
+TRUNCATE TABLE school_classe_fees_details;
+TRUNCATE TABLE school_classe_fees;
+TRUNCATE TABLE school_classes;
+TRUNCATE TABLE schools;
+TRUNCATE TABLE student_classes;
+TRUNCATE TABLE students;
+TRUNCATE TABLE type_fees;
+TRUNCATE TABLE type_payments;
+TRUNCATE TABLE users;

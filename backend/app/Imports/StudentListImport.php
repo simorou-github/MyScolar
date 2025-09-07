@@ -75,6 +75,7 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             $student_classe = StudentClasse::create([
                 'id' => generateDBTableId(29, "App\Models\StudentClasse"),
                 'student_id' => $student->id,
+                'school_id' => $this->schoolId,
                 'classe_id' => $this->currentClasseId,
                 'school_classe_id' => $this->currentClasseId,
                 'academic_year' => $this->academicYear,

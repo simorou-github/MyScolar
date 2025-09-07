@@ -17,33 +17,33 @@ class RoleSeeder extends Seeder
 
             [
                 "name" => "super_admin",
-                "description" => "Super Administrateur"
+                "label" => "Super Administrateur"
             ],
 
             [
                 "name" => "admin",
-                "description" => "Administrateur"
+                "label" => "Administrateur"
             ],
 
             [
                 "name" => "school_admin",
-                "description" => "Administrateur Ecole"
+                "label" => "Administrateur Ecole"
             ],
 
             [
                 "name" => "accountant",
-                "description" => "Comptable"
+                "label" => "Comptable"
             ],
 
             [
                 "name" => "treasurer",
-                "description" => "Trésorier"
+                "label" => "Trésorier"
             ],
 
         ];
 
         foreach ($roles as $role) {
-            Role::updateOrCreate(['name'=>$role['name'], 'guard_name'=> 'api']);
+            Role::updateOrCreate(['name'=>$role['name'],'label'=>$role['label'], 'guard_name'=> 'api']);
         }
     }
 }

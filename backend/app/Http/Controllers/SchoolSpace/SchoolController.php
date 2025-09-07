@@ -142,11 +142,17 @@ class SchoolController extends Controller
             if ($request->classe_id) {
                 $params[] = ['classe_id', '=', $request->classe_id];
             }
-            if ($request->academic_year) {
-                $params[] = ['academic_year', '=', $request->academic_year];
+            if ($request->classe_id) {
+                $params[] = ['classe_id', '=', $request->classe_id];
             }
-            $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params)->get();
 
+            $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params);
+
+            if ($request->school_id) {
+                $params[] = ['school_id', '=', $request->school_id];
+                $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params);
+            }
+            $data = $data->get();
             // C'est le school classe id qui représente classe id ici
             if ($request->classe_id && !$request->academic_year) {
                 $true_classe_id = SchoolClasse::where('id', $request->classe_id)->first()['classe_id'];
@@ -322,6 +328,7 @@ class SchoolController extends Controller
                         'student_id' => $student->id,
                         'classe_id' => $request->classe_id,
                         'school_classe_id' => $request->classe_id,
+                        'school_id' => $request->school_id,
                         'academic_year' => getActiveAcademicYear()
                     ]);
 

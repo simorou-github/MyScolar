@@ -137,7 +137,7 @@
 
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                        <a href="http://localhost:4200/activation-account?email={{$data['email']}}&type=v2&knw={{$data['code']}}" target="_blank">
+                        <a href="https://web.scolarco.com/activation-account?email={{$data['email']}}&type=v2&knw={{$data['code']}}" target="_blank">
                             Changer mot de passe
                         </a>    
                     </td>

@@ -39,7 +39,7 @@ class SchoolInscriptionService
 
 
         // Si la raison sociale existe déjà
-        if (School::where('social_reason', $school_request->social_reason)->where('country_id', $school_request->country_id)->first()) {
+        if (School::where('social_reason', $school_request->social_reason)->whereNot('status', 'REJETE')->where('country_id', $school_request->country_id)->first()) {
             throw new ScolarException("Une école existe déjà avec ce nom pour le pays choisi.");
         }
 
