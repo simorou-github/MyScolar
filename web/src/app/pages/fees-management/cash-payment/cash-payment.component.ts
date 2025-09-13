@@ -21,14 +21,14 @@ export class CashPaymentComponent {
   curr_fees: any; academic_years: any; currentAcademicYaer: any; academic_year = ''; balanceFees: any; student: any; student_classe: any;
   operators: any; selectedBalancesRows: Array<{ id: string, balance: number, montant: number, type_fees_id: string }> = [];
   totalFees: number; student_param: any; selected_fees: any[]; totalBalances: number; paymentForm!: FormGroup; batchPaymentForm!: FormGroup;
-  p: number = 1; path_part = environment.domainUrl+'/storage/';
+  p: number = 1; path_part = environment.domainUrl + '/storage/';
 
-  apprenants: any;  school_classes: any;  private school_id: string = '';  userEmail: any;
+  apprenants: any; school_classes: any; private school_id: string = ''; userEmail: any;
 
   constructor(private authService: AuthService, private modalService: BsModalService, private paiementScolaireService: PaiementScolaireService,
     private toastr: ToastrService, private managerFeesService: ManageFeesService, private fb: FormBuilder, private classeService: ClasseService,
     private tokenService: TokenService, private schoolService: SchoolService, private ngxLoader: NgxUiLoaderService) {
-      this.school_id = this.tokenService?.getSchoolId; this.userEmail = tokenService.getUserEmail
+    this.school_id = this.tokenService?.getSchoolId; this.userEmail = tokenService.getUserEmail
   }
 
   ngOnInit(): void {
@@ -41,6 +41,8 @@ export class CashPaymentComponent {
       balance: ['', [Validators.required]],
       amount: ['', [Validators.required]],
       phone: ['', [Validators.required]],
+      payment_method: ['', [Validators.required]],
+      reference: [''],
       email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"), Validators.required]],
       details: [],
     });
@@ -51,6 +53,8 @@ export class CashPaymentComponent {
       balance: ['', [Validators.required]],
       amount: ['', [Validators.required]],
       phone: ['', [Validators.required]],
+      payment_method: ['', [Validators.required]],
+      reference: [''],
       email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"), Validators.required]],
       details: [],
     });
@@ -100,6 +104,7 @@ export class CashPaymentComponent {
             balance: ['', [Validators.required]],
             amount: ['', [Validators.required]],
             phone: ['', [Validators.required]],
+            payment_method: ['', [Validators.required]],
             email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
             details: [],
           });
@@ -159,7 +164,8 @@ export class CashPaymentComponent {
           this.ngxLoader.stopLoader('loader-spin');
           this.apprenants = v.data;
         } else {
-          this.ngxLoader.stopLoader('loader-spin');        }
+          this.ngxLoader.stopLoader('loader-spin');
+        }
       },
 
       error: (e) => {
@@ -177,7 +183,7 @@ export class CashPaymentComponent {
   //Get all School's Classes
   getAllClassesOfCurrentSchool() {
     this.ngxLoader.startLoader('loader-spin');
-    this.classeService.listClasseOfSchool({school_id: this.school_id}).subscribe({
+    this.classeService.listClasseOfSchool({ school_id: this.school_id }).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
@@ -200,7 +206,7 @@ export class CashPaymentComponent {
     });
   }
 
-  resetTotalBalances(){
+  resetTotalBalances() {
     this.totalBalances = 0;
   }
 

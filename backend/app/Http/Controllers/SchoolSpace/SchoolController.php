@@ -831,6 +831,24 @@ class SchoolController extends Controller
     {
         try {
             $school = School::find($request->id);
+            return response()->json([
+                'data' => $school,
+                'status' => 200
+            ]);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json([
+                'data' => [],
+                'message' => 'Une erreur interne est survenue',
+                'status' => 500
+            ]);
+        }
+    }
+
+    public function getSchoolRejectedDetail(Request $request)
+    {
+        try {
+            $school = School::find($request->id);
             if ($school->status != "REJETE") {
                 return response()->json([
                     'message' => 'Désolé. Les informations demandées ne peuvent pas être affichées.',

@@ -6,6 +6,7 @@ use App\Exceptions\ScolarException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSchoolInscriptionRequest;
 use App\Jobs\EmailScolarTemplateJob;
+use App\Mail\ScolarPayMailPro;
 use App\Models\School;
 use App\Models\User;
 use App\Services\SchoolInscriptionService;
@@ -14,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
@@ -102,9 +104,9 @@ class SchoolInscriptionController extends Controller
                     $user->status = !$user->status;
                     $user->save();
                     $school_admin = Role::findByName('school-admin', 'api');
-                   //$school_acc = Role::findByName('accountant', 'api');
+                    //$school_acc = Role::findByName('accountant', 'api');
                     $user->assignRole($school_admin);
-                   // $user->assignRole($school_acc);
+                    // $user->assignRole($school_acc);
                     $msg = 'Compte activé avec succès.';
                     $message = 'Votre demande d\'inscription a bien été validée.';
                 }
@@ -128,13 +130,12 @@ class SchoolInscriptionController extends Controller
                     $msg = 'Compte désactivé avec succès';
                     $message = 'Le compte de votre école a été désactivé. Merci de de contacter le Groupe Scolar Plus.';
                 }
-
+      
                 //Sending Mail
-                EmailScolarTemplateJob::dispatch(
-                    [
-                        env("ADMIN_MAIL_1"),
-                        $data->email
-                    ],
+                Mail::to([
+                    env("ADMIN_MAIL_1"),
+                    $data->email
+                ])->send(new ScolarPayMailPro(
                     [
                         'school' => $data->social_reason,
                         'email' => $data->email,
@@ -146,9 +147,9 @@ class SchoolInscriptionController extends Controller
                     ($request->status == 'VALIDE') ? 'Validation Inscription' : 'Rejet Inscription',
                     env("APP_NAME"),
                     $message
-                );
+                ));
 
-
+               
                 DB::commit();
                 return response()->json([
                     'data' => $data,

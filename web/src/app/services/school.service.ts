@@ -20,6 +20,10 @@ export class SchoolService {
   getSchoolDetail(body){
     return this.http.post(environment.apiUrl + '/school/detail', body);
   }
+  
+  getSchoolRejectedDetail(body){
+    return this.http.post(environment.apiUrl + '/school-rejected/detail', body);
+  }
 
   getAllSchool(body) {
   	return this.http.post(environment.apiUrl + '/school/list', body);

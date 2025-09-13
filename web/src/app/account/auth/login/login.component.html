@@ -34,7 +34,7 @@
                 <alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</alert>
 
                 <div class="mb-2">
-                  <label for="email">Adresse mail</label>
+                  <label for="email">Adresse mail <span class="text-danger">*</span></label>
                   <input type="text" formControlName="email" class="form-control input" id="email"
                     placeholder="Entrez votre login" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
                   <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
@@ -44,19 +44,24 @@
                 </div>
 
                 <div class="mb-2">
-                  <label for="password">Mot de passe</label>
+                  <label for="password">Mot de passe <span class="text-danger">*</span></label>
                   <div class="input-group auth-pass-inputgroup">
-                    <input type="password" class="form-control input" formControlName="password"
+                    <input [type]="passwordType" class="form-control input" formControlName="password"
                       placeholder="Entrez votre mot de passe"
                       [ngClass]="{ 'is-invalid': submitted && f.password.errors }" aria-label="Password"
                       aria-describedby="password-addon">
-                    <!--button class="btn btn-light ms-0" type="button" id="password-addon"><i
-                        class="mdi mdi-eye-outline"></i></button-->
+                    <button class="btn btn-light toggle-password-btn" type="button" id="password-addon"
+                      (click)="togglePassword()" style="height: 40px !important;">
+                      <i class="mdi"
+                        [ngClass]="passwordType === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"></i>
+                    </button>
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                       <span *ngIf="f.password.errors.required">Mot de passe obligatoire</span>
                     </div>
                   </div>
                 </div>
+
+
                 <div class="mt-2 text-center">
                   <a routerLink="/recuperation-mot-de-passe" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Mot de
                     passe oublié ?</a>
@@ -90,7 +95,7 @@
                 <div class="row">
                   <div class="mt-4 col-md-6 text-center">
                     <a routerLink="/auth/inscription" class="text-muted h5" title="Devenir Partenaire.">
-                      <i class="mdi mdi-login text-primary mr-1" ></i>
+                      <i class="mdi mdi-login text-primary mr-1"></i>
                       S'Inscrire </a>
                   </div>
                   <div class="mt-4 col-md-6 text-center">

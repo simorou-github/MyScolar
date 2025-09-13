@@ -68,7 +68,7 @@ export class InscriptionComponent {
       if (params['sci']) {
         this.schoolId = params['sci'];
         this.ngxLoader.startLoader('loader-spin');
-        this.school_service.getSchoolDetail({ id: this.schoolId }).subscribe({
+        this.school_service.getSchoolRejectedDetail({ id: this.schoolId }).subscribe({
           next: (v: any) => {
             this.message = v.message;
             // Variable pour tester si c'est une première soumission

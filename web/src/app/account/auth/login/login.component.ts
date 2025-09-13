@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
   // set the currenr year
   year: number = new Date().getFullYear();
   message: any; isProcessing: boolean = false;
+  passwordType: string = 'password';
 
   // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
@@ -44,6 +45,9 @@ export class LoginComponent implements OnInit {
 
   get f() { return this.loginForm.controls; }
 
+  togglePassword(): void {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+  }
 
   onSubmit(): void {
     if (this.loginForm.invalid) {

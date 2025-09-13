@@ -28,10 +28,10 @@ Route::post('school/create-inscription', [SchoolInscriptionController::class, 'c
 Route::post('verify/code', [SchoolInscriptionController::class, 'codeVerification']);
 
 // Vérification du code (avec limitation de débit)
-Route::middleware('throttle:3,10')->group(function () {
-    Route::post('code/confirmation', [SchoolInscriptionController::class, 'getCodeOfVerification']);
-    Route::post('new/code/confirmation', [SchoolInscriptionController::class, 'getNewCodeOfVerification']);
-});
+//Route::middleware('throttle:3,10')->group(function () {
+Route::post('code/confirmation', [SchoolInscriptionController::class, 'getCodeOfVerification']);
+Route::post('new/code/confirmation', [SchoolInscriptionController::class, 'getNewCodeOfVerification']);
+//});
 
 // Villes & Pays
 Route::get('country/list', [CityController::class, 'list']);
@@ -40,6 +40,8 @@ Route::post('country/city/list', [CityController::class, 'listCitiesByCountry'])
 
 // Paiement Public
 Route::post('manage-fees/public-search-student-balance', [FeesManageController::class, 'searchStudentFeesBalanceForParentPayment']);
+
+Route::post('school-rejected/detail', [SchoolController::class, 'getSchoolRejectedDetail']);
 
 Route::prefix('school')->middleware(['auth:api'])->group(function () {
     Route::post('detail', [SchoolController::class, 'getSchoolDetail']);
@@ -171,7 +173,7 @@ Route::get('school/get-file-path/{id}', function ($id) {
 Route::middleware(['auth:api'])->group(function () {
     // Routes spécifiques aux écoles
     Route::prefix('school')->group(function () {
-        
+
         // Groupes
         Route::prefix('groupe')->group(function () {
             Route::post('list', [SchoolController::class, 'listGroupe']);

@@ -89,11 +89,11 @@ export const MENU: MenuItem[] = [
         icon: 'bx bx-cast',
         isOpen: false,
         isActive: false,
-        rolesAllowed: ['super-admin', 'admin'],
+        rolesAllowed: ['super-admin', 'admin', 'school-admin'],
         subItems: [
             { id: 7001, label: 'Classes', link: '/classes', parentId: 7, rolesAllowed: ['super-admin', 'admin'] },
             { id: 7002, label: 'Opérateurs', link: '/scolar/operators', parentId: 7, rolesAllowed: ['super-admin', 'admin'] },
-            { id: 7003, label: 'Utilisateurs', link: '/scolar/manage-user', parentId: 7, rolesAllowed: ['super-admin', 'admin'] },
+            { id: 7003, label: 'Utilisateurs', link: '/scolar/manage-user', parentId: 7, rolesAllowed: ['super-admin', 'admin', 'school-admin'] },
             { id: 7004, label: 'Roles & Permissions', link: '/scolar/manage-permission', parentId: 7, rolesAllowed: ['super-admin'] }
         ]
     },
@@ -104,10 +104,10 @@ export const MENU: MenuItem[] = [
         icon: 'bx bx-wallet',
         isOpen: false,
         isActive: false,
-        rolesAllowed: ['admin', 'super-admin', 'treasurer'],
+        rolesAllowed: ['admin', 'super-admin', 'treasurer', 'school-admin'],
         subItems: [
-            { id: 8001, label: 'Soldes et Transactions', icon: 'bx bx-wallet', link: '/scolar/fees-balance-followup', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer'] },
-            { id: 8002, label: 'Paiement Caisse', icon: 'bx bx-currency-notes', link: '/scolar/fees-cash-payment', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer'] }
+            { id: 8001, label: 'Soldes et Transactions', icon: 'bx bx-wallet', link: '/scolar/fees-balance-followup', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer', 'school-admin'] },
+            { id: 8002, label: 'Paiement Caisse', icon: 'bx bx-currency-notes', link: '/scolar/fees-cash-payment', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer', 'school-admin'] }
         ]
     },
 ];

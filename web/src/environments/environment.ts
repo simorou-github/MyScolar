@@ -4,13 +4,13 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://coopstats.coopdicpa.com/scolar_service/public/api',
-  domainUrl: 'https://coopstats.coopdicpa.com',
-  baseUrl: 'https://scolar-web.coopdicpa.com/web/',
+  // apiUrl: 'https://coopstats.coopdicpa.com/scolar_service/public/api',
+  // domainUrl: 'https://coopstats.coopdicpa.com',
+  // baseUrl: 'https://scolar-web.coopdicpa.com/web/',
 
-  /*apiUrl: 'http://127.0.0.1:8000/api',
+  apiUrl: 'http://127.0.0.1:8000/api',
   domainUrl: 'http://127.0.0.1:8000',
-  baseUrl: 'http://localhost:4200',*/
+  baseUrl: 'http://localhost:4200',
   timeoutInMs: 15 * 60 * 1000, // 5 minutes
   // IMPORTANT
   landingPageUrl: 'file:///C:/xampp/htdocs/scolarpay/scolarland/index.html',
