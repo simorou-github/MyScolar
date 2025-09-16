@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { randomInt } from 'crypto';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
@@ -124,6 +125,16 @@ export class CashPaymentComponent {
 
       }
     });
+  }
+
+  //Générate Caisse Référence
+  methodeSelected(){
+    this.paymentForm.controls.phone.setValue(this.curr_student.phone);
+ 
+    //this.paymentForm.get('reference')?.setValue('C-' + this.getRandomNumber(100000, 999999));
+  }
+  getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   //Get all Academic Year

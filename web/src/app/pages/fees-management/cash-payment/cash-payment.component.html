@@ -207,7 +207,7 @@
     </div>
     <div class="modal-body p-3">
         <form (ngSubmit)="processUniquePayment(paymentForm.value)" [formGroup]="paymentForm">
-            <div class="row mb-4 mt-2">
+            <div class="row mb-6 mt-2">
                 <h5>Paiement de <b class="text-secondary ">{{curr_fees.type_fees?.label}} - {{curr_fees.fees_label}},
                     </b>
                     pour <b class="text-secondary">{{curr_student.last_name}} {{curr_student.first_name}}</b></h5>
@@ -216,7 +216,7 @@
             <div class="mb-2">
                 <!-- <h5>Mode de paiement :</h5> -->
                 <div class="row">
-                    <div class="col-xl-3 col-sm-4" *ngFor="let operator of operators; let i=index;">
+                    <div class="col-xl-5 col-sm-5" *ngFor="let operator of operators; let i=index;">
                         <label class="card-radio-label mb-3">
                             <input type="radio" id="{{i}}" required class="card-radio-input" formControlName="operator"
                                 value="{{operator.id}}">
@@ -270,10 +270,11 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-6">
                     <div class="mb-3">
                         <label for="payment_method">Méthode de paiement <i class="text-danger">*</i></label>
-                        <select class="form-control form-select" id="payment_method" formControlName="payment_method" required>
+                        <select class="form-control form-select" id="payment_method"
+                            formControlName="payment_method" required>
                             <option value="">Selectionnez</option>
                             <option value="ESPECES">Espèces</option>
                             <option value="MOBILEMONEY">Mobile Money</option>
@@ -283,10 +284,12 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-12">
                     <div class="mb-3">
                         <label for="reference" class="form-label">Référence paiement </label>
-                        <input type="text" class="form-control" id="reference" formControlName="reference">
+                        <input type="text" class="form-control" id="reference"
+                            placeholder="Référence transaction mobile, Référence Virement, etc."
+                            formControlName="reference">
                     </div>
                 </div>
             </div>
@@ -319,14 +322,14 @@
             <div class="mb-2">
                 <label>Mode de paiement :</label>
                 <div class="row">
-                    <div class="col-xl-3 col-sm-4" *ngFor="let operator of operators; let i=index;">
+                    <div class="col-xl-5 col-sm-5" *ngFor="let operator of operators; let i=index;">
                         <label class="card-radio-label mb-3">
                             <input type="radio" id="{{i}}" style="cursor: pointer !important;" required
                                 class="card-radio-input" formControlName="operator" value="{{operator.id}}">
                             <div class="card-radio" style="cursor: pointer !important;">
-                                <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="50"
+                                <img [src]="path_part + operator.path_logo" alt="{{operator?.name}}" width="50"
                                     height="30"> &nbsp;&nbsp;
-                                <span>{{operator.name}} {{operator.country.name}}</span>
+                                <span>{{operator?.name}} {{operator.country?.name}}</span>
                             </div>
                         </label>
                     </div>
@@ -349,14 +352,28 @@
                             required style="background-color: rgba(217, 215, 215, 0.506);">
                     </div>
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <div class="mb-3">
                         <label for="amount" class="form-label">Montant à payer <i class="text-danger">*</i></label>
                         <input type="number" class="form-control" id="amount" formControlName="amount" required
                             readonly>
                     </div>
                 </div>
-
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Téléphone <i class="text-danger">*</i></label>
+                        <input type="text" class="form-control" formControlName="phone" required id="phone"
+                            maxlength="20">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email <i class="text-danger">*</i></label>
+                        <input type="email" class="form-control" id="email" formControlName="email">
+                    </div>
+                </div>               
                 <div class="col-lg-4">
                     <div class="mb-3">
                         <label for="payment_method">Méthode de paiement <i class="text-danger">*</i></label>
@@ -371,32 +388,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Téléphone <i class="text-danger">*</i></label>
-                        <input type="text" class="form-control" formControlName="phone" required id="phone"
-                            maxlength="20">
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email <i class="text-danger">*</i></label>
-                        <input type="email" class="form-control" id="email" formControlName="email">
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
+                <div class="col-lg-12">
                     <div class="mb-3">
                         <label for="reference" class="form-label">Référence paiement </label>
-                        <input type="text" class="form-control" id="reference" formControlName="reference">
+                        <input type="text" class="form-control" id="reference" placeholder="Référence transaction mobile, Référence Virement, etc." formControlName="reference">
                     </div>
                 </div>
             </div>
-            <div class="mb-3">
-                <label for="details" class="form-label">Comentaires</label>
-                <textarea class="form-control" id="details" formControlName="details" rows="2"></textarea>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="mb-3">
+                        <label for="details" class="form-label">Comentaires</label>
+                        <textarea class="form-control" id="details" formControlName="details" rows="2"></textarea>
+                    </div>
+                </div>
             </div>
-
             <div class="text-end">
                 <button type="submit" class="btn btn-warning" [disabled]="!batchPaymentForm.valid || isProcessing"><i
                         class="fa fa-check"></i> Payer le lot de frais</button>

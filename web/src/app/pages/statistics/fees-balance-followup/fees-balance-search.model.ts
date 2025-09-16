@@ -7,4 +7,6 @@ export class FeesBalanceSearchModel {
     type_fees_id?: string; 
     school_id?: string ;
     file_type?: string ;
+    date_debut?: Date ;
+    date_fin?: Date ;
 }

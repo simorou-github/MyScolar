@@ -43,8 +43,8 @@ export class FeesBalanceFollowupComponent {
 
   //Get Data for Graphique des Paiements reçus
   getFeesBalanceFollowupData() {
-    console.log(this.searchFeesBalanceParam);
     this.ngxLoader.startLoader('loader-spin');
+    console.log(this.searchFeesBalanceParam);
     this.scolarService.getFeesBalanceFollowupData(this.searchFeesBalanceParam).subscribe(
       {
         next: (v: any) => {
@@ -71,6 +71,8 @@ export class FeesBalanceFollowupComponent {
     this.searchFeesBalanceParam = {};
     this.searchFeesBalanceParam.academic_year = this.tokenService.getAcademicYear;
     this.searchFeesBalanceParam.school_id = this.tokenService.getSchoolId;
+
+    this.getFeesBalanceFollowupData();
   }
 
   getAllClasses(): void {
@@ -160,6 +162,7 @@ export class FeesBalanceFollowupComponent {
   exportJournal() {
     this.searchFeesBalanceParam.file_type = 'xls';
     this.ngxLoader.startLoader('loader-spin');
+    console.log(this.searchFeesBalanceParam);
     this.scolarService.exportJournal(this.searchFeesBalanceParam).subscribe((response: any) => {
       let blob = new Blob([response], { type: 'application/xls' });
       let downloadURL = window.URL.createObjectURL(response);

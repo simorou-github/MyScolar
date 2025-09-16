@@ -39,7 +39,7 @@ export class OperatorComponent implements OnInit {
       reference_id: [''],
       secondary_key: [''],
       scolar_rate: [''],
-      user_id: [localStorage.getItem('user')],
+      user_id: [this.tokenService.getUserId],
     });
     this.searchForm = this.fb.group({
       name: [''],
@@ -99,6 +99,7 @@ export class OperatorComponent implements OnInit {
     formData.append('reference_id', this.operatorForm.get('reference_id')?.value);
     formData.append('secondary_key', this.operatorForm.get('secondary_key')?.value);
     formData.append('scolar_rate', this.operatorForm.get('scolar_rate')?.value);
+    formData.append('user_id', this.tokenService.getUserId);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
