@@ -37,7 +37,8 @@ export class InscriptionComponent {
 
   // set the currenr year
   year: number = new Date().getFullYear();
-  passwordType: string = 'password';
+  passwordType1: string = 'password';
+  passwordType2: string = 'password';
 
 
   ngOnInit(): void {
@@ -97,7 +98,11 @@ export class InscriptionComponent {
   }
 
    togglePassword(): void {
-    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordType1 = this.passwordType1 === 'password' ? 'text' : 'password';
+  }
+
+   togglePasswordConfirmation(): void {
+    this.passwordType2 = this.passwordType2 === 'password' ? 'text' : 'password';
   }
 
   /* File onchange event */

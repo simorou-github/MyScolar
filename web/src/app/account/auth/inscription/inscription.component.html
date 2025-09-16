@@ -95,9 +95,7 @@
                                     </div>
                                 </ng-container>
 
-                                <!-- <ng-container *ngIf="isEmailValid || isTwiceSubmission"> -->
-                                <ng-container>
-                                    <!-- <ng-container> -->
+                                <ng-container *ngIf="isEmailValid || isTwiceSubmission">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="">
@@ -204,34 +202,32 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="password">Mot de passe <span class="text-danger">*
-                                                    </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Créer votre mot de passe."></span>
+                                            <label for="password">Mot de passe <span
+                                                    class="text-danger">*</span></label>
+                                            <span class="bx bx-info-circle pull-right"
+                                                title="Créer votre mot de passe."></span>
 
-                                                <input type="password" class="form-control" formControlName="password"
+                                            <div class="password-input-container">
+                                                <input [type]="passwordType1" class="form-control" formControlName="password"
                                                     id="password">
-                                                <button class="btn btn-light toggle-password-btn" type="button"
-                                                    id="password-addon" (click)="togglePassword()"
-                                                    style="height: 40px !important;">
-                                                    <i class="mdi"
-                                                        [ngClass]="passwordType === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"></i>
-                                                </button>
+                                                <i class="mdi password-toggle-icon"
+                                                    [ngClass]="passwordType1 === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                    (click)="togglePassword()"></i>
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
-                                             <label for="password">Confirmation du mot de passe <span
-                                                        class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Créer votre mot de passe."></span>
+                                            <label for="password_conf">Confirmation du mot de passe <span
+                                                    class="text-danger">*</span></label>
+                                            <span class="bx bx-info-circle pull-right"
+                                                title="Créer votre mot de passe."></span>
 
-                                                <input type="password" class="form-control"
-                                                    formControlName="password_conf">
-                                                <button class="btn btn-light toggle-password-btn" type="button"
-                                                    id="password-addon" (click)="togglePassword()"
-                                                    style="height: 40px !important;">
-                                                    <i class="mdi"
-                                                        [ngClass]="passwordType === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"></i>
-                                                </button>
+                                            <div class="password-input-container">
+                                                <input [type]="passwordType2" class="form-control" formControlName="password_conf"
+                                                    id="password_conf">
+                                                <i class="mdi password-toggle-icon"
+                                                    [ngClass]="passwordType2 === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                    (click)="togglePasswordConfirmation()"></i>
+                                            </div>
                                         </div>
                                     </div>
 
