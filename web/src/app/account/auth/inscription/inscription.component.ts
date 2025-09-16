@@ -37,6 +37,7 @@ export class InscriptionComponent {
 
   // set the currenr year
   year: number = new Date().getFullYear();
+  passwordType: string = 'password';
 
 
   ngOnInit(): void {
@@ -93,8 +94,10 @@ export class InscriptionComponent {
     );
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
-
+   togglePassword(): void {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
 
   /* File onchange event */

@@ -106,7 +106,7 @@ export const MENU: MenuItem[] = [
         isActive: false,
         rolesAllowed: ['admin', 'super-admin', 'treasurer', 'school-admin'],
         subItems: [
-            { id: 8001, label: 'Soldes et Transactions', icon: 'bx bx-wallet', link: '/scolar/fees-balance-followup', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer', 'school-admin'] },
+            { id: 8001, label: 'Soldes et Transactions', icon: 'bx bx-wallet', link: '/scolar/fees-balance-followup', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer'] },
             { id: 8002, label: 'Paiement Caisse', icon: 'bx bx-currency-notes', link: '/scolar/fees-cash-payment', parentId: 8, rolesAllowed: ['admin', 'super-admin', 'treasurer', 'school-admin'] }
         ]
     },

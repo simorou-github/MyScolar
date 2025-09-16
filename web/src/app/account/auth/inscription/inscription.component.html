@@ -19,7 +19,8 @@
     </div>
     <!-- end col -->
     <!-- Form -->
-    <div class="col-xl-6" style="margin-top: -35px; position: absolute; right: 0; float: right; overflow: auto; background-color: white;">
+    <div class="col-xl-6"
+        style="margin-top: -35px; position: absolute; right: 0; float: right; overflow: auto; background-color: white;">
         <ngx-ui-loader bgsPosition="'center-center'" [bgsOpacity]="0.5" [fgsType]="'rectangle-bounce'" [fgsSize]="80"
             [loaderId]="'loader-spin'"></ngx-ui-loader>
         <div class="row g-0">
@@ -94,7 +95,8 @@
                                     </div>
                                 </ng-container>
 
-                                <ng-container *ngIf="isEmailValid || isTwiceSubmission">
+                                <!-- <ng-container *ngIf="isEmailValid || isTwiceSubmission"> -->
+                                <ng-container>
                                     <!-- <ng-container> -->
                                     <div class="row">
                                         <div class="col-md-6">
@@ -160,8 +162,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="">
-                                                <label for="first_name">Prénom <span
-                                                        class="text-danger">* </span></label>
+                                                <label for="first_name">Prénom <span class="text-danger">*
+                                                    </span></label>
                                                 <span class="bx bx-info-circle pull-right"
                                                     title="Saisir vos prénoms"></span>
 
@@ -190,7 +192,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="">
-                                                <label for="location">Adresse <span class="text-danger">* </span></label>
+                                                <label for="location">Adresse <span class="text-danger">*
+                                                    </span></label>
                                                 <span class="bx bx-info-circle pull-right"
                                                     title="Saisir votre adresse ou celle de votre école. Ex: Awakê, 01 BP00120"></span>
 
@@ -201,26 +204,34 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="">
-                                                <label for="password">Mot de passe <span
-                                                        class="text-danger">* </span></label>
+                                            <label for="password">Mot de passe <span class="text-danger">*
+                                                    </span></label>
                                                 <span class="bx bx-info-circle pull-right"
                                                     title="Créer votre mot de passe."></span>
 
                                                 <input type="password" class="form-control" formControlName="password"
                                                     id="password">
-                                            </div>
+                                                <button class="btn btn-light toggle-password-btn" type="button"
+                                                    id="password-addon" (click)="togglePassword()"
+                                                    style="height: 40px !important;">
+                                                    <i class="mdi"
+                                                        [ngClass]="passwordType === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"></i>
+                                                </button>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="">
-                                                <label for="password">Confirmation du mot de passe <span
+                                             <label for="password">Confirmation du mot de passe <span
                                                         class="text-danger">* </span></label>
                                                 <span class="bx bx-info-circle pull-right"
                                                     title="Créer votre mot de passe."></span>
 
                                                 <input type="password" class="form-control"
                                                     formControlName="password_conf">
-                                            </div>
+                                                <button class="btn btn-light toggle-password-btn" type="button"
+                                                    id="password-addon" (click)="togglePassword()"
+                                                    style="height: 40px !important;">
+                                                    <i class="mdi"
+                                                        [ngClass]="passwordType === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"></i>
+                                                </button>
                                         </div>
                                     </div>
 
@@ -236,14 +247,16 @@
                                         <div class="col-md-12">
                                             <div>
                                                 <div>
-                                                    <label for="document" class="form-label">Joindre un document <i class="text-danger">* </i> <span
+                                                    <label for="document" class="form-label">Joindre un document <i
+                                                            class="text-danger">* </i> <span
                                                             class="bx bx-info-circle pull-right"
                                                             title="Joindre les documents d'identité administrative, jurique ou fiscale de votre école. Vous devez les scanner sensemble en un seul document de 10Mo au plus."></span></label>
                                                     <input class="form-control form-control-lg" id="document"
                                                         accept=".pdf"
                                                         title="Tout document permettant de vérifier l'identité ou l'autorisation de l'école."
                                                         type="file" (change)="fileEvent($event)">
-                                                        <i class="text-danger" style="margin-top: -25px;">Taille maximal accreptée (10Mo).</i>
+                                                    <i class="text-danger" style="margin-top: -25px;">Taille maximal
+                                                        accreptée (10Mo).</i>
                                                 </div>
                                             </div>
                                         </div>
@@ -264,8 +277,8 @@
                             </div>
                         </form>
                         <div class="mt-4 mt-md-5 text-center">
-                            <p class="mb-0 h5">Vous aviez déjà un compte, <a
-                                    href="http://localhost:4200"><span class="bx bx-log-in-circle"></span>
+                            <p class="mb-0 h5">Vous aviez déjà un compte, <a href="http://localhost:4200"><span
+                                        class="bx bx-log-in-circle"></span>
                                     Se Connecter </a></p>
                         </div>
                     </div>
