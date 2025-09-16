@@ -350,7 +350,7 @@ class ParameterController extends Controller
         $request->validate([
             'name' => 'required|string',
             'country_id' => 'required',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'nullable|file',//|mimes:jpg,jpeg,png|max:2048',
         ]);
         
         $path = null;

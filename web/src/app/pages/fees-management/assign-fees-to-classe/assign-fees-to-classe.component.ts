@@ -6,7 +6,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ClasseService } from 'src/app/services/classe.service';
 import { ManageFeesService } from 'src/app/services/manage-fees.service';
 import { ParameterService } from 'src/app/services/parameter.service';
-import { SchoolService } from 'src/app/services/school.service';
 import { TokenService } from 'src/app/shared/authentication/token.service';
 
 @Component({
@@ -114,7 +113,6 @@ export class AssignFeesToClasseComponent implements OnInit {
 
   public deleteFee(index: number): void {
     this.feesList.removeAt(index);
-    this.feesList.markAsDirty();
   }
 
   createFeesGroup(label: any = "Paiement unique", due_amount: number = 0) {
@@ -145,13 +143,16 @@ export class AssignFeesToClasseComponent implements OnInit {
   }
 
   getAllClasses(): void {
+    this.ngxLoader.startLoader('loader-spin');
     this.classeService.listClasseOfSchool({ school_id: this.tokenService.getSchoolId }).subscribe(
       {
         next: (v: any) => {
           this.classes = v.data;
+          this.ngxLoader.stopLoader('loader-spin');
         },
         error: (e) => {
           console.error(e);
+          this.ngxLoader.stopLoader('loader-spin');
         },
         complete: () => {
         }

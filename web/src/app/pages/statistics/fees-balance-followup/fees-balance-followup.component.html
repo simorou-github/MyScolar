@@ -103,7 +103,7 @@
                                 Fermer</button>
                         </div>
                     </div>
-                    <form #filterForm="ngForm" *ngIf="isFilter" (ngSubmit)="getFeesBalanceFollowupData()">
+                    <form #filterForm="ngForm" *ngIf="isFilter">
 
                         <div class="row mt-1">
 
@@ -168,16 +168,19 @@
                             </div>
 
                             <div class="col-lg-2">
-                                <label for="start_date">Début période</label>
-                                <input type="date" class="form-control mb-2" formControlName="start_date" />
+                                <label for="start_date">Début Echéance</label>
+                                <input type="date" class="form-control mb-2" 
+                                name="date_debut" ngModel
+                                [(ngModel)]="searchFeesBalanceParam.date_debut"/>
                             </div>
 
                             <div class="col-lg-2">
-                                <label for="end_date">Fin période</label>
-                                <input type="date" class="form-control mb-2" formControlName="end_date" />
+                                <label for="end_date">Fin Echéance</label>
+                                <input type="date" class="form-control mb-2" name="date_fin" ngModel
+                                 [(ngModel)]="searchFeesBalanceParam.date_fin" (change)="getFeesBalanceFollowupData()"/>
                             </div>
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <label for="fees_label">Répartition</label>
                                 <input class="form-control" type="text" name="fees_label" ngModel
                                     [(ngModel)]="searchFeesBalanceParam.fees_label"
@@ -185,9 +188,13 @@
                                     (keyup.enter)="getFeesBalanceFollowupData()">
                             </div>
                             <br>
-                            <div class="col-lg-2 text-right">
-                                <button class="btn btn-primary " type="submit"> <i class="fa fa-search"></i>
+                            <div class="col-lg-2 mt-3 text-right">
+                                <button class="btn btn-primary mt-3"  (click)="getFeesBalanceFollowupData()" type="submit"> <i class="fa fa-search"></i>
                                     Rechercher</button>
+                            </div>
+                            <div class="col-lg-2 mt-3 text-right">
+                                <button class="btn btn-warning mt-3" (click)="resetForm()" type="submit"> <i class="fa fa-filter"></i>
+                                    Effacer le Filtre</button>
                             </div>
                         </div>
                     </form>
@@ -211,7 +218,7 @@
                             <th scope="col">Matricule</th>
                             <th scope="col">Nom & Prénoms</th>
                             <th scope="col">Classe</th>
-                            <th scope="col">Année</th>
+                            <th scope="col">Echéance</th>
                             <th scope="col">Frais</th>
                             <th scope="col">Montant</th>
                             <th scope="col">Solde</th>
@@ -232,8 +239,8 @@
                                     title="Naissance : {{balance.student_birthday}} | Sexe : {{balance.student_sex=='F'?'Féminin':'Masculin'}} | Email : {{balance.student_email}}">
                                     {{balance.student_last_name }} {{balance.student_first_name}}</td>
                                 <td>{{balance.classe_code}}-{{balance.groupe_code}}</td>
-                                <td>{{balance.academic_year}}</td>
-                                <td>{{balance.fees_label}}</td>
+                                <td>{{balance.due_date}}</td>
+                                <td>{{balance.type_fees_label}}, {{balance.fees_label}}</td>
                                 <td>{{balance.fees_amount | currency:'XOF'}}</td>
                                 <td>
                                     <span *ngIf="balance.balance==0" class="badge bg-success blog-badge p-2"><i
