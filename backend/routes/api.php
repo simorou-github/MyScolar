@@ -263,5 +263,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('manage-user/list', [UserContoller::class, 'userList']);
     Route::post('manage-user/add-by-admin', [UserContoller::class, 'addUserByAdmin']);
     Route::post('manage-user/update-profile', [UserContoller::class, 'updateUserProfile']);
+    Route::post('manage-user/change-status', [UserContoller::class, 'changeStatusOfUser']);
     Route::apiResource('roles', RoleController::class);
 });
