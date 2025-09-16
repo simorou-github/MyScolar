@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +22,11 @@ class UserContoller extends Controller
     public function userList(Request $request)
     {
         try {
+            $user = Auth::user();
             $params = [];
+            if ($user->school_id) {
+                $params[] = ['school_id', 'like', $user->school_id];
+            }
             if ($request->input('email')) {
                 $params[] = ['email', 'like', '%' . $request->input('email') . '%'];
             }
@@ -31,9 +36,7 @@ class UserContoller extends Controller
             if ($request->input('first_name')) {
                 $params[] = ['first_name', 'like', '%' . $request->input('first_name') . '%'];
             }
-            if ($request->input('school_id')) {
-                $params[] = ['school_id', 'like', $request->input('school_id')];
-            }
+            
             if ($request->input('id')) {
                 $params[] = ['id', 'like', $request->input('id')];
             }

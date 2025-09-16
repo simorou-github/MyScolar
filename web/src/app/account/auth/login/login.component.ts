@@ -51,26 +51,27 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      this.showError("Veillez rafraichir la page et réessayer.");
+      this.showError("Veuillez rafraîchir la page et réessayer.");
     } else {
       this.isProcessing = true;
       this.email = this.loginForm.get('email')?.value;
       this.authService.login(this.loginForm.value).subscribe({
         next: (v: any) => {
           if (v.status == 200) {
-            if (v.is_true_password == 0 || v.is_true_password == false) {
+            console.log(v.is_true_password);
+
+            if (v.is_true_password) {
+              this.router.navigate(['/dashboard']);
+              this.message = v.message;
+              this.showSuccess(this.message);
+              this.tokenService.handleToken(v.access_token);
+              this.authState.changeAuthStatus(true);
+            } else {
               this.router.navigate(['/activation-account'], { queryParams: { email: this.email } });
             }
-            this.router.navigate(['/dashboard']);
 
-            this.message = v.message;
-            this.showSuccess(this.message);
-            this.tokenService.handleToken(v.access_token);
-            this.authState.changeAuthStatus(true);
             this.isProcessing = false;
             this.loginForm.reset();
-
-
           } else {
             this.message = v.message;
             this.loginForm.patchValue({
@@ -79,7 +80,6 @@ export class LoginComponent implements OnInit {
             this.showError(this.message);
             this.isProcessing = false;
           }
-
         },
         error: (error: any) => {
           this.error = 'Impossible de valider vos identifiants. Veuillez réessayer.';
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
         },
         complete: () => {
         },
-      })
+      });
     }
   }
 
