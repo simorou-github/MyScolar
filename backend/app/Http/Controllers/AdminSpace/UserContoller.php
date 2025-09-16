@@ -192,4 +192,42 @@ class UserContoller extends Controller
             ]);
         }
     }
+
+    public function updateUserProfile(Request $request)
+    {
+        try {
+            if (!$request->id) {
+                return response()->json([
+                    'message' => 'L\'identifiant de cet utilisateur n\'existe pas',
+                    'status' => 500
+                ]);
+            }
+            $user = User::find($request->id);
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Aucun utilisateur trouvé avec cet identifiant',
+                    'status' => 500
+                ]);
+            }
+
+            $user_updated = $user->update([
+                'last_name' => $request->last_name,
+                'first_name' => $request->first_name,
+                'password' => Hash::make($request->password)
+            ]);
+
+            if ($user_updated) {
+                return response()->json([
+                    'message' => 'Profil mis à jour avec succès',
+                    'status' => 200
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur interne est survenue',
+                'status' => 500
+            ]);
+        }
+    }
 }

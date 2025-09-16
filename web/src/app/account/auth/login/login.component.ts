@@ -58,6 +58,11 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe({
         next: (v: any) => {
           if (v.status == 200) {
+            if (v.is_true_password == 0 || v.is_true_password == false) {
+              this.router.navigate(['/activation-account'], { queryParams: { email: this.email } });
+            }
+            this.router.navigate(['/dashboard']);
+
             this.message = v.message;
             this.showSuccess(this.message);
             this.tokenService.handleToken(v.access_token);
@@ -65,13 +70,6 @@ export class LoginComponent implements OnInit {
             this.isProcessing = false;
             this.loginForm.reset();
 
-            if (v.is_true_password == 0 || v.is_true_password == false) {
-              // Rediriger vers la page de changement de mot de passe
-              this.router.navigate(['/activation-account'], { queryParams: { email: this.email } });
-            } else {
-              // Rediriger vers le tableau de bord normal
-              this.router.navigate(['/dashboard']);
-            }
 
           } else {
             this.message = v.message;

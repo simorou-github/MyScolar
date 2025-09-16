@@ -51,7 +51,7 @@ class AuthController extends Controller
                     'status' => 500
                 ]);
             }
-               // Log::info($validator->validated());
+            // Log::info($validator->validated());
 
 
             if (!$token = auth('api')->attempt($validator->validated())) {
@@ -162,7 +162,8 @@ class AuthController extends Controller
 
             if ($email != null) {
                 User::where('email', $email)->update([
-                    'password' => Hash::make($pwd), 'status' => 1,
+                    'password' => Hash::make($pwd),
+                    'status' => 1,
                     'email_verified_at' => Carbon::now()
                 ]);
                 return response()->json([
@@ -209,14 +210,15 @@ class AuthController extends Controller
             }
 
             if ($user != null || $user) {
-            
+
                 sendMail(
                     [
                         trim($request->email)
                     ],
                     [
                         'email' => trim($request->email),
-                        'last_name' => $user->last_name, 'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'first_name' => $user->first_name,
                         'code' => password_hash($user->last_name . $user->first_name, PASSWORD_DEFAULT)
                     ],
                     'emails.resetPassword',
@@ -224,7 +226,7 @@ class AuthController extends Controller
                     env("APP_NAME"),
                     'Merci de cliquer sur le bouton ci-dessous pour redefinir votre mot de passe.'
                 );
-                
+
 
                 return response()->json([
                     'message' => 'Email envoyé avec succès',
@@ -256,7 +258,7 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $email)->first();
-           
+
 
             if ($user->email_verified_at == null || $user->email_verified_at == '') {
                 return response()->json([
@@ -286,4 +288,6 @@ class AuthController extends Controller
             ]);
         }
     }
+
+    
 }

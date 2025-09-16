@@ -152,7 +152,20 @@ class SchoolController extends Controller
                 $params[] = ['school_id', '=', $request->school_id];
                 $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params);
             }
-            $data = $data->get();
+            $students = $data->get();
+
+            $sortedStudents = $students
+                ->sortBy(function ($student) {
+                    return $student->student->first_name;
+                })
+                ->sortBy(function ($student) {
+                    return $student->student->last_name;
+                })
+                ->sortBy(function ($student) {
+                    return $student->classe->classe->rank;
+                });
+
+
             // C'est le school classe id qui représente classe id ici
             if ($request->classe_id && !$request->academic_year) {
                 $true_classe_id = SchoolClasse::where('id', $request->classe_id)->first()['classe_id'];
@@ -162,7 +175,7 @@ class SchoolController extends Controller
             }
 
             return response()->json([
-                'data' => $data,
+                'data' => $sortedStudents->values()->all(),
                 'classe' => $classe,
                 'message' => 'Liste des élèves',
                 'status' => 200

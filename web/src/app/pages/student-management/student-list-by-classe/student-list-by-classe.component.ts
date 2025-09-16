@@ -84,6 +84,7 @@ export class StudentListByClasseComponent implements OnInit{
   displayDetailsModal(detailsModal: any, student: any) {
     this.modalRef = this.modalService.show(detailsModal, { class: 'modal-lg' });
     this.curr_student = student;
+    console.log(this.curr_student)
   }
 
   generatePDF() {

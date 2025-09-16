@@ -24,4 +24,8 @@ export class ManageUserService {
   addUserByAdmin(body: any) {
     return this.http.post(environment.apiUrl + '/manage-user/add-by-admin', body);
   }
+
+  updateUserProfile(body: any) {
+    return this.http.post(environment.apiUrl + '/manage-user/update-profile', body);
+  }
 }

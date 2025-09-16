@@ -20,8 +20,8 @@
 
             <div class="col-sm-auto">
               <div>
-                <a class="btn btn-info" (click)="downloadTemplate(); infoOnModelUpload.show()"
-                  target="_self"><i class="fas fa-file-download me-1"></i> Télécharger un Modèle</a>
+                <a class="btn btn-info" (click)="downloadTemplate(); infoOnModelUpload.show()" target="_self"><i
+                    class="fas fa-file-download me-1"></i> Télécharger un Modèle</a>
               </div>
             </div>
 
@@ -107,7 +107,7 @@
 </div>
 
 <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+  [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
 
 <!--Start Add Classe Modal -->
 <ng-template #addModal let-modal>
@@ -183,20 +183,28 @@
   <form (ngSubmit)="addStudentListToClasse()" [formGroup]="uploadForm">
     <div class="modal-body">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-10">
           <input type="hidden" formControlName="classe_id">
           <input type="hidden" formControlName="school_id">
           <input type="hidden" formControlName="academic_year">
+
           <div class="mt-3">
             <label for="file_upload" class="form-label">Liste d'apprenants</label>
-            <input class="form-control" type="file" id="file_upload" formControlName="file_upload"
-              (input)="onFileChange($event)" class="custom-file-input"
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+            <div class="custom-file-upload-container">
+              <input class="custom-file-input" type="file" id="file_upload" formControlName="file_upload"
+                (change)="onFileChange($event)"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+              <label for="file_upload" class="custom-file-upload-label">
+                <i class="mdi mdi-upload"></i>
+                <span *ngIf="!fileName">Sélectionner un fichier</span>
+                <span *ngIf="fileName">{{ fileName }}</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
+
     <div class="modal-footer">
       <div class="hstack gap-2 justify-content-end">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"

@@ -203,15 +203,14 @@ class SchoolInscriptionService
             ]);
             // 'expires_at' => Carbon::now()->addMinutes(30)]);
             if ($response) {
-                EmailScolarTemplateJob::dispatch(
-                    $request->email,
+                Mail::to($request->email)->send(new ScolarPayMailPro(
                     ['code' => $code],
                     'emails.emailVerification',
                     'Vérification de compte mail',
                     env("APP_NAME"),
-                    'Merci de taper ce nouveau code reçu sur la page de vérification de mail sur notre plateforme pour continuer
-                        votre demande d\'inscription. Ce code expire dans ' . env("EMAIL_CODE_VALIDITY_TIME") . ' minutes.'
-                );
+                    'Merci de taper le code reçu sur la page de vérification de mail sur notre plateforme pour continuer
+     votre demande d\'inscription. Ce code expire dans ' . env("EMAIL_CODE_VALIDITY_TIME") . ' minutes.'
+                ));
             } else {
                 throw new ScolarException("Merci de réessayer.");
             }

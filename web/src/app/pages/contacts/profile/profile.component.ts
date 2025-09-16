@@ -6,7 +6,9 @@ import { ChartType } from './profile.model';
 import { TokenService } from 'src/app/shared/authentication/token.service';
 import { ManageUserService } from 'src/app/services/manage-user.service';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PasswordValidator } from 'src/app/validators/password.validator';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-profile',
@@ -19,14 +21,16 @@ import { FormBuilder, FormGroup } from '@angular/forms';
  */
 export class ProfileComponent implements OnInit {
   // bread crumb items
-  breadCrumbItems: Array<{}>;
+  breadCrumbItems: Array<{}>; isProcessing: boolean = false;
 
   revenueBarChart: ChartType;
-  statData:any;
+  statData: any; message: string = '';
   user: any; userForm!: FormGroup;
+  passwordType1: string = 'password';
+  passwordType2: string = 'password';
   constructor(private tokenService: TokenService, private userService: ManageUserService, private toastr: ToastrService,
-    private fb: FormBuilder,
-  ) {  }
+    private fb: FormBuilder, private ngxLoader: NgxUiLoaderService, private manageUserService: ManageUserService,
+  ) { }
 
   ngOnInit() {
     this.getUser();
@@ -36,22 +40,26 @@ export class ProfileComponent implements OnInit {
       first_name: [''],
       email: [''],
       tel: [''],
-    });
-    this.breadCrumbItems = [{ label: 'Utilisateur' }, { label: 'Profile', active: true }];
+      password: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}'), Validators.minLength(8)]],
+      password_confirmation: [''],
+    },
+      {
+        validator: [PasswordValidator('password', 'password_confirmation'),],
+      });
+    this.breadCrumbItems = [{ label: 'Utilisateur' }, { label: 'Profil', active: true }];
   }
 
-  editUser(){
-    console.log(this.userForm.value);
-    this.userForm.setValue({
+  editUser() {
+    this.userForm.patchValue({
       id: this.user.id,
       first_name: this.user.first_name,
-      last_naeme: this.user.last_naeme,
+      last_name: this.user.last_name,
       email: this.user.email,
       tel: this.user.school?.tel,
     });
   }
 
-  
+
   getUser(): void {
     this.userService.userList({ id: this.tokenService.getUserID }).subscribe(
       {
@@ -67,7 +75,44 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  
+  togglePassword(): void {
+    this.passwordType1 = this.passwordType1 === 'password' ? 'text' : 'password';
+  }
+
+  togglePasswordConfirmation(): void {
+    this.passwordType2 = this.passwordType2 === 'password' ? 'text' : 'password';
+  }
+
+
+  updateUser() {
+    this.ngxLoader.startLoader('loader-spin');
+    this.manageUserService.updateUserProfile(this.userForm.value).subscribe({
+      next: (v: any) => {
+        if (v.status == 200) {
+          this.message = v.message;
+          this.showSuccess(this.message)
+          this.getUser();
+          this.userForm.reset();
+          this.ngxLoader.stopLoader('loader-spin');
+        } else {
+          this.message = v.message;
+          this.showError(this.message)
+          this.ngxLoader.stopLoader('loader-spin')
+        }
+      },
+      error: (e) => {
+        console.log(e);
+        this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
+        this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
+      },
+
+      complete: () => {
+
+      }
+    });
+  }
+
   showSuccess(msg: string) {
     this.toastr.success(msg, 'Succès');
   }

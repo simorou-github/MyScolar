@@ -22,10 +22,11 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="avatar-md profile-user-wid mb-4">
-                <img src="assets/images/users/avatar-1.jpg" alt="" class="img-thumbnail rounded-circle"> 
+                <img src="assets/images/users/avatar-1.jpg" alt="" class="img-thumbnail rounded-circle">
               </div>
               <h5 class="font-size-15">{{user?.school?.social_reason}}</h5>
-              <p class="mb-0 font-size-13"> <i class="fa fa-phone text-warning"></i> Tel : {{user?.school?.tel}} <br> <i class="fa fa-envelope text-primary"></i> E-mail : {{user?.school?.email}}</p>
+              <p class="mb-0 font-size-13"> <i class="fa fa-phone text-warning"></i> Tel : {{user?.school?.tel}} <br> <i
+                  class="fa fa-envelope text-primary"></i> E-mail : {{user?.school?.email}}</p>
             </div>
           </div>
         </div>
@@ -36,7 +37,8 @@
         <div class="card-body">
           <h4 class="card-title mb-2">Informations Personnelles</h4>
 
-          <p class="text-muted mb-2">Les informations de votre compte sont présentés ci-dessous. Vous pouvez les modifier.</p>
+          <p class="text-muted mb-2">Les informations de votre compte sont présentés ci-dessous. Vous pouvez les
+            modifier.</p>
           <div class="table-responsive">
             <table class="table table-nowrap mb-0">
               <tbody>
@@ -58,13 +60,15 @@
                 </tr>
                 <tr>
                   <th scope="row">Rôles :</th>
-                  <td> 
-                    <span *ngFor="let role of user?.roles" class="badge bg-info blog-badge p-2"> <i class="fa fa-check-circle"> {{ role?.name }} </i></span> &nbsp; 
+                  <td>
+                    <span *ngFor="let role of user?.roles" class="badge bg-info blog-badge p-2"> <i
+                        class="fa fa-check-circle"> {{ role?.name }} </i></span> &nbsp;
                   </td>
                 </tr>
                 <tr>
                   <th colspan="2">
-                    <button type="button" class="btn btn-primary w-md" (click)="editUser()"><i class="fa fa-edit" ></i> Modifier</button>
+                    <button type="button" class="btn btn-primary w-md" (click)="editUser()"><i class="fa fa-edit"></i>
+                      Modifier</button>
                   </th>
                 </tr>
               </tbody>
@@ -74,7 +78,7 @@
       </div>
       <!-- end card -->
 
-      
+
       <!-- end card -->
     </div>
 
@@ -83,34 +87,57 @@
         <div class="card-body">
           <h4 class="card-title mb-4">Profile Utilisateur</h4>
 
-            <form [formGroup]="userForm">
-                <div class="mb-3">
-                    <label for="last_name">Nom <i class="text-danger">*</i></label>
-                    <input type="text" class="form-control" formControlName="last_name" id="last_name">
-                </div>
-                <div class="mb-3">
-                    <label for="first_name">Prénoms <i class="text-danger">*</i></label>
-                    <input type="text" class="form-control" formControlName="first_name"  id="first_name">
-                </div>
-                <div class="mb-3">
-                  <label for="email">Email <i class="text-danger">*</i></label>
-                  <input type="email" class="form-control" formControlName="email"  id="email">
-                </div>
-                <div class="mb-3">
-                  <label for="formrow-password-input">Password</label>
-                  <input type="password" class="form-control" id="formrow-password-input" />
-                </div>
-                <div class="mb-3">
-                  <label for="formrow-password-input">Confirmation</label>
-                  <input type="password" class="form-control" id="formrow-password-input" />
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-success w-md"><i class="fa fa-save"></i> Enregistrer</button>
-                </div>
-            </form>
+          <form [formGroup]="userForm" (ngSubmit)="updateUser()">
+            <input type="hidden" formControlName="id">
+            <div class="mb-3">
+              <label for="email">Email </label>
+              <input type="email" style="background-color: #E5E7EB !important;" class="form-control"
+                formControlName="email" readonly id="email">
+            </div>
+
+            <div class="mb-3">
+              <label for="last_name">Nom <i class="text-danger">*</i></label>
+              <input type="text" class="form-control" formControlName="last_name" id="last_name">
+            </div>
+
+            <div class="mb-3">
+              <label for="first_name">Prénoms <i class="text-danger">*</i></label>
+              <input type="text" class="form-control" formControlName="first_name" id="first_name">
+            </div>
+
+            <label for="formrow-password-input">Mot de passe <i class="text-danger">*</i></label>
+
+            <div class="password-input-container mb-3">
+              <input [type]="passwordType1" class="form-control" formControlName="password" id="password">
+              <i class="mdi password-toggle-icon"
+                [ngClass]="passwordType1 === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                (click)="togglePassword()"></i>
+            </div>
+            <label for="formrow-password-conf-input">Confirmation mot de passe <i class="text-danger">*</i></label>
+            <div class="password-input-container">
+              <input [type]="passwordType2" class="form-control" formControlName="password_confirmation"
+                id="password_confirmation">
+              <i class="mdi password-toggle-icon"
+                [ngClass]="passwordType2 === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                (click)="togglePasswordConfirmation()"></i>
+            </div>
+            <div class="row" style="margin-top: -20px !important;">
+              <div class="col-md-12">
+                <i class="text-danger">Veuillez utiliser un mot de passe fort (8 Caractères
+                  au moins, Chiffres, Majuscules, Minuscules, Caractères spéciaux comme
+                  @-!-#).</i>
+              </div>
+            </div>
+            <div class="mt-2">
+              <button type="submit" [disabled]="!userForm.valid" class="btn btn-success w-md"><i class="fa fa-save"></i>
+                Enregistrer</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
   <!-- end row -->
 </div>
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+  [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
