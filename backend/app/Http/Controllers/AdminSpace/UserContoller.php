@@ -36,7 +36,7 @@ class UserContoller extends Controller
             if ($request->input('first_name')) {
                 $params[] = ['first_name', 'like', '%' . $request->input('first_name') . '%'];
             }
-            
+
             if ($request->input('id')) {
                 $params[] = ['id', 'like', $request->input('id')];
             }
@@ -178,7 +178,7 @@ class UserContoller extends Controller
             }
 
             Mail::to($request->user['email'])->send(new UserCreatedWithTemporaryPassword($user_created, $request->user['temp_password']));
-            
+
             DB::commit();
             return response()->json([
                 'data' => [],
@@ -228,6 +228,97 @@ class UserContoller extends Controller
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json([
+                'message' => 'Une erreur interne est survenue',
+                'status' => 500
+            ]);
+        }
+    }
+
+    public function updateUserByAdmin(Request $request)
+    {
+        Log::info('est bien ici ok');
+        try {
+            if (!$request->user['id']) {
+                return response()->json([
+                    'message' => 'Identifiant utilisateur manquant.',
+                    'status' => 400
+                ]);
+            }
+
+            $user = User::find($request->user['id']);
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Utilisateur introuvable.',
+                    'status' => 404
+                ]);
+            }
+
+            DB::beginTransaction();
+
+            // Mise à jour des infos utilisateur
+            $user->update([
+                'last_name'   => $request->user['last_name'],
+                'first_name'  => $request->user['first_name'],
+                'email'       => $request->user['email'],
+                'status'      => $request->user['status'] ?? $user->status,
+            ]);
+
+            // Mise à jour du mot de passe temporaire si fourni
+            if (!empty($request->user['temp_password'])) {
+                $user->temp_password = $request->user['temp_password'];
+                $user->password = Hash::make($request->user['temp_password']);
+                $user->is_true_password = false;
+                $user->save();
+            }
+
+            // Mise à jour des rôles
+            if ($request->roles && is_array($request->roles)) {
+                $user->syncRoles($request->roles);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'data' => $user->load('roles'),
+                'message' => 'Utilisateur mis à jour avec succès.',
+                'status' => 200
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => 'Une erreur interne est survenue',
+                'status' => 500
+            ]);
+        }
+    }
+
+    public function getUserRoles($id)
+    {
+        try {
+            $user = User::with('roles')->find($id);
+
+            if (!$user) {
+                return response()->json([
+                    'data' => [],
+                    'message' => 'Utilisateur introuvable',
+                    'status' => 404
+                ]);
+            }
+
+            // Liste simple des rôles 
+            $roles = $user->getRoleNames(); 
+
+            return response()->json([
+                'data' => $roles,
+                'message' => 'Liste des rôles de l\'utilisateur',
+                'status' => 200
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'data' => [],
                 'message' => 'Une erreur interne est survenue',
                 'status' => 500
             ]);

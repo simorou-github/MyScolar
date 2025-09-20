@@ -25,7 +25,15 @@ export class ManageUserService {
     return this.http.post(environment.apiUrl + '/manage-user/add-by-admin', body);
   }
 
+  updateUserByAdmin(body: any) {
+    return this.http.put(environment.apiUrl + '/manage-user/update-by-admin', body);
+  }
+
   updateUserProfile(body: any) {
     return this.http.post(environment.apiUrl + '/manage-user/update-profile', body);
+  }
+
+  getUserRoles(userId: string) {
+    return this.http.get(`${environment.apiUrl}/users/${userId}/roles`);
   }
 }

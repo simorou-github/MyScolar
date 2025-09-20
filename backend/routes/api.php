@@ -6,7 +6,6 @@ use App\Http\Controllers\SchoolSpace\FeesManageController;
 use App\Http\Controllers\SchoolSpace\SchoolController;
 use App\Http\Controllers\SchoolSpace\SchoolInscriptionController;
 use App\Http\Controllers\Authentication\AuthController;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminSpace\ParameterController;
 use App\Http\Controllers\AdminSpace\RoleController;
@@ -260,9 +259,13 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Utilisateurs & Rôles
     Route::get('permissions', [RoleController::class, 'getPermissions']);
+    Route::get('users/{id}/roles', [UserContoller::class, 'getUserRoles']);
     Route::post('manage-user/list', [UserContoller::class, 'userList']);
     Route::post('manage-user/add-by-admin', [UserContoller::class, 'addUserByAdmin']);
     Route::post('manage-user/update-profile', [UserContoller::class, 'updateUserProfile']);
     Route::post('manage-user/change-status', [UserContoller::class, 'changeStatusOfUser']);
+    Route::put('/manage-user/update-by-admin', [UserContoller::class, 'updateUserByAdmin']);
+
+    
     Route::apiResource('roles', RoleController::class);
 });

@@ -85,6 +85,12 @@
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
                                                         <a class="dropdown-item" href="javascript: void(0);"
+                                                            (click)="update(user)">
+                                                            <i
+                                                                class="mdi mdi-pencil font-size-7 text-primary align-middle me-2"></i>
+                                                            Modifier</a>
+
+                                                        <a class="dropdown-item" href="javascript: void(0);"
                                                             (click)="confirm(user)">
                                                             <i
                                                                 class="{{user?.status ? 'mdi mdi-lock-remove-outline text-danger' : 'mdi mdi-lock-open-check-outline text-success'}}"></i>&nbsp;
@@ -92,18 +98,13 @@
                                                             ? 'Désactiver' :
                                                             'Activer'}}
                                                         </a>
-                                                        <!--a class="dropdown-item"
-                                                            href="javascript: void(0);"
-                                                            (click)="update(modalUser, user)">
-                                                            <i
-                                                                class="mdi mdi-pencil font-size-7 text-primary align-middle me-2"></i>
-                                                            Modifier</a>
-                                                        <a class="dropdown-item"
+
+                                                        <!-- <a class="dropdown-item"
                                                             href="javascript: void(0);"
                                                             (click)="confirmDeletingUser(user)">
                                                             <i
                                                                 class="mdi mdi-trash-can-outline text-danger align-middle me-2"></i>
-                                                            Supprimer</a-->
+                                                            Supprimer</a> -->
                                                     </div>
                                                 </div>
                                             </td>
@@ -155,9 +156,16 @@
                                         </h5>
                                     </div>
                                     <div class="col-3 text-right">
-                                        <button class="btn btn-primary pull-right" style="margin-right: 10%"
+                                        <!-- <button class="btn btn-primary pull-right" style="margin-right: 10%"
                                             type="submit" [disabled]="!userForm.valid || rolesTab?.length == 0"><i class="bx bx-check"></i>
-                                            Enregistrer</button>
+                                            Enregistrer</button> -->
+                                        <button class="btn btn-primary pull-right" style="margin-right: 10%"
+                                            type="submit" [disabled]="!userForm.valid || rolesTab?.length == 0"
+                                            (click)="userForm.get('id')?.value ? updateUserByAdmin() : addUserByAdmin()">
+                                            <i class="bx bx-check"></i>
+                                            {{ userForm.get('id')?.value ? 'Modifier' : 'Enregistrer' }}
+                                        </button>
+
                                         <button class="btn btn-danger pull-right" (click)="closeModalUser()"><i
                                                 class="bx bx-x"></i> Fermer</button>
                                     </div>
@@ -224,10 +232,12 @@
                                     <ng-container *ngFor="let role of roles; let i = index;">
                                         <div class="col-4">
                                             <input class="form-check-input" type="checkbox" name="formRadio{{i}}"
-                                                id="formRadio{{i}}" (change)="checkBox($event, role.name)">&nbsp;&nbsp;
+                                                id="formRadio{{i}}" [checked]="rolesTab.includes(role.name)"
+                                                (change)="checkBox($event, role.name)">
                                             <label class="form-check-label" for="formRadio{{i}}">
                                                 {{role.label}}
                                             </label>
+
                                         </div>
                                     </ng-container>
 
