@@ -18,5 +18,13 @@ export class PaiementScolaireService {
   processBatchPayment(body: any) {
     return this.http.post(environment.apiUrl + '/payment/process-batch-payment', body);
   }
+  
+  processUniqueCaissePayment(body: any) {
+    return this.http.post(environment.apiUrl + '/payment/process-unique-caisse-payment', body);
+  }
+  
+  processBatchCaissePayment(body: any) {
+    return this.http.post(environment.apiUrl + '/payment/process-batch-caisse-payment', body);
+  }
 
 }

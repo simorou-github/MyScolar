@@ -48,7 +48,7 @@ export class SchoolUserManagementComponent {
 
   getRoles() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageRolePermission.roles({'type': 'school'}).subscribe({
+    this.manageRolePermission.getRoles().subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.roles = v.data;

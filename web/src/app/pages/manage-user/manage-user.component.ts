@@ -36,6 +36,7 @@ export class ManageUserComponent implements OnInit {
       last_name: ['', [Validators.required]],
       first_name: ['', [Validators.required]],
       status: [0],
+      temp_password: ['']
     });
 
     this.userSearchForm = this.fb.group({
@@ -46,10 +47,21 @@ export class ManageUserComponent implements OnInit {
     });
   }
 
+  generatePassword() {
+    const length = 10;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+    let password = "";
+    for (let i = 0, n = charset.length; i < length; ++i) {
+      password += charset.charAt(Math.floor(Math.random() * n));
+    }
+    this.userForm.patchValue({ temp_password: password });
+    //this.toastr.info('Un nouveau mot de passe a été généré. N\'oubliez pas de le sauvegarder !', 'Information');
+  }
+
 
   getRoles() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageRolePermission.roles({}).subscribe({
+    this.manageRolePermission.getRoles().subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.roles = v.data;
@@ -74,7 +86,7 @@ export class ManageUserComponent implements OnInit {
 
   userList() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageUserService.userList({ }).subscribe({
+    this.manageUserService.userList({}).subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.users = v.data;
@@ -100,23 +112,22 @@ export class ManageUserComponent implements OnInit {
     });
   }
 
-  checkBox(event, role) {
+  checkBox(event: any, role: string) {
     if (event.target.checked) {
-      this.rolesTab.push(role);
+      if (!this.rolesTab.includes(role)) this.rolesTab.push(role);
+    } else {
+      this.rolesTab = this.rolesTab.filter(r => r !== role);
     }
+  }
 
-    if (!event.target.checked) {
-      this.rolesTab.forEach((element, index) => {
-        if (element === role) {
-          this.rolesTab.splice(index, 1);
-        }
-      });
-    }
+
+  StaticModal(StaticDataModal: any) {
+    this.modalRef = this.modalService.show(StaticDataModal);
   }
 
   addUserByAdmin() {
     this.ngxLoader.startLoader('loader-spin');
-    this.manageUserService.addUserByAdmin({ user: this.userForm.value, roles: this.rolesTab }).subscribe({
+    this.manageUserService.addUserByAdmin({ user: this.userForm.value, roles: this.rolesTab, schoolId: this.schoolId }).subscribe({
       next: (v: any) => {
         if (v.status == 200) {
           this.message = v.message;
@@ -216,7 +227,6 @@ export class ManageUserComponent implements OnInit {
   }
 
   confirm(user) {
-    console.log(user)
     let testResponse = '';
     if (user.status) {
       testResponse = 'Voulez-vous désactiver l\'utilisateur ' + user.last_name + ' ' + user.first_name + ' ?';
@@ -264,6 +274,59 @@ export class ManageUserComponent implements OnInit {
       }
     });
   }
+
+  updateUserByAdmin() {
+    this.ngxLoader.startLoader('loader-spin');
+    this.manageUserService.updateUserByAdmin({
+      user: this.userForm.value,
+      roles: this.rolesTab,
+      schoolId: this.schoolId
+    }).subscribe({
+      next: (v: any) => {
+        if (v.status == 200) {
+          this.message = v.message;
+          this.showSuccess(this.message);
+          this.userList(); // recharge la liste
+          this.ngxLoader.stopLoader('loader-spin');
+          this.isUserForm = false;
+        } else {
+          this.message = v.message;
+          this.showError(this.message);
+          this.ngxLoader.stopLoader('loader-spin');
+        }
+      },
+      error: (e) => {
+        console.error(e);
+        this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
+        this.showError(this.message);
+        this.ngxLoader.stopLoader('loader-spin');
+      }
+    });
+  }
+
+  update(user: any) {
+    this.ngxLoader.startLoader('loader-spin');
+
+    this.userForm.patchValue(user);
+
+    this.manageUserService.getUserRoles(user.id).subscribe({
+      next: (res: any) => {
+        if (res.status === 200) {
+          this.rolesTab = res.data;
+        }
+        this.ngxLoader.stopLoader('loader-spin');
+
+      }
+    });
+
+    this.isUserForm = true;
+        this.ngxLoader.stopLoader('loader-spin');
+
+  }
+
+
+
+
 
 
 }

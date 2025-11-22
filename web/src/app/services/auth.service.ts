@@ -31,4 +31,8 @@ export class AuthService {
   listAccademicYear(body: any) {
     return this.http.post(environment.apiUrl + '/parameter/academic-year/list', body);
   }
+  
+  publicListAccademicYear(body: any) {
+    return this.http.post(environment.apiUrl + '/public/academic-year/public-list', body);
+  }
 }

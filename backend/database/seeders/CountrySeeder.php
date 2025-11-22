@@ -262,7 +262,8 @@ class CountrySeeder extends Seeder
         ];
 
         foreach ($countries as $key => $country) {
-            Country::create($country);
+            if(! Country::where('name', $country['name'])->first() && ! Country::where('code', $country['code'])->first())
+                Country::create($country);
         }
     }
 }

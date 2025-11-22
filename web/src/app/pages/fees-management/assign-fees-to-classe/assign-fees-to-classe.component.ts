@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ClasseService } from 'src/app/services/classe.service';
 import { ManageFeesService } from 'src/app/services/manage-fees.service';
 import { ParameterService } from 'src/app/services/parameter.service';
-import { SchoolService } from 'src/app/services/school.service';
 import { TokenService } from 'src/app/shared/authentication/token.service';
 
 @Component({
@@ -16,12 +15,12 @@ import { TokenService } from 'src/app/shared/authentication/token.service';
 })
 export class AssignFeesToClasseComponent implements OnInit {
   typeFeesId: string = ""; breadCrumbItems: Array<{}>; schoolClasseForm!: FormGroup; typeFees: any; academic_year: string = '';
-  typeFeesToSelect: any;  typePayments: any;  typePaymentToSelect: any;  classes: any;
-  isProcessing: boolean;  message: string; toDay: Date;
+  typeFeesToSelect: any; typePayments: any; typePaymentToSelect: any; classes: any;
+  isProcessing: boolean; message: string; toDay: Date; 
   scName: string;
   constructor(private fb: FormBuilder, private tokenService: TokenService, private manageFeesService: ManageFeesService, private route: ActivatedRoute, private parameterService: ParameterService,
     private classeService: ClasseService, private toastr: ToastrService, private router: Router,
-  private ngxLoader: NgxUiLoaderService){
+    private ngxLoader: NgxUiLoaderService) {
 
   }
 
@@ -41,7 +40,7 @@ export class AssignFeesToClasseComponent implements OnInit {
       type_payment: ['', [Validators.required]],
       type_fees_id: [this.typeFeesId, [Validators.required]],
       amount_fees: [null, [Validators.required]],
-      fees: this.fb.array([]),
+      fees: this.fb.array([], this.validateDatesInOrder),
     });
   }
 
@@ -55,10 +54,10 @@ export class AssignFeesToClasseComponent implements OnInit {
             this.schoolClasseForm.reset();
             this.showSuccess(this.message);
             this.router.navigate(['espace/gestion-frais']);
-           //this.ngxLoader.stopLoader('loader-fees');
+            this.ngxLoader.stopLoader('loader-fees');
           } else {
             this.showError(this.message);
-           //this.ngxLoader.stopLoader('loader-fees');
+            this.ngxLoader.stopLoader('loader-fees');
           }
         },
 
@@ -78,22 +77,35 @@ export class AssignFeesToClasseComponent implements OnInit {
 
   //due_date_number = Nomnre d'échéance correspondant au type paiement
   public addFees() {
-    if(this.schoolClasseForm.value.type_fees_id && this.schoolClasseForm.value.amount_fees > 0){
+    if (this.schoolClasseForm.value.type_fees_id && this.schoolClasseForm.value.amount_fees > 0) {
       const arr = <FormArray>this.schoolClasseForm.controls.fees;
       arr.controls = [];
       let due_date_number = this.schoolClasseForm.value.type_payment.due_date_number;
       for (let i = 0; i < due_date_number; i++) {
-        if(this.schoolClasseForm.value.type_payment.label == 'Unique'){
+        if (this.schoolClasseForm.value.type_payment.label == 'Unique') {
           this.feesList.push(this.createFeesGroup(this.schoolClasseForm.value.type_payment.label, this.schoolClasseForm.value.amount_fees / due_date_number));
-        }else{
-          this.feesList.push(this.createFeesGroup(this.schoolClasseForm.value.type_payment.label +' ' + (i+1), this.schoolClasseForm.value.amount_fees / due_date_number));
+        } else {
+          this.feesList.push(this.createFeesGroup(this.schoolClasseForm.value.type_payment.label + ' ' + (i + 1), this.schoolClasseForm.value.amount_fees / due_date_number));
         }
-      }
+      }
     } else {
       this.schoolClasseForm.get('type_payment').patchValue("");
       this.showWarning('Veuillez sélectionner un fais et saisir le montant correspondant en premier.');
     }
-  }
+  }
+
+  validateDatesInOrder(control: AbstractControl): ValidationErrors | null {
+    const formArray = control as FormArray;
+    const dates = formArray.controls.map(c => c.get('due_date')?.value).filter(date => !!date);
+
+    for (let i = 1; i < dates.length; i++) {
+      if (new Date(dates[i]) <= new Date(dates[i - 1])) {
+        return { datesNotInOrder: true };
+      }
+    }
+
+    return null;
+  }
 
   public get feesList(): FormArray {
     return <FormArray>this.schoolClasseForm.get('fees');
@@ -101,7 +113,6 @@ export class AssignFeesToClasseComponent implements OnInit {
 
   public deleteFee(index: number): void {
     this.feesList.removeAt(index);
-    this.feesList.markAsDirty();
   }
 
   createFeesGroup(label: any = "Paiement unique", due_amount: number = 0) {
@@ -114,7 +125,7 @@ export class AssignFeesToClasseComponent implements OnInit {
   }
 
   typeFeesList() {
-    this.parameterService.listTypeFees({school_id: this.tokenService.getSchoolId}).subscribe({
+    this.parameterService.listTypeFees({ school_id: this.tokenService.getSchoolId }).subscribe({
       next: (v: any) => {
         this.typeFees = v.data;
         this.typeFeesToSelect = this.typeFees;
@@ -132,13 +143,16 @@ export class AssignFeesToClasseComponent implements OnInit {
   }
 
   getAllClasses(): void {
-    this.classeService.listClasseOfSchool({school_id: this.tokenService.getSchoolId}).subscribe(
+    this.ngxLoader.startLoader('loader-spin');
+    this.classeService.listClasseOfSchool({ school_id: this.tokenService.getSchoolId }).subscribe(
       {
         next: (v: any) => {
           this.classes = v.data;
+          this.ngxLoader.stopLoader('loader-spin');
         },
         error: (e) => {
           console.error(e);
+          this.ngxLoader.stopLoader('loader-spin');
         },
         complete: () => {
         }
@@ -157,7 +171,7 @@ export class AssignFeesToClasseComponent implements OnInit {
     this.toastr.warning(msg, 'Attention');
   }
 
-  closeAssignForm(){
+  closeAssignForm() {
     this.router.navigate(['espace/gestion-frais']);
   }
 

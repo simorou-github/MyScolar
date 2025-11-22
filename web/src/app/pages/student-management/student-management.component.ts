@@ -31,7 +31,7 @@ export class StudentManagementComponent implements OnInit {
 
   constructor(private datePipe: DatePipe, private fb: FormBuilder, private ngxLoader: NgxUiLoaderService, private modalService: BsModalService, private toastr: ToastrService,
     private tokenService: TokenService, private schoolService: SchoolService, private classeService: ClasseService,
-    private parameterService: ParameterService, private manageFees: ManageFeesService) {
+     private manageFees: ManageFeesService) {
     this.academicYear = this.tokenService.getAcademicYear;
     this.schoolId = this.tokenService.getSchoolId;
     this.schoolName = this.tokenService.getSocialReasonSchool;

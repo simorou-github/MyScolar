@@ -4,15 +4,17 @@ use App\Models\AcademicYear;
 use App\Models\Parameter;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-function generateStudentRegistration($school_country_code){
+function generateStudentRegistration($school_country_code)
+{
     $regis = "";
     $last_student_code_plus_one = Student::max('code') + 1;
     $current_size = config('constants.size_registration') - strlen((string)$last_student_code_plus_one);
 
-    for($i = 0; $i < $current_size; $i++){
-        $regis.="0";
+    for ($i = 0; $i < $current_size; $i++) {
+        $regis .= "0";
     }
     return [
         'registration' => $school_country_code . $regis . $last_student_code_plus_one,
@@ -20,8 +22,9 @@ function generateStudentRegistration($school_country_code){
     ];
 }
 
-function getScolarPlusRate(){
-    if($scolar_rate = Parameter::where('label', 'scolar_rate')->where('status', true)->first()){
+function getScolarPlusRate()
+{
+    if ($scolar_rate = Parameter::where('label', 'scolar_rate')->where('status', true)->first()) {
         return $scolar_rate->value;
     }
     return 0;
@@ -49,17 +52,19 @@ function generateDBTableId($length, $model_name): string
 }
 
 //General Model Search
-function modelGeneralSearch($model, $relation=[], $condition=[]): string
+function modelGeneralSearch($model, $relation = [], $condition = []): string
 {
     $data = $model::with($relation)->where($condition)->get();
     return $data;
 }
 
-function getCurrentUserId(){
+function getCurrentUserId()
+{
     return auth()->user()->id;
 }
 
-function getMonthsOfYear(){
+function getMonthsOfYear()
+{
     $months = [
         ['label' => 'Janvier', 'month_num' => 1],
         ['label' => 'Février', 'month_num' => 2],
@@ -72,18 +77,19 @@ function getMonthsOfYear(){
         ['label' => 'Septembre', 'month_num' => 9],
         ['label' => 'Octobre', 'month_num' => 10],
         ['label' => 'Novembre', 'month_num' => 11],
-        ['label' => 'Décembre', 'month_num' => 12]        
+        ['label' => 'Décembre', 'month_num' => 12]
     ];
 
     return $months;
 }
 
 //Get Active Academic year
-function getFeesBalanceData(Array $param)
+function getFeesBalanceData(array $param)
 {
     if (!$param) {
         return [];
     } else {
+
         $balanceFeesData = DB::table('balance_fees as b')
             ->leftJoin('type_fees as tf', 'b.type_fees_id', '=', 'tf.id')
             ->leftJoin('schools as s', 'b.school_id', '=', 's.id')
@@ -92,12 +98,29 @@ function getFeesBalanceData(Array $param)
             ->leftJoin('classes as c', 'sc.classe_id', '=', 'c.id')
             ->leftJoin('groupes as g', 'sc.groupe_id', '=', 'g.id')
             ->where($param)
-            ->select('b.*',
-                's.ifu as ifu', 's.social_reason as social_reason', 's.email as school_email', 's.owner as school_owner', 's.tel as school_tel', 's.location as school_location', 
-                'st.code_scolar', 'st.code as student_code', 'st.last_name as student_last_name', 'st.first_name as student_first_name','st.sex as student_sex', 'st.matricule as student_matricule', 'st.email as student_email', 'st.birthday as student_birthday', 'st.phone as student_phone',
-                'c.code as classe_code', 'c.label as classe_label', 
-                'g.code as groupe_code', 'g.description as groupe_label',
-                'tf.label as type_fees_label')
+            ->select(
+                'b.*',
+                's.ifu as ifu',
+                's.social_reason as social_reason',
+                's.email as school_email',
+                's.owner as school_owner',
+                's.tel as school_tel',
+                's.location as school_location',
+                'st.code_scolar',
+                'st.code as student_code',
+                'st.last_name as student_last_name',
+                'st.first_name as student_first_name',
+                'st.sex as student_sex',
+                'st.matricule as student_matricule',
+                'st.email as student_email',
+                'st.birthday as student_birthday',
+                'st.phone as student_phone',
+                'c.code as classe_code',
+                'c.label as classe_label',
+                'g.code as groupe_code',
+                'g.description as groupe_label',
+                'tf.label as type_fees_label'
+            )
             ->orderBy('st.code_scolar')->orderBy('b.fees_label')
             ->get();
         return [
@@ -108,6 +131,3 @@ function getFeesBalanceData(Array $param)
         ];
     }
 }
-
-  
-    

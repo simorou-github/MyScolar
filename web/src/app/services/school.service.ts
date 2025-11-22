@@ -20,6 +20,10 @@ export class SchoolService {
   getSchoolDetail(body){
     return this.http.post(environment.apiUrl + '/school/detail', body);
   }
+  
+  getSchoolRejectedDetail(body){
+    return this.http.post(environment.apiUrl + '/school-rejected/detail', body);
+  }
 
   getAllSchool(body) {
   	return this.http.post(environment.apiUrl + '/school/list', body);
@@ -100,8 +104,10 @@ export class SchoolService {
     return this.http.post(environment.apiUrl + '/school/statistic/year-payment-per-month', body);
   }
 
-  downloadTemplate(){
-    return this.http.get(environment.apiUrl + '/download-template', this.blobHttpOptions);
-  }
 
+  downloadApprenantListModel() {
+    return this.http.get(environment.apiUrl + '/model-apprenant/export-xls', {
+      responseType: 'blob' // 👈 important pour les fichiers binaires
+    });
+  }
 }

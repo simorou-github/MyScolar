@@ -1,0 +1,17 @@
+.password-input-container {
+    position: relative;
+}
+
+.password-input-container .form-control {
+    padding-right: 40px; /* Augmenter le padding pour laisser de la place à l'icône */
+}
+
+.password-input-container .password-toggle-icon {
+    position: absolute;
+    right: 10px; /* Distance du bord droit */
+    top: 50%;
+    transform: translateY(-50%); /* Centrage vertical */
+    cursor: pointer;
+    font-size: 1.25rem; /* Taille de l'icône */
+    color: #888; /* Couleur de l'icône */
+}

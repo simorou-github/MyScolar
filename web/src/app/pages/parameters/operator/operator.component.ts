@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ParameterService } from 'src/app/services/parameter.service';
 import { SchoolInscriptionService } from 'src/app/services/school-inscription.service';
+import { TokenService } from 'src/app/shared/authentication/token.service';
 
 @Component({
   selector: 'app-operator',
@@ -19,7 +20,7 @@ export class OperatorComponent implements OnInit {
   message: any; labelFormTitle: string; btnFormTitle: string; operatorId: any;
   operatorName: any; isSearchForm: boolean = false; selectedFile: File | null = null;
 
-  constructor(private fb: FormBuilder, private schoolInscriptionService: SchoolInscriptionService, private ngxLoader: NgxUiLoaderService,
+  constructor(private fb: FormBuilder, private tokenService: TokenService, private schoolInscriptionService: SchoolInscriptionService, private ngxLoader: NgxUiLoaderService,
     private parameterService: ParameterService, private toastr: ToastrService, private modalService: BsModalService) {
 
   }
@@ -29,12 +30,22 @@ export class OperatorComponent implements OnInit {
     this.operatorForm = this.fb.group({
       id: [],
       country_id: ['', [Validators.required]],
+      is_cash_mode: ['', [Validators.required]],
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      token_url: [''],
+      pay_request_url: [''],
+      balance_request_url: [''],
+      api_key: [''],
+      reference_id: [''],
+      secondary_key: [''],
+      scolar_rate: [''],
+      user_id: [this.tokenService.getUserId],
     });
     this.searchForm = this.fb.group({
       name: [''],
       country_id: [''],
       status: [''],
+      is_cash_mode: [''],
     });
     this.listCountries();
     this.getAllOperators();
@@ -78,7 +89,17 @@ export class OperatorComponent implements OnInit {
     this.isProcessing = true;
     const formData = new FormData();
     formData.append('name', this.operatorForm.get('name')?.value);
+    formData.append('id', this.operatorForm.get('id')?.value);
+    formData.append('is_cash_mode', this.operatorForm.get('is_cash_mode')?.value);
     formData.append('country_id', this.operatorForm.get('country_id')?.value);
+    formData.append('token_url', this.operatorForm.get('token_url')?.value);
+    formData.append('pay_request_url', this.operatorForm.get('pay_request_url')?.value);
+    formData.append('balance_request_url', this.operatorForm.get('balance_request_url')?.value);
+    formData.append('api_key', this.operatorForm.get('api_key')?.value);
+    formData.append('reference_id', this.operatorForm.get('reference_id')?.value);
+    formData.append('secondary_key', this.operatorForm.get('secondary_key')?.value);
+    formData.append('scolar_rate', this.operatorForm.get('scolar_rate')?.value);
+    formData.append('user_id', this.tokenService.getUserId);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
@@ -163,13 +184,14 @@ export class OperatorComponent implements OnInit {
     this.operatorForm.patchValue({
       id: operator?.id,
       country_id: operator?.country_id,
-      name: operator?.name
+      name: operator?.name,
+      is_cash_mode: operator?.is_cash_mode
     });
   }
 
 
   delete() {
-    this.parameterService.deleteOperator({ 'id': this.classe_id }).subscribe(
+    this.parameterService.deleteOperator({ 'id': this.operatorId }).subscribe(
       {
         next: (v: any) => {
           if (v.status == 200) {

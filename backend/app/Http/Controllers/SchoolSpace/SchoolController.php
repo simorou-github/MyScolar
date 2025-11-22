@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SchoolSpace;
 
 use App\Exceptions\ScolarException;
+use App\Exports\AprenantListModel;
 use App\Http\Controllers\Controller;
 use App\Imports\StudentListImport;
 use Illuminate\Http\Request;
@@ -18,13 +19,12 @@ use App\Models\SchoolClasseFeesDetails;
 use App\Models\Student;
 use App\Models\StudentClasse;
 use App\Models\TypeFees;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SchoolController extends Controller
 {
@@ -139,29 +139,43 @@ class SchoolController extends Controller
     {
         try {
             $params = [];
-            if ($request->input('classe_id')) {
-                $params[] = ['classe_id', '=', $request->input('classe_id')];
+            if ($request->classe_id) {
+                $params[] = ['classe_id', '=', $request->classe_id];
+            }
+            if ($request->classe_id) {
+                $params[] = ['classe_id', '=', $request->classe_id];
             }
 
-            $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->whereRelation(
-                'student',
-                'school_id',
-                $request->school_id,
-                'academic_year',
-                '=',
-                $request->academic_year
-            )->where($params)->get();
+            $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params);
+
+            if ($request->school_id) {
+                $params[] = ['school_id', '=', $request->school_id];
+                $data = StudentClasse::with(['student', 'classe.classe', 'classe.groupe', 'student.school'])->where($params);
+            }
+            $students = $data->get();
+
+            $sortedStudents = $students
+                ->sortBy(function ($student) {
+                    return $student->student->first_name;
+                })
+                ->sortBy(function ($student) {
+                    return $student->student->last_name;
+                })
+                ->sortBy(function ($student) {
+                    return $student->classe->classe->rank;
+                });
+
 
             // C'est le school classe id qui représente classe id ici
-            if ($request->input('classe_id')) {
-                $true_classe_id = SchoolClasse::where('id', $request->input('classe_id'))->first()['classe_id'];
+            if ($request->classe_id && !$request->academic_year) {
+                $true_classe_id = SchoolClasse::where('id', $request->classe_id)->first()['classe_id'];
                 $classe = Classe::where('id', $true_classe_id)->first()['code'];
             } else {
                 $classe = '';
             }
 
             return response()->json([
-                'data' => $data,
+                'data' => $sortedStudents->values()->all(),
                 'classe' => $classe,
                 'message' => 'Liste des élèves',
                 'status' => 200
@@ -327,6 +341,7 @@ class SchoolController extends Controller
                         'student_id' => $student->id,
                         'classe_id' => $request->classe_id,
                         'school_classe_id' => $request->classe_id,
+                        'school_id' => $request->school_id,
                         'academic_year' => getActiveAcademicYear()
                     ]);
 
@@ -829,6 +844,24 @@ class SchoolController extends Controller
     {
         try {
             $school = School::find($request->id);
+            return response()->json([
+                'data' => $school,
+                'status' => 200
+            ]);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json([
+                'data' => [],
+                'message' => 'Une erreur interne est survenue',
+                'status' => 500
+            ]);
+        }
+    }
+
+    public function getSchoolRejectedDetail(Request $request)
+    {
+        try {
+            $school = School::find($request->id);
             if ($school->status != "REJETE") {
                 return response()->json([
                     'message' => 'Désolé. Les informations demandées ne peuvent pas être affichées.',
@@ -926,5 +959,10 @@ class SchoolController extends Controller
             'message' => 'Une erreur interne est survenue',
             'status' => 500
         ]);
+    }
+
+    public function exportApprenantModelExcel(Request $request): BinaryFileResponse
+    {
+        return Excel::download(new AprenantListModel, 'users.xlsx');
     }
 }

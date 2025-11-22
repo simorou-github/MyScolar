@@ -36,7 +36,6 @@ class AuthController extends Controller
             }
 
             $user = User::with('school')->where('email', $request->email)->first();
-            Log::info($user);
             if (!$user) {
                 return response()->json([
                     'message' => 'Vos paramètres de connexion sont incorrects.',
@@ -45,13 +44,14 @@ class AuthController extends Controller
                 ]);
             }
 
-            if (/*$user->school_id == NULL || */$user->status ==  0) {
+            if (/*$user->school_id == NULL || */$user->status ==  0 && $user->is_true_password == true) {
                 return response()->json([
                     'message' => 'Votre compte n\'est pas activé. Veuillez contacter le Groupe Scolar Plus.',
                     'data' => [],
                     'status' => 500
                 ]);
             }
+            // Log::info($validator->validated());
 
 
             if (!$token = auth('api')->attempt($validator->validated())) {
@@ -60,7 +60,7 @@ class AuthController extends Controller
                     'status' => 500
                 ]);
             }
-            return $this->createNewToken($token);
+            return $this->createNewToken($token, $user->is_true_password);
         } catch (Exception $e) {
             Log::info($e);
             return response()->json([
@@ -113,13 +113,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function createNewToken($token)
+    protected function createNewToken($token, $is_true_password)
     {
 
         return response()->json([
             'message' => 'Connexion réussie.',
             'access_token' => $token,
             'status' => 200,
+            'is_true_password' => $is_true_password,
             'expires_in' => auth('api')->factory()->getTTL() * 60,
         ]);
     }
@@ -161,7 +162,8 @@ class AuthController extends Controller
 
             if ($email != null) {
                 User::where('email', $email)->update([
-                    'password' => Hash::make($pwd), 'status' => 1,
+                    'password' => Hash::make($pwd),
+                    'status' => 1,
                     'email_verified_at' => Carbon::now()
                 ]);
                 return response()->json([
@@ -208,14 +210,15 @@ class AuthController extends Controller
             }
 
             if ($user != null || $user) {
-                Log::info($request->email);
+
                 sendMail(
                     [
                         trim($request->email)
                     ],
                     [
                         'email' => trim($request->email),
-                        'last_name' => $user->last_name, 'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'first_name' => $user->first_name,
                         'code' => password_hash($user->last_name . $user->first_name, PASSWORD_DEFAULT)
                     ],
                     'emails.resetPassword',
@@ -223,7 +226,7 @@ class AuthController extends Controller
                     env("APP_NAME"),
                     'Merci de cliquer sur le bouton ci-dessous pour redefinir votre mot de passe.'
                 );
-                
+
 
                 return response()->json([
                     'message' => 'Email envoyé avec succès',
@@ -245,8 +248,6 @@ class AuthController extends Controller
     {
         $email = $request->email;
         $pwd = $request->password;
-        $type = $request->type;
-        $knw = $request->knw;
         try {
 
             if ($email == null || !$email) {
@@ -257,12 +258,6 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $email)->first();
-            if ($type != 'v2' || !password_verify($user->last_name . $user->first_name, $knw)) {
-                return response()->json([
-                    'message' => 'Veuillez suivre la procédure de redéfinition du mot de passe.',
-                    'status' => 300
-                ]);
-            }
 
 
             if ($user->email_verified_at == null || $user->email_verified_at == '') {
@@ -273,10 +268,11 @@ class AuthController extends Controller
                 ]);
             }
 
-
             if ($email != null) {
                 User::where('email', $email)->update([
-                    'password' => Hash::make($pwd)
+                    'password' => Hash::make($pwd),
+                    'is_true_password' => true,
+                    'status' => true
                 ]);
                 return response()->json([
                     'message' => 'Mot de passe changé avec succès',
@@ -292,4 +288,6 @@ class AuthController extends Controller
             ]);
         }
     }
+
+    
 }

@@ -1,5 +1,6 @@
 <div class="account-pages my-3">
-  <div class="container">
+  <br><br><br>
+  <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-8 col-lg-6 col-xl-5">
         <div class="card overflow-hidden">
@@ -33,7 +34,7 @@
                 <alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</alert>
 
                 <div class="mb-2">
-                  <label for="email">Adresse mail</label>
+                  <label for="email">Adresse mail <span class="text-danger">*</span></label>
                   <input type="text" formControlName="email" class="form-control input" id="email"
                     placeholder="Entrez votre login" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
                   <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
@@ -43,19 +44,21 @@
                 </div>
 
                 <div class="mb-2">
-                  <label for="password">Mot de passe</label>
-                  <div class="input-group auth-pass-inputgroup">
-                    <input type="password" class="form-control input" formControlName="password"
+                  <label for="password">Mot de passe <span class="text-danger">*</span></label>
+                  <div class="password-input-container">
+                    <input [type]="passwordType" class="form-control" formControlName="password"
                       placeholder="Entrez votre mot de passe"
                       [ngClass]="{ 'is-invalid': submitted && f.password.errors }" aria-label="Password"
                       aria-describedby="password-addon">
-                    <!--button class="btn btn-light ms-0" type="button" id="password-addon"><i
-                        class="mdi mdi-eye-outline"></i></button-->
-                    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                      <span *ngIf="f.password.errors.required">Mot de passe obligatoire</span>
-                    </div>
+                    <i class="mdi password-toggle-icon"
+                      [ngClass]="passwordType === 'password' ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                      (click)="togglePassword()"></i>
+                  </div>
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <span *ngIf="f.password.errors.required">Mot de passe obligatoire</span>
                   </div>
                 </div>
+
                 <div class="mt-2 text-center">
                   <a routerLink="/recuperation-mot-de-passe" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Mot de
                     passe oublié ?</a>
@@ -89,7 +92,7 @@
                 <div class="row">
                   <div class="mt-4 col-md-6 text-center">
                     <a routerLink="/auth/inscription" class="text-muted h5" title="Devenir Partenaire.">
-                      <i class="mdi mdi-login text-primary mr-1" ></i>
+                      <i class="mdi mdi-login text-primary mr-1"></i>
                       S'Inscrire </a>
                   </div>
                   <div class="mt-4 col-md-6 text-center">

@@ -75,14 +75,13 @@ export class PaiementScolaireComponent {
     this.isProcessing = true;
     this.selectedBalancesRows = [];
     this.totalBalances = 0;
-    this.managerFeesService.searchStudentFeesBalanceForParentPayment(data.value).subscribe({
+    this.managerFeesService.publicSearchStudentFeesBalanceForParentPayment(data.value).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
           this.balanceFees = v.balanceFees;
           this.student = v.student;
           this.student_classe = v.student_classe;
-          // console.log(this.student_classe);
           this.operators = v.operators;
           this.isProcessing = false;
           this.showSuccess(this.message);
@@ -116,7 +115,7 @@ export class PaiementScolaireComponent {
   //Get all Academic Year
   getAllAcademicYear(data: any = {}) {
     this.isProcessing = true;
-    this.authService.listAccademicYear(data).subscribe({
+    this.authService.publicListAccademicYear(data).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
@@ -129,6 +128,7 @@ export class PaiementScolaireComponent {
       },
 
       error: (e) => {
+        this.isProcessing = false;
         console.error(e);
         this.showError(this.message);
       },
@@ -183,6 +183,7 @@ export class PaiementScolaireComponent {
       },
 
       error: (e) => {
+        this.isProcessing = false;
         console.error(e);
         this.showError(this.message);
       },
@@ -222,6 +223,7 @@ export class PaiementScolaireComponent {
       },
 
       error: (e) => {
+        this.isProcessing = false;
         console.error(e);
         this.showError(this.message);
       },

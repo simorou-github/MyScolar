@@ -25,7 +25,7 @@ export class ClasseManagementComponent {
 
   message: any; domain_url: string = environment.domainUrl; currentClasseCode: any; currentClasseId: any; fileUrl: any;
 
-  existed_students: any; selectedFile: File | null = null;
+  existed_students: any; selectedFile: File | null = null; fileName: string = '';
 
   @ViewChild('modalExistedStudent') private modalExistedStudent;
   constructor(private fb: FormBuilder, private schoolService: SchoolService, private tokenService: TokenService,
@@ -63,6 +63,7 @@ export class ClasseManagementComponent {
       file_upload: ['', [Validators.required]],
       academic_year: [''],
     });
+    this.fileName = ''; 
   }
 
 
@@ -159,8 +160,16 @@ export class ClasseManagementComponent {
   }
 
   onFileChange(event: any) {
-  this.selectedFile = event.target.files[0];
-}
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.selectedFile = file; // Votre ligne d'origine
+      this.fileName = file.name; // Nouvelle ligne pour stocker le nom
+    } else {
+      // Gérer le cas où l'utilisateur annule la sélection du fichier
+      this.selectedFile = null;
+      this.fileName = '';
+    }
+  }
 
   // onFileChange(evt: any) {
   //   const target: DataTransfer = <DataTransfer>(evt.target);
@@ -201,6 +210,7 @@ export class ClasseManagementComponent {
   closeUploadModal() {
     this.modalService.hide();
     this.uploadForm.reset();
+    this.fileName = '';
   }
 
   closeExistedStudentModal() {
@@ -216,7 +226,7 @@ export class ClasseManagementComponent {
   addStudentListToClasse() {
     this.isProcessing = true;
     const formData = new FormData();
-  formData.append('file', this.selectedFile);
+    formData.append('file', this.selectedFile);
     formData.append('classe_id', this.currentClasseId);
     formData.append('academic_year', this.academicYear);
     formData.append('school_id', this.schoolId);
@@ -286,19 +296,14 @@ export class ClasseManagementComponent {
       }
     });
   }
-
   downloadTemplate(): void {
-    this.schoolService.downloadTemplate().subscribe({
-      next: (blob: any) => {
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = 'ModelListeEleve.xlsx';
-        link.click();
-      },
-      error: (e: any) => {
-        console.log(e)
-      }
-
+    this.schoolService.downloadApprenantListModel().subscribe((blob) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'ModelListeApprenants.xlsx';
+      a.click();
+      URL.revokeObjectURL(objectUrl); // nettoyage mémoire
     });
   }
 

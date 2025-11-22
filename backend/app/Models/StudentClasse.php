@@ -16,6 +16,7 @@ class StudentClasse extends Model
         'student_id', 
         'classe_id',
         'school_classe_id',
+        'school_id',
         'academic_year',
     ];
 
@@ -37,5 +38,9 @@ class StudentClasse extends Model
     
     public function updater(){
         return $this->belongsTo('App\Models\User', 'update_id');
+    }
+    
+    public function school(){
+        return $this->belongsTo('App\Models\School', 'school_id');
     }
 }

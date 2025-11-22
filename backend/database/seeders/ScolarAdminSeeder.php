@@ -23,18 +23,20 @@ class ScolarAdminSeeder extends Seeder
 
             $user = User::create([
                 'id' => generateDBTableId(15, "App\Models\User"),
-                'last_name' => 'GANIERO',
-                'first_name' => 'Levy',
-                'email' => 'florentganiero1@gmail.com',
+                'last_name' => 'ADMIN',
+                'first_name' => 'Scolar',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make("Admin@2025"),
                 'email_verified_at' => now(),
                 'is_admin' => 1,
                 'status' => 1,
-                'school_id' => null
+                'school_id' => null,
+                'is_true_password' => true,
+                'temp_password' =>  null
             ]);
 
-            $user->assignRole(Role::findByName('school_admin', 'api'));
-            $user->assignRole(Role::findByName('admin', 'api'));
+            //$user->assignRole(Role::findByName('school-admin', 'api'));
+            $user->assignRole(Role::findByName('super-admin', 'api'));
 
             DB::commit();
         } catch (Exception $e) {

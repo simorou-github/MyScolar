@@ -1,24 +1,17 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://scolar.coopdicpa.com/service/public/api',
-  domainUrl: 'https://scolar.coopdicpa.com',
-  baseUrl: 'https://scolar.coopdicpa.com/web/',
-  // apiUrl: 'https://coopstats.coopdicpa.com/scolar_service/public/api',
-  // domainUrl: 'https://coopstats.coopdicpa.com',
-  // baseUrl: 'https://scolar.coopdicpa.com/web/',
-  // apiUrl: 'https://scolar-plus.coopdicpa.com/service/public/api',  
-  // //apiUrl: 'https://scolar.coopdicpa.com/service/public/api',  
-  // baseUrl: 'https://scolar-plus.coopdicpa.com',
-  // //baseUrl: 'https://scolar.coopdicpa.com',
-  // // IMPORTANT to download model file
-  // domainUrl: 'https://scolar-plus.coopdicpa.com',
+  timeoutInMs: 60 * 60 * 1000, // 60 minutes
+  apiUrl: 'https://services.scolarco.com/public/api',
+  domainUrl: 'https://services.scolarco.com',
+  baseUrl: 'https://web.scolarco.com',
+  
   // IMPORTANT
-  //apiUrl: 'http://127.0.0.1:8000/api',
-  //domainUrl: 'http://127.0.0.1:8000',
+  /*apiUrl: 'http://127.0.0.1:8000/api',
+  domainUrl: 'http://127.0.0.1:8000',
   // IMPORTANT to download model file
-  //baseUrl: 'http://localhost:4200',
+  baseUrl: 'http://localhost:4200',*/
 
-  landingPageUrl: 'https://portal.innovagrou.in/',
+  landingPageUrl: 'https://portal.scolarco.com',
   defaultauth: 'fackbackend',
   firebaseConfig: {
     apiKey: '',

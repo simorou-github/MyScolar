@@ -108,7 +108,7 @@
                 <div class="col-md-12 h5">Liste des apprenants : ({{students?.length}}) </div>
             </div>
               <div class="table-responsive">
-                <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
+                <table 
                   class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
                   id="projectList-table">
                   <thead class="table-light">
@@ -160,7 +160,6 @@
                     (pageChange)="p = $event"></pagination-controls>
   
                 </div>
-              <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'" [loaderId]="'loader-spin'"></ngx-ui-loader>
 
               </div>
             </div>
@@ -177,7 +176,10 @@
     </div>
   </div>
   
-  
+  <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+
+
   
   <!--Start Details Modal -->
   <ng-template #detailsModal let-modal>
@@ -220,7 +222,7 @@
         <div class="col-md-4">
           <div class="mb-3">
             <label for="">Classe</label>
-            <input type="text" class="form-control bg-disabled" readonly value="{{curr_student.classe?.code}}">
+            <input type="text" class="form-control bg-disabled" readonly value="{{curr_student?.classe?.classe?.code}}">
           </div>
         </div>
         <div class="col-md-4">

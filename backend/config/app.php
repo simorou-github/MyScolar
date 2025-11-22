@@ -16,7 +16,9 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'ScolarPlus'),
+
+    'frontend_url' => env('FRONTEND_URL', 'https://web.scolarco.com/'),
 
     /*
     |--------------------------------------------------------------------------

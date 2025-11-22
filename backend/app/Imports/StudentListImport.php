@@ -11,9 +11,7 @@ use App\Models\Student;
 use App\Models\StudentClasse;
 use Maatwebsite\Excel\Concerns\ToArray;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class StudentListImport implements ToArray, WithValidation, WithHeadingRow
@@ -51,7 +49,11 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             if ($std = Student::where('last_name', $row['nom'])->where('first_name', $row['prenoms'])
                 ->first()
             ) {
-                throw new ScolarException('L\'élève à la ligne ' . $key + 8 . ' existe déjà dans la base.');
+                throw new ScolarException('L\'élève ' . $row['nom'] . ' ' . $row['prenoms'] . ' à la ligne ' . $key + 6 . ' existe déjà dans la base.');
+            }
+
+            if (!in_array($row['sexe'], ['M', 'F'])) {
+                throw new ScolarException('Valeur de sexe invalide à la ligne : '. $key + 6 .'. Autorisé : M ou F."');
             }
             // Création 
             $generatedStudentRegistration = generateStudentRegistration($school->country->code);
@@ -73,6 +75,7 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
             $student_classe = StudentClasse::create([
                 'id' => generateDBTableId(29, "App\Models\StudentClasse"),
                 'student_id' => $student->id,
+                'school_id' => $this->schoolId,
                 'classe_id' => $this->currentClasseId,
                 'school_classe_id' => $this->currentClasseId,
                 'academic_year' => $this->academicYear,
@@ -104,19 +107,19 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
 
     public function headingRow(): int
     {
-        return 7; // Ligne où se trouvent les en-têtes
+        return 5; // Ligne où se trouvent les en-têtes
     }
 
     public function rules(): array
     {
         return [
-            '*.nom'     => 'required|string|max:255',
-            '*.prenoms'     => 'required|string|max:255',
-            '*.matricule_ecole'     => 'nullable|max:30',
-            '*.email'    => 'nullable|email',
+            '*.nom'              => 'required|string|max:255',
+            '*.prenoms'          => 'required|string|max:255',
+            '*.matricule_ecole'  => 'nullable|max:30',
+            '*.email'            => 'nullable|email',
             '*.date_de_naissance' => 'required|before:today|after:1900-01-01',
-            '*.sexe'     => 'required|in:M,F',
-            '*.telephone'     => 'nullable|numeric|min:8|max:20',
+            '*.sexe'             => 'required|in:M,F',
+            '*.telephone'        => 'nullable|digits_between:8,20',
         ];
     }
 
@@ -137,31 +140,19 @@ class StudentListImport implements ToArray, WithValidation, WithHeadingRow
         }
     }
 
-    // public function onFailure(...$failures)
-    // {
-    //     // Capturer les erreurs de validation
-    //     foreach ($failures as $failure) {
-    //         $row = $failure->values();
-    //         $row['error'] = implode(', ', $failure->errors());
-    //         $this->invalidRows[] = $row;
-    //     }
-    // }
 
     public function customValidationMessages(): array
     {
         return [
-            '*.nom.required'     => 'Le nom de famille est obligatoire dans la colonne :attribute.',
-            '*.prenoms.required'     => 'Le prénom est obligatoire dans la colonne :attribute.',
-            '*.date_de_naissance.required'    => 'La date de naissance est obligatoire dans la colonne :attribute.',
-            '*.email.email'       => 'Le format de l\'email n’est pas valide dans la colonne :attribute.',
-            '*.date_de_naissance.required' => 'La date de naissance est obligatoire .',
-            // '*.date_de_naissance.date'     => 'Format de date invalide.',
+            '*.nom.required'               => 'Le nom de famille est obligatoire.',
+            '*.prenoms.required'           => 'Le prénom est obligatoire.',
+            '*.matricule_ecole.max'        => 'Le matricule ne doit pas dépasser 30 caractères.',
+            '*.email.email'                => 'Le format de l\'email n\'est pas valide.',
+            '*.date_de_naissance.required' => 'La date de naissance est obligatoire.',
             '*.date_de_naissance.before'   => 'La date de naissance doit être dans le passé.',
             '*.date_de_naissance.after'    => 'La date de naissance est trop ancienne.',
-            '*.sexe.in'           => 'Le sexe doit être H ou F dans la colonne :attribute.',
-            '*.teléphone.numeric' => 'Le numéro de téléphone doit être composé de chiffres.',
-            '*.téléphone.min' => 'Le numéro de téléphone doit comporter au moins 8 chiffres.',
-            '*.téléphone.max' => 'Le numéro de téléphone doit comporter au plus 20 chiffres.'
+            '*.sexe.in'                    => 'Le sexe doit être M (Masculin) ou F (Féminin).',
+            '*.telephone.digits_between'   => 'Le numéro de téléphone doit comporter entre 8 et 20 chiffres.',
         ];
     }
 }

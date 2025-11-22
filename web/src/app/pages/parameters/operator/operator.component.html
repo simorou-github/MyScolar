@@ -60,6 +60,15 @@
                                     </div>
 
                                     <div class="col-sm-2">
+                                        <label class="visually-hidden" for="autoSizingSelect">Mode Opérateur</label>
+                                        <select class="form-select" id="autoSizingSelect" formControlName="is_cash_mode">
+                                            <option selected value="">Mode</option>
+                                            <option value="1">Caisse</option>
+                                            <option value="0">Mobile <output></output> Bancaire</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-2">
                                         <label class="visually-hidden" for="autoSizingSelect">Statut</label>
                                         <select class="form-select" id="autoSizingSelect" formControlName="status">
                                             <option selected value="">Statut</option>
@@ -88,14 +97,15 @@
                                 ({{operators?.length}}) </div>
                         </div>
                         <div class="table-responsive">
-                            <table ngxUiLoaderBlurred [loaderId]="'loader-spin'"
-                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
+                            <table
+                                class="table table-striped align-middle table-nowrap"
                                 id="projectList-table">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 8%">#</th>
-                                        <th scope="col" style="width: 30%">Nom</th>
-                                        <th scope="col" style="width: 30%">Pays</th>
+                                        <th scope="col" style="width: 20%">Nom</th>
+                                        <th scope="col" style="width: 20%">Pays</th>
+                                        <th scope="col" style="width: 20%">Mode Opérateur</th>
                                         <th scope="col" style="width: 10%">Statut</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -117,6 +127,12 @@
                                             <td style="width: 30%">{{operator.country?.name}}</td>
                                             <td style="width: 10%">
                                                 <span
+                                                    class="badge {{(operator.is_cash_mode == 1) ? 'bg-warning' : 'bg-success'}}">{{(operator.is_cash_mode
+                                                    == 1) ? 'Caisse' :
+                                                    'Mobile & Bancaire'}}</span>
+                                            </td>
+                                            <td style="width: 10%">
+                                                <span
                                                     class="badge {{(operator.status == 1) ? 'bg-success' : 'bg-danger'}}">{{(operator.status
                                                     == 1) ? 'Actif' :
                                                     'Inactif'}}</span>
@@ -133,10 +149,13 @@
                                                             (click)="update(modalOperator, operator)"><i
                                                                 class="mdi mdi-pencil font-size-7 text-warning align-middle me-2"></i>
                                                             Modifier</a>
-                                                        <a class="dropdown-item" href="javascript: void(0);"
-                                                            (click)="ConfirmDeleteModal(StaticDeleteModal, operator)"><i
-                                                                class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i>
-                                                            Supprimer</a>
+                                                        <a class="dropdown-item" href="javascript: void(0);" title="Supression Logique"
+                                                            (click)="ConfirmDeleteModal(StaticDeleteModal, operator)">
+                                                            <i *ngIf="operator.status == 1" class="mdi mdi-trash-can-outline text-danger font-size-7 align-middle me-2"></i>
+                                                            <i *ngIf="operator.status == 0" class="mdi mdi-undo text-success font-size-7 align-middle me-2"></i>
+                                                            <span *ngIf="operator.status == 1"> Désactiver</span>
+                                                            <span *ngIf="operator.status == 0"> Activer</span>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -151,8 +170,6 @@
                                     (pageChange)="p = $event"></pagination-controls>
 
                             </div>
-                            <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                                [loaderId]="'loader-spin'"></ngx-ui-loader>
                         </div>
                     </div>
                 </div>
@@ -169,6 +186,10 @@
 
 </div>
 
+<ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+
+
 <!--Start Classe Modal -->
 <ng-template #modalOperator role="document" let-modal>
     <div class="modal-header">
@@ -182,24 +203,6 @@
     </div>
     <form (ngSubmit)="create()" [formGroup]="operatorForm">
         <div class="modal-body">
-            <div class="mb-3">
-                <label for="code" class="form-label">Pays <span class="required_color">*</span></label>
-                <select class="form-select mb-2" formControlName="country_id" id="country_id"
-                    [ngClass]="{ 'is-invalid': operatorForm.get('country_id')?.touched && !operatorForm.get('country_id')?.valid }">
-                    <option disabled value selected>Selectionnez un
-                        pays</option>
-                    <option *ngFor="let country of countries" value="{{ country?.id }}">{{
-                        country?.name
-                        }}</option>
-                </select>
-                <div class="space-between-validator"
-                    *ngIf="operatorForm.get('country_id')?.touched && operatorForm.get('country_id').hasError('required')">
-                    <span class="required_color">Entrer le pays de
-                        l'opérateur.</span>
-                </div>
-
-            </div>
-
             <div class="mb-3">
                 <label for="name" class="form-label">Nom <span class="required_color">*</span></label>
                 <input type="text" id="label" class="form-control" formControlName="name" placeholder="Ex: MTN"
@@ -220,7 +223,74 @@
                         caractères.</span>
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="code" class="form-label">Mode Opérateur <span class="required_color">*</span></label>
+                <select class="form-select mb-2" formControlName="is_cash_mode" id="is_cash_mode"
+                    [ngClass]="{ 'is-invalid': operatorForm.get('is_cash_mode')?.touched && !operatorForm.get('is_cash_mode')?.valid }">
+                    <option disabled value="" selected>Selectionnez un
+                        mode pour l'opérateur</option>
+                    <option value="0">Mobile ou Bancaire</option>
+                    <option value="1">Caisse</option>
+                </select>
+                <div class="space-between-validator"
+                    *ngIf="operatorForm.get('is_cash_mode')?.touched && operatorForm.get('is_cash_mode').hasError('required')">
+                    <span class="required_color">Selectionnez un
+                        mode pour l'opérateur.</span>
+                </div>
 
+            </div>
+            <div class="mb-3">
+                <label for="code" class="form-label">Pays <span class="required_color">*</span></label>
+                <select class="form-select mb-2" formControlName="country_id" id="country_id"
+                    [ngClass]="{ 'is-invalid': operatorForm.get('country_id')?.touched && !operatorForm.get('country_id')?.valid }">
+                    <option disabled value selected>Selectionnez un
+                        pays</option>
+                    <option *ngFor="let country of countries" value="{{ country?.id }}">{{
+                        country?.name
+                        }}</option>
+                </select>
+                <div class="space-between-validator"
+                    *ngIf="operatorForm.get('country_id')?.touched && operatorForm.get('country_id').hasError('required')">
+                    <span class="required_color">Entrer le pays de
+                        l'opérateur.</span>
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="token_url" class="form-label">URL Token</label>
+                <input type="text" id="token_url" class="form-control" formControlName="token_url" placeholder="Ex: https://exemple.com/token"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="pay_request_url" class="form-label">URL Paie</label>
+                <input type="text" id="pay_request_url" class="form-control" formControlName="pay_request_url" placeholder="Ex: https://exemple.com/token"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="balance_request_url" class="form-label">URL Solde</label>
+                <input type="text" id="balance_request_url" class="form-control" formControlName="balance_request_url" placeholder="Ex: https://exemple.com/token"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="api_key" class="form-label">Clé API</label>
+                <input type="text" id="api_key" class="form-control" formControlName="api_key" placeholder="Ex: https://exemple.com/token"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="reference_id" class="form-label">Référence ID</label>
+                <input type="text" id="reference_id" class="form-control" formControlName="reference_id" placeholder="Ex: JSYHI686LJK"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="secondary_key" class="form-label">Clé Sécondaire</label>
+                <input type="text" id="secondary_key" class="form-control" formControlName="secondary_key" placeholder="Ex: SKJdd858fz5245azef"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="scolar_rate" class="form-label">Commission Scolar</label>
+                <input type="number" id="scolar_rate" class="form-control" formControlName="scolar_rate" placeholder="Ex: 0.01 (pour 1%)"/>
+            </div>
             <div class="mb-3">
                 <label for="logo" class="form-label">Logo </label>
 
@@ -251,11 +321,11 @@
             (click)="closeModalDeleting()"></button>
     </div>
     <div class="modal-body text-center">
-        <p class="h5 text-danger">Voulez-vous vraiment supprimer l'operator : {{
+        <p class="h5 text-danger">Voulez-vous vraiment mettre à jour le statut de l'operator : {{
             operatorName }} ?</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="closeModalDeleting()">Non</button>
-        <button type="button" class="btn btn-danger" (click)="delete()">Supprimer</button>
+        <button type="button" class="btn btn-danger" (click)="delete()">Mettre à jour</button>
     </div>
 </ng-template>

@@ -25,7 +25,8 @@ class CitySeeder extends Seeder
         ];
 
         foreach($cities as $city){
-            City::create($city);
+            if(! City::where('name', $city['name'])->first())
+                City::create($city);
         }
     }
 }

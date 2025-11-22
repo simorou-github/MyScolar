@@ -112,60 +112,6 @@
 
     <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
 
-    <!-- Début -->
-    <!-- Frais par classe -->
-    <!-- <div class="card">
-        <div class="card-body">
-            <div class="row ht-2">
-                <div class="col-md-12 h5">Liste des classes et frais </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
-                    id="projectList-table">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col" style="width: 50px">#</th>
-                            <th scope="col">Libellé frais/Classes</th>
-                            <th *ngFor="let schoolClasse of schoolClasses" scope="col">{{ schoolClasse.classe?.code }}
-                                {{ (schoolClasse?.groupe) ? ("-") : ("") }} {{ schoolClasse?.groupe?.code }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngIf="isProcessing" class="text-center">
-                            <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
-                        </tr>
-                        <tr *ngIf="typeFees?.length == 0" class="text-center">
-                            <td colspan="5">Aucune donnée trouvée !</td>
-                        </tr>
-
-                        <tr
-                            *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-                            <td>{{i+1}}</td>
-                            <td>{{typefee.label}}</td>
-                            <ng-container *ngFor="let info of info_fees">
-
-                                <td *ngIf="info?.type_fees_id == typefee?.id">
-                            
-                                    <span
-                                    class="badge {{info?.type_fees_status == true ? 'bg-success' : 'bg-danger'}}"><i class="{{info?.type_fees_status == true ? 'mdi mdi-check' : 'mdi mdi-close'}}"></i></span>
-                                </td>
-
-                            </ng-container>
-                        </tr>
-                    </tbody>
-
-                </table>
-                <div class="pagination-style">
-                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
-                        (pageChange)="p = $event"></pagination-controls>
-                </div>
-            </div>
-        </div>
-
-    </div> -->
-
-    <!-- Fin -->
-
     <!-- Liste des frais de l'école -->
     <div class="card">
         <div class="card-body">

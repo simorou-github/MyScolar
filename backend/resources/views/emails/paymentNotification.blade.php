@@ -40,7 +40,7 @@
                 <td style="width: 80%; text-align: left; font-size: 16px; font-family: Verdana, Geneva, Tahoma, sans-serif; color: gray;"><b>Ecole</b>: {{ $data['payment']['school']['social_reason'] }}</td>
             </tr>
             <tr>
-                <td style="width: 80%; text-align: left; font-size: 16px; font-family: Verdana, Geneva, Tahoma, sans-serif; color: gray;"><b>Classe</b>: {{ $data['payment']['classe']['code'] }}</td>
+                <td style="width: 80%; text-align: left; font-size: 16px; font-family: Verdana, Geneva, Tahoma, sans-serif; color: gray;"><b>Classe</b>: {{ $data['payment']['classe']['classe']['code'] }}</td>
             </tr>
             <tr>
                 <td style="width: 80%; text-align: left; font-size: 16px; font-family: Verdana, Geneva, Tahoma, sans-serif; color: gray;"><b>Numéro paiement</b>: {{ $data['payment']['phone'] }}

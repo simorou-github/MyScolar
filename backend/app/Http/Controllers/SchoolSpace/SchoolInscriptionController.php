@@ -6,6 +6,7 @@ use App\Exceptions\ScolarException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSchoolInscriptionRequest;
 use App\Jobs\EmailScolarTemplateJob;
+use App\Mail\ScolarPayMailPro;
 use App\Models\School;
 use App\Models\User;
 use App\Services\SchoolInscriptionService;
@@ -14,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
@@ -29,91 +31,46 @@ class SchoolInscriptionController extends Controller
     public function createInscription(StoreSchoolInscriptionRequest $request)
     {
 
-        try {
-            $user = $this->school_inscription_service->createSchoolInscription($request);
-            return response()->json([
-                'data' => [],
-                'message' => 'Inscription enregistrée avec succès. Le Groupe Scolar Plus traitera votre inscription.',
-            ], 201);
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
-        }
+        $user = $this->school_inscription_service->createSchoolInscription($request);
+        return response()->json([
+            'data' => [],
+            'message' => 'Inscription enregistrée avec succès. Le Groupe Scolar Plus traitera votre inscription.',
+        ], 201);
     }
 
     public function getCodeOfVerification(Request $request)
     {
-        try {
-            if ($request->email) {
-                $this->school_inscription_service->getCodeVerificarion($request);
 
-                return response()->json([
-                    'message' => 'Code de vérification envoyé par mail.',
-                ], 200);
-            }
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
+        if ($request->email) {
+            $this->school_inscription_service->getCodeVerificarion($request);
+
             return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
+                'message' => 'Code de vérification envoyé par mail.',
+            ], 200);
         }
     }
 
     //Verification
     public function codeVerification(Request $request)
     {
-        try {
-            $this->school_inscription_service->codeVerification($request);
 
-            return response()->json([
-                'message' => 'Code valide',
-            ], 200);
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
-        }
+        $this->school_inscription_service->codeVerification($request);
+
+        return response()->json([
+            'message' => 'Code valide',
+        ], 200);
     }
 
     //Resend verification code
     public function getNewCodeOfVerification(Request $request)
     {
-        try {
 
-            $this->school_inscription_service->getNewCodeOfVerification($request);
-            return response()->json([
-                'message' => 'Code de vérification renvoyé par mail',
-                'data' => '',
-            ], 200);
-        } catch (ScolarException $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => 'Une erreur interne est survenue.',
-            ], 500);
-        }
+
+        $this->school_inscription_service->getNewCodeOfVerification($request);
+        return response()->json([
+            'message' => 'Code de vérification renvoyé par mail',
+            'data' => '',
+        ], 200);
     }
 
     // Validate inscription and change status of school inscription
@@ -146,10 +103,10 @@ class SchoolInscriptionController extends Controller
                     $user->email_verified_at = Carbon::now();
                     $user->status = !$user->status;
                     $user->save();
-                    $school_admin = Role::findByName('school_admin', 'api');
-                    $school_acc = Role::findByName('accountant', 'api');
+                    $school_admin = Role::findByName('school-admin', 'api');
+                    //$school_acc = Role::findByName('accountant', 'api');
                     $user->assignRole($school_admin);
-                    $user->assignRole($school_acc);
+                    // $user->assignRole($school_acc);
                     $msg = 'Compte activé avec succès.';
                     $message = 'Votre demande d\'inscription a bien été validée.';
                 }
@@ -173,13 +130,12 @@ class SchoolInscriptionController extends Controller
                     $msg = 'Compte désactivé avec succès';
                     $message = 'Le compte de votre école a été désactivé. Merci de de contacter le Groupe Scolar Plus.';
                 }
-
+      
                 //Sending Mail
-                EmailScolarTemplateJob::dispatch(
-                    [
-                        env("ADMIN_MAIL_1"),
-                        $data->email
-                    ],
+                Mail::to([
+                    env("ADMIN_MAIL_1"),
+                    $data->email
+                ])->send(new ScolarPayMailPro(
                     [
                         'school' => $data->social_reason,
                         'email' => $data->email,
@@ -191,9 +147,9 @@ class SchoolInscriptionController extends Controller
                     ($request->status == 'VALIDE') ? 'Validation Inscription' : 'Rejet Inscription',
                     env("APP_NAME"),
                     $message
-                );
+                ));
 
-
+               
                 DB::commit();
                 return response()->json([
                     'data' => $data,

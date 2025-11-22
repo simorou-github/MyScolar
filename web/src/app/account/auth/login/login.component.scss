@@ -18,3 +18,28 @@ button{
 label{
     font-size: larger !important;
 }
+
+.auth-pass-inputgroup {
+  display: flex;
+  align-items: stretch; /* fait que les enfants prennent la même hauteur */
+}
+
+.password-input-container {
+    position: relative;
+}
+
+.password-input-container .form-control {
+    /* Ajoute un espace pour que le texte ne soit pas caché par l'icône */
+    padding-right: 40px; 
+}
+
+.password-input-container .password-toggle-icon {
+    /* Positionnement absolu pour placer l'icône dans l'input */
+    position: absolute;
+    right: 15px; /* Distance du bord droit */
+    top: 50%;
+    transform: translateY(-50%); /* Centrage vertical parfait */
+    cursor: pointer; /* Indique que l'icône est cliquable */
+    color: #888; /* Couleur de l'icône */
+    font-size: 1.25rem; /* Taille de l'icône */
+}

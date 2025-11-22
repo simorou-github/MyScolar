@@ -10,7 +10,6 @@ class AcademicYear extends Model
     use HasFactory;
     public $fillable = [
         'academic_year',
-        'date',
         'status',
         'create_id',
         'update_id'

@@ -119,6 +119,10 @@ export class TopbarComponent implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 
+  goToProfile(){
+    this.router.navigate(['/scolar/profile']);
+  }
+
   /**
    * Fullscreen method
    */

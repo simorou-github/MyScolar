@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenService } from './shared/authentication/token.service';
 import { Router } from '@angular/router';
+import { IdleTimeoutService } from './services/idle-timeout.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
 
-  constructor( private tokenService: TokenService, private router: Router) {}
+  constructor( private tokenService: TokenService, private router: Router, private idleService: IdleTimeoutService) {}
   
 
   ngOnInit() {

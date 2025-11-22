@@ -1,7 +1,11 @@
 <div class="container-fluid">
     <app-page-title title="AFFECTATION DE FRAIS  | {{scName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+        [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+
     <div class="row">
-        <div class="col-lg-12"  ngxUiLoaderBlurred [loaderId]="'loader-fees'">
+        <div class="col-lg-12" ngxUiLoaderBlurred [loaderId]="'loader-fees'">
             <div class="card">
                 <!-- <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader> -->
 
@@ -98,7 +102,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <input type="date" class="form-control mb-2" min="{{toDay | date:'yyyy-MM-dd'}}"
                                             formControlName="due_date" placeholder="Date échéance"
                                             [ngClass]="{'is-invalid' : feesList?.controls[i].get('due_date')?.touched && !feesList?.controls[i].get('due_date')?.valid}" />
@@ -107,8 +111,19 @@
                                             <span class="required_color">Entrer l'échéance.</span>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-2 text-center">
+                                        <button type="button" class="btn btn-danger"
+                                            (click)="deleteFee(i)">
+                                            <i class="fa fa-minus-circle"></i> <b> Retirer</b></button>
+                                    </div>
                                 </div>
+
                             </ng-container>
+                            <div *ngIf="feesList.errors?.datesNotInOrder" class="text-danger mt-2">
+                                Les dates doivent être croissantes. Chaque échéance doit être postérieure à la
+                                précédente.
+                            </div>
 
                         </div>
                         <div class="col-lg-12">
@@ -121,13 +136,10 @@
                         </div>
 
                     </form>
-
-                    
-
                 </div>
             </div>
             <ngx-ui-loader overlayColor="#ECF0F1" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                        [loaderId]="'loader-fees'"></ngx-ui-loader>
+                [loaderId]="'loader-fees'"></ngx-ui-loader>
         </div>
     </div>
     <!-- end row -->

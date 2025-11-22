@@ -17,6 +17,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UsergridComponent } from './usergrid/usergrid.component';
 import { UserlistComponent } from './userlist/userlist.component';
 import { ProfileComponent } from './profile/profile.component';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 @NgModule({
   declarations: [UsergridComponent, UserlistComponent, ProfileComponent],
@@ -32,7 +33,8 @@ import { ProfileComponent } from './profile/profile.component';
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
     BsDropdownModule,
-    ModalModule
+    ModalModule,
+    NgxUiLoaderModule
   ]
 })
 export class ContactsModule { }
