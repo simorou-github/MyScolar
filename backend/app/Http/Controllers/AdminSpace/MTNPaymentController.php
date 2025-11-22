@@ -27,9 +27,10 @@ class MTNPaymentController extends Controller
     //Create access token
     public function createAccessToken($token_url, $reference_id, $api_key, $secondary_key)
     {
-        if(!$token_url || !$reference_id || !$api_key || !$secondary_key){
+
+        if (!$token_url || !$reference_id || !$api_key || !$secondary_key) {
             Log::error("Paramètre d'accès au token non fournis.");
-            return null;  
+            return null;
         }
 
         $url = $token_url;
@@ -87,9 +88,9 @@ class MTNPaymentController extends Controller
             ]);
         }
 
-        if (!$operator = Operator::where('id',$request->data['operator'])
+        if (!$operator = Operator::where('id', $request->data['operator'])
             ->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
-                ->whereNotNull('balance_request_url')->first()) {
+            ->whereNotNull('balance_request_url')->first()) {
             return response()->json([
                 'data' => null,
                 'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
@@ -112,7 +113,22 @@ class MTNPaymentController extends Controller
 
         $scolar_rate = $operator->scolar_rate;
 
-        $access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token;
+        $tokenResponse = $this->createAccessToken(
+            $operator->token_url,
+            $operator->reference_id,
+            $operator->api_key,
+            $operator->secondary_key
+        );
+
+        if (!$tokenResponse || !isset($tokenResponse->access_token)) {
+            return response()->json([
+                'data' => null,
+                'message' => "Impossible de générer le jeton MTN. Vérifiez les paramètres de l'opérateur.",
+                'status' => 500
+            ]);
+        }
+
+        $access_token = $tokenResponse->access_token;
         $environment = 'sandbox';
         $reference_uuid = Str::uuid();
         $url = $operator->pay_request_url; //URL de paiement
@@ -296,17 +312,18 @@ class MTNPaymentController extends Controller
             ]);
         }
 
-        if (!$operator = Operator::where('id',$request->operator)
+        if (!$operator = Operator::where('id', $request->operator)
             ->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
-                ->whereNotNull('balance_request_url')->first()) {
+            ->whereNotNull('balance_request_url')->first()) {
             return response()->json([
                 'data' => null,
                 'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
                 'status' => 300
             ]);
         }
+        Log::info($this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key));
         //Get MTN Token
-        if(!$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token){
+        if (!$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token) {
             return response()->json([
                 'data' => [],
                 'message' => "Impossible de joindre l'opérateur. Veuillez contacter le Groupe Scolar Plus.",

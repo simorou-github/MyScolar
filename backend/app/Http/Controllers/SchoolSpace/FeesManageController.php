@@ -254,7 +254,7 @@ class FeesManageController extends Controller
             return response()->json([
                 'data' => $balanceFees,
                 'details_transactions' => $details_transactions,
-                'message' => 'Balance',
+                'message' => 'Informations récupérées',
                 'status' => 200
             ]);
         } catch (Exception $e) {
@@ -287,7 +287,7 @@ class FeesManageController extends Controller
 
             return response()->json([
                 'school_fees' => $school_fees,
-                'message' => 'Balance',
+                'message' => 'Informations récupérées',
                 'status' => 200
             ]);
         } catch (Exception $e) {
@@ -371,7 +371,7 @@ class FeesManageController extends Controller
                 'student' => $student,
                 'student_classe' => $student_classe,
                 'operators' => $operators,
-                'message' => 'Balance',
+                'message' => 'Informations récupérées',
                 'status' => 200
             ]);
         } catch (Exception $e) {
@@ -575,7 +575,7 @@ class FeesManageController extends Controller
                 'data' => $balanceFees,
                 'sum_fees' => $balanceFees->sum('fees_amount'),
                 'sum_balance' => $balanceFees->sum('balance'),
-                'message' => 'Balance'
+                'message' => 'Informations récupérées'
             ], 200);
         } catch (Exception $e) {
             Log::error($e->getMessage());
