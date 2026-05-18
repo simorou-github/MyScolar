@@ -1,0 +1,568 @@
+// =============================================
+// ScolarPlus Brand Variables
+// =============================================
+$brand-blue      : #4A90D9;
+$brand-blue-dark : #2B6BAA;
+$brand-orange    : #F47920;
+$brand-navy      : #1D3557;
+$brand-green     : #10B981;
+$brand-purple    : #7C3AED;
+$text-dark       : #0A0F1E;
+$text-muted      : #6B7280;
+$border-color    : #E5EFF9;
+$white           : #ffffff;
+
+// =============================================
+// Page
+// =============================================
+.faq-page {
+  min-height: 100vh;
+  background: #F8FAFC;
+  display: flex;
+  flex-direction: column;
+}
+
+// =============================================
+// Header Hero
+// =============================================
+.faq-header {
+  background: linear-gradient(160deg, #0D1B2E 0%, #122744 55%, #1A3F6F 100%);
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 48px;
+}
+
+// Orbs
+.faq-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+
+  &-1 {
+    width: 500px;
+    height: 500px;
+    background: rgba(74, 144, 217, 0.2);
+    top: -150px;
+    right: -100px;
+  }
+
+  &-2 {
+    width: 300px;
+    height: 300px;
+    background: rgba(244, 121, 32, 0.14);
+    bottom: -80px;
+    left: -60px;
+  }
+}
+
+// Grid dots
+.faq-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+.faq-header-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+// Top bar
+.faq-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 36px;
+}
+
+.faq-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.faq-logo-mark {
+  width: 40px;
+  height: 40px;
+  background: $brand-blue;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+
+  .faq-lm-s {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1;
+  }
+
+  .faq-lm-dot {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    background: $brand-orange;
+    border-radius: 50%;
+  }
+}
+
+.faq-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  span {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: $white;
+    line-height: 1.1;
+    strong { font-weight: 800; }
+  }
+
+  small {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+}
+
+.faq-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.faq-nav-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover { color: $white; }
+}
+
+.faq-nav-btn {
+  font-size: 13px;
+  font-weight: 700;
+  color: $white;
+  background: rgba(74,144,217,0.25);
+  border: 1.5px solid rgba(74,144,217,0.4);
+  border-radius: 8px;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $brand-blue;
+    border-color: $brand-blue;
+    color: $white;
+  }
+}
+
+// Hero text
+.faq-hero {
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+.faq-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(74,144,217,0.15);
+  border: 1px solid rgba(74,144,217,0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 16px;
+}
+
+.faq-hero {
+  h1 {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: $white;
+    margin: 0 0 12px;
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    margin: 0 0 28px;
+  }
+}
+
+.faq-hero-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 12px 0;
+}
+
+.faq-hero-stat {
+  padding: 0 24px;
+  text-align: center;
+
+  strong {
+    display: block;
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+.faq-hero-stat-div {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+// =============================================
+// Body content
+// =============================================
+.faq-body {
+  flex: 1;
+  padding: 48px 24px;
+}
+
+.faq-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+// =============================================
+// Tabs (override ngx-bootstrap tabset)
+// =============================================
+::ng-deep {
+  .faq-tabs {
+
+    // Tab nav bar
+    .nav-tabs {
+      border: none;
+      background: $white;
+      border-radius: 14px;
+      padding: 6px;
+      display: flex;
+      gap: 4px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      flex-wrap: nowrap;
+      overflow-x: auto;
+
+      .nav-item {
+        flex: 1;
+        min-width: 0;
+
+        .nav-link {
+          border: none !important;
+          border-radius: 10px !important;
+          padding: 10px 14px !important;
+          color: $text-muted !important;
+          background: transparent !important;
+          font-weight: 500;
+          text-align: center;
+          transition: all 0.2s;
+          width: 100%;
+          cursor: pointer;
+
+          &:hover {
+            color: $brand-blue !important;
+            background: rgba(74,144,217,0.06) !important;
+          }
+
+          &.active {
+            background: $brand-blue !important;
+            box-shadow: 0 4px 12px rgba(74,144,217,0.3) !important;
+
+            .faq-tab-head span { color: $white; }
+            .faq-tab-icon {
+              background: rgba(255,255,255,0.2) !important;
+              color: $white !important;
+            }
+          }
+        }
+      }
+    }
+
+    // Tab content
+    .tab-content {
+      background: none;
+    }
+  }
+}
+
+// Tab head
+.faq-tab-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  span {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-muted;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+}
+
+.faq-tab-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+
+  &--blue   { background: rgba(74,144,217,0.1);  color: $brand-blue; }
+  &--orange { background: rgba(244,121,32,0.1);  color: $brand-orange; }
+  &--green  { background: rgba(16,185,129,0.1);  color: $brand-green; }
+  &--purple { background: rgba(124,58,237,0.1);  color: $brand-purple; }
+}
+
+// =============================================
+// FAQ Section
+// =============================================
+.faq-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.faq-section-header {
+  margin-bottom: 28px;
+
+  h2 {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: $text-dark;
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: $text-muted;
+    margin: 0;
+  }
+}
+
+// FAQ item
+.faq-item {
+  display: flex;
+  gap: 16px;
+  padding: 22px 24px;
+  background: $white;
+  border: 1.5px solid $border-color;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: $brand-blue;
+    box-shadow: 0 4px 20px rgba(74,144,217,0.1);
+    transform: translateY(-1px);
+  }
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.faq-q-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(74,144,217,0.1);
+  color: $brand-blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 800;
+  font-family: 'Sora', 'Segoe UI', sans-serif;
+  flex-shrink: 0;
+  margin-top: 2px;
+
+  &--orange { background: rgba(244,121,32,0.1);  color: $brand-orange; }
+  &--green  { background: rgba(16,185,129,0.1);  color: $brand-green; }
+  &--purple { background: rgba(124,58,237,0.1);  color: $brand-purple; }
+}
+
+.faq-item-body {
+  flex: 1;
+  min-width: 0;
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 8px;
+    line-height: 1.4;
+  }
+
+  p {
+    font-size: 14px;
+    color: $text-muted;
+    margin: 0;
+    line-height: 1.7;
+
+    strong { color: $text-dark; font-weight: 600; }
+  }
+}
+
+// =============================================
+// CTA Banner
+// =============================================
+.faq-cta {
+  background: linear-gradient(135deg, $brand-blue 0%, $brand-blue-dark 100%);
+  padding: 0;
+}
+
+.faq-cta-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.faq-cta-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  flex-shrink: 0;
+}
+
+.faq-cta-text {
+  flex: 1;
+
+  h3 {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: $white;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+  }
+}
+
+.faq-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 24px;
+  background: $white;
+  color: $brand-blue;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(255,255,255,0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    color: $brand-blue;
+  }
+}
+
+// =============================================
+// Footer
+// =============================================
+.faq-footer {
+  background: #0A0F1E;
+  padding: 20px 32px;
+  text-align: center;
+
+  p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    margin: 0;
+
+    strong { color: rgba(255,255,255,0.7); }
+
+    a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 6px;
+      transition: color 0.2s;
+
+      &:hover { color: $brand-blue; }
+    }
+  }
+}
+
+// =============================================
+// Responsive
+// =============================================
+@media (max-width: 768px) {
+  .faq-hero h1 { font-size: 26px; }
+  .faq-topbar-actions { display: none; }
+  .faq-cta-inner { flex-direction: column; text-align: center; }
+  .faq-cta-icon { display: none; }
+  .faq-hero-stat-div { display: none; }
+  .faq-hero-stats { flex-direction: column; gap: 8px; padding: 16px 24px; }
+
+  ::ng-deep .faq-tabs .nav-tabs {
+    .nav-item .nav-link { padding: 8px 8px !important; }
+    .faq-tab-head span { display: none; }
+  }
+
+  .faq-item { padding: 16px; }
+  .faq-body { padding: 28px 16px; }
+  .faq-header-inner { padding: 0 16px; }
+}
