@@ -1,279 +1,463 @@
-<div class="container-fluid p-0">
+<div class="reg-wrapper">
 
-    <div class="col-xl-6" id="bg" style="position: fixed;">
-        <div class="auth-full-bg pt-lg-5 p-4">
-            <div class="w-100">
-                <!--div class="bg-overlay"></div-->
-                <div class="d-flex flex-column" style="overflow:none; height: 100%;">
+  <!-- ========== Panneau gauche : illustration ========== -->
+  <div class="reg-visual">
+    <div class="reg-visual-inner">
 
-                    <div class="p-4 mt-auto">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-7">
+      <!-- Orbs décoratifs -->
+      <div class="reg-orb reg-orb-1"></div>
+      <div class="reg-orb reg-orb-2"></div>
+      <div class="reg-grid"></div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <!-- Logo -->
+      <a routerLink="/" class="reg-logo">
+        <div class="reg-logo-mark">
+          <span class="reg-lm-s">s</span>
+          <span class="reg-lm-dot"></span>
         </div>
-    </div>
-    <!-- end col -->
-    <!-- Form -->
-    <div class="col-xl-6" style="margin-top: -35px; position: absolute; right: 0; float: right; overflow: auto; background-color: white;">
-        <ngx-ui-loader bgsPosition="'center-center'" [bgsOpacity]="0.5" [fgsType]="'rectangle-bounce'" [fgsSize]="80"
-            [loaderId]="'loader-spin'"></ngx-ui-loader>
-        <div class="row g-0">
-            <div class="auth-full-page-content p-md-5 p-3">
-                <div class="w-100">
-                    <div class="d-flex flex-column h-100">
-                        <div class="mb-1">
-                            <a routerLink="/" class="d-block card-logo mt-5">
-                                <img src="assets/images/logo-scolarplus1.png" alt="" width="85" height="80"
-                                    class="card-logo-dark">
-                                <p class="h1" style="margin: -50px 0px 0px 85px  !important;"> &nbsp; <b>SCOLAR PLUS</b>
-                                </p>
-                                <span class="card-logo-light h3 text-primary"><b> &nbsp;<br> <br> S'inscrire</b></span>
-                            </a>
-                            <p class="text-muted" style="text-align: justify;">Les Ecoles, les Parents d'élèves et les
-                                Etudiant(e)s peuvent
-                                s'enregistrer afin d'accéder à l'application ScolarPlus
-                                en remplissant le formulaire ci-dessous.
-                            </p>
-                        </div>
-                        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-                            <div class="my-auto">
-                                <div class=" row search-box me-2 d-inline-block pull-right">
-
-                                </div><br><br>
-
-                                <ng-container *ngIf="!isTwiceSubmission">
-                                    <div class="row" style="margin-top: -35px;">
-                                        <div class="col-md-12">
-                                            <label for="type">Qui êtes-vous <span class="text-danger">*</span> </label>
-                                            <select class="form-select mb-4" formControlName="type" id="type">
-                                                <option disabled value="">Selectionnez votre statut</option>
-                                                <option value="ecole">Je suis un promoteur d'école</option>
-                                                <!--option value="parent">Je suis un parent d'élève(s)</option>
-                                                <option value="etudiant">Je suis un étudiant(e)</option-->
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="email">E-mail <span class="text-danger">*</span></label>
-                                            <input type="text"
-                                                [ngClass]="{'is-invalid' : registerForm.get('email')?.touched && !registerForm.get('email')?.valid}"
-                                                class="form-control" formControlName="email" id="email">
-                                            <span class="required_color"
-                                                *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('pattern')">Entrer
-                                                une adresse mail valide.</span>
-                                        </div>
-                                        <div class="col-md-6 mt-1" *ngIf="!isEmailSent">
-                                            <!-- <div class="col-md-6 mt-1"> -->
-                                            <label for="code_verification"></label>
-                                            <button type="button" class="btn btn-primary w-md p-2 mt-4"
-                                                [disabled]="isProcessing" style="width: 100%; font-size: 16px;"
-                                                (click)="sendEmailVerificationCode();"><span class="bx bx-check"></span>
-                                                Vérifier l'email</button>
-                                        </div>
-                                        <div class="col-md-6" *ngIf="isEmailSent">
-                                            <!-- <div class="col-md-6"> -->
-                                            <label for="code_verification">Code de vérification <span
-                                                    class="text-danger">*</span></label>
-                                            <span class="bx bx-info-circle pull-right"
-                                                title="Saisir le code reçu dans votre email"></span>
-                                            <input type="text" class="form-control" formControlName="code_verification"
-                                                style="text-transform: uppercase" id="code_verification"
-                                                placeholder="Ex: E5D58D" (keyup)="verifyCode()">
-                                            <button *ngIf="isEmailSent" type="button" style="margin-top: -22px;"
-                                                (click)="resendEmailVerificationCode()" class="btn text-warning"> <b
-                                                    class="h5">Renvoyer
-                                                    le code</b> </button>
-
-                                        </div>
-                                    </div>
-                                </ng-container>
-
-                                <ng-container *ngIf="isEmailValid || isTwiceSubmission">
-                                    <!-- <ng-container> -->
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="social_reason">Raison Sociale de l'Ecole <span
-                                                        class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Saisir le nom de votre école ou université"></span>
-
-                                                <input type="text" class="form-control" formControlName="social_reason"
-                                                    id="social_reason">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="ifu">N° d'Identité Fiscale</label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Saisir la référence fiscale de votre école ou université"></span>
-
-                                                <input type="text" class="form-control" id="ifu" formControlName="ifu">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="country_id">Pays <span class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Sélectionnez votre Pays de résidence ou celui de votre école ou université"></span>
-
-                                                <select class="form-select mb-4" formControlName="country_id"
-                                                    id="country_id" (change)="getCityByCountry($event)">
-                                                    <option disabled value="">Selectionnez votre Pays </option>
-                                                    <option *ngFor="let country of countries" value="{{ country?.id }}">
-                                                        {{ "("+ country?.phone_code +")" + " " + country?.name }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="city_id">Ville <span class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Sélectionnez votre Ville de résidence ou celle de votre école ou université"></span>
-
-                                                <select class="form-select mb-4" formControlName="city_id" id="city_id">
-                                                    <option disabled value="">Selectionnez votre Ville</option>
-                                                    <option *ngFor="let city of cities_filtered" value="{{ city?.id }}">
-                                                        {{ city?.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="last_name">Nom <span class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Saisir votre nom de famille"></span>
-
-                                                <input type="text" class="form-control" formControlName="last_name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="first_name">Prénom <span
-                                                        class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Saisir vos prénoms"></span>
-
-                                                <input type="text" class="form-control" id="first_name"
-                                                    formControlName="first_name">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="">
-                                                <label for="tel">Code </label>
-                                                <input type="text" class="form-control" formControlName="phone_code"
-                                                    id="phone_code">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="">
-                                                <label for="tel">Téléphone <span class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Saisir votre numéro de téléphone fonctionnel sans l'indicatif. Scolar Plus pourrait vous appeler."></span>
-
-                                                <input type="text" class="form-control" mask="{{mask_template}}"
-                                                    formControlName="tel" id="tel">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="location">Adresse <span class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Saisir votre adresse ou celle de votre école. Ex: Awakê, 01 BP00120"></span>
-
-                                                <input type="text" class="form-control" formControlName="location"
-                                                    id="location">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="password">Mot de passe <span
-                                                        class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Créer votre mot de passe."></span>
-
-                                                <input type="password" class="form-control" formControlName="password"
-                                                    id="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label for="password">Confirmation du mot de passe <span
-                                                        class="text-danger">* </span></label>
-                                                <span class="bx bx-info-circle pull-right"
-                                                    title="Créer votre mot de passe."></span>
-
-                                                <input type="password" class="form-control"
-                                                    formControlName="password_conf">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row" style="margin-top: -20px !important;">
-                                        <div class="col-md-12">
-                                            <i class="text-danger">Veuillez utiliser un mot de passe fort (8 Caractères
-                                                au moins, Chiffres, Majuscules, Minuscules, Caractères spéciaux comme
-                                                @-!-#).</i>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3 mt-3">
-                                        <div class="col-md-12">
-                                            <div>
-                                                <div>
-                                                    <label for="document" class="form-label">Joindre un document <i class="text-danger">* </i> <span
-                                                            class="bx bx-info-circle pull-right"
-                                                            title="Joindre les documents d'identité administrative, jurique ou fiscale de votre école. Vous devez les scanner sensemble en un seul document de 10Mo au plus."></span></label>
-                                                    <input class="form-control form-control-lg" id="document"
-                                                        accept=".pdf"
-                                                        title="Tout document permettant de vérifier l'identité ou l'autorisation de l'école."
-                                                        type="file" (change)="fileEvent($event)">
-                                                        <i class="text-danger" style="margin-top: -25px;">Taille maximal accreptée (10Mo).</i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="">
-                                                <button type="submit" class="btn btn-primary w-md p-2"
-                                                    style="width: 100%; font-size: 18px;"
-                                                    [disabled]="!registerForm.valid || isProcessing"><span
-                                                        class="bx bx-user-plus bx-2"></span> S'inscrire </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-container>
-
-                            </div>
-                        </form>
-                        <div class="mt-4 mt-md-5 text-center">
-                            <p class="mb-0 h5">Vous aviez déjà un compte, <a
-                                    href="http://localhost:4200"><span class="bx bx-log-in-circle"></span>
-                                    Se Connecter </a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="reg-logo-text">
+          <span>Scolar<strong>Plus</strong></span>
+          <small>Votre solution digitale</small>
         </div>
-        <!-- end col -->
+      </a>
+
+      <!-- Illustration principale -->
+      <div class="reg-scene">
+
+        <!-- SVG : mockup tableau de bord école en création -->
+        <div class="reg-school-wrap">
+          <svg class="reg-school-svg" viewBox="0 0 340 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hdrGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(74,144,217,0.85)"/>
+                <stop offset="100%" stop-color="rgba(43,107,170,0.85)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- ===== Carte principale : dashboard école ===== -->
+            <!-- Ombre -->
+            <rect x="64" y="30" width="216" height="180" rx="16" fill="rgba(0,0,0,0.28)"/>
+            <!-- Corps de la carte -->
+            <rect x="60" y="26" width="216" height="180" rx="16" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+            <!-- Header de la carte -->
+            <path d="M60 42 Q60 26 76 26 H260 Q276 26 276 42 V74 H60 Z" fill="url(#hdrGrad)"/>
+            <!-- 3 dots fenêtre -->
+            <circle cx="76" cy="38" r="4" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="89" cy="38" r="4" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="102" cy="38" r="4" fill="rgba(255,255,255,0.25)"/>
+            <!-- Barre d'adresse -->
+            <rect x="116" y="32" width="144" height="12" rx="6" fill="rgba(255,255,255,0.14)"/>
+            <text x="188" y="41" text-anchor="middle" font-size="6.5" fill="rgba(255,255,255,0.55)" font-family="sans-serif">scolarplus.com/espace-ecole</text>
+
+            <!-- Avatar école -->
+            <circle cx="168" cy="86" r="25" fill="#0D1B2E" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+            <!-- Anneau animé autour de l'avatar -->
+            <circle cx="168" cy="86" r="31" stroke="rgba(74,144,217,0.3)" stroke-width="1.5" fill="none" stroke-dasharray="8 5"/>
+            <!-- Logo S+ dans l'avatar -->
+            <text x="168" y="93" text-anchor="middle" font-size="17" font-weight="800" fill="white" font-family="sans-serif">S+</text>
+
+            <!-- Badge vérifié -->
+            <circle cx="190" cy="104" r="9" fill="#10B981" stroke="#0D1B2E" stroke-width="2"/>
+            <polyline points="186,104 189,107 195,101" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+            <!-- Nom de l'école (barre de texte simulée) -->
+            <rect x="110" y="120" width="116" height="8" rx="4" fill="rgba(255,255,255,0.28)"/>
+            <!-- Sous-titre -->
+            <rect x="130" y="133" width="76" height="5" rx="2.5" fill="rgba(255,255,255,0.13)"/>
+
+            <!-- Séparateur -->
+            <line x1="80" y1="148" x2="256" y2="148" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+            <!-- Stats 3 blocs -->
+            <rect x="80" y="156" width="48" height="36" rx="8" fill="rgba(74,144,217,0.18)"/>
+            <text x="104" y="170" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="sans-serif">124</text>
+            <text x="104" y="181" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.42)" font-family="sans-serif">Élèves</text>
+
+            <rect x="140" y="156" width="56" height="36" rx="8" fill="rgba(244,121,32,0.18)"/>
+            <text x="168" y="170" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="sans-serif">8</text>
+            <text x="168" y="181" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.42)" font-family="sans-serif">Classes</text>
+
+            <rect x="208" y="156" width="48" height="36" rx="8" fill="rgba(16,185,129,0.18)"/>
+            <circle cx="232" cy="168" r="7" fill="rgba(16,185,129,0.7)"/>
+            <polyline points="229,168 232,171 237,165" stroke="white" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <text x="232" y="181" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.42)" font-family="sans-serif">Actif</text>
+
+            <!-- ===== Carte flottante : Email vérifié (haut gauche) ===== -->
+            <rect x="2" y="28" width="96" height="44" rx="10" fill="rgba(255,255,255,0.94)" stroke="rgba(74,144,217,0.15)" stroke-width="1"/>
+            <!-- Icône email -->
+            <circle cx="18" cy="50" r="11" fill="rgba(74,144,217,0.1)"/>
+            <rect x="11" y="45" width="14" height="10" rx="1.5" stroke="#4A90D9" stroke-width="1.2" fill="none"/>
+            <polyline points="11,45 18,51 25,45" stroke="#4A90D9" stroke-width="1.2" fill="none"/>
+            <!-- Texte -->
+            <rect x="34" y="40" width="56" height="5" rx="2.5" fill="rgba(10,15,30,0.13)"/>
+            <rect x="34" y="50" width="42" height="4" rx="2" fill="rgba(10,15,30,0.08)"/>
+            <!-- Badge ✓ sur la carte -->
+            <circle cx="88" cy="28" r="10" fill="#10B981" stroke="white" stroke-width="2"/>
+            <polyline points="84,28 87,31 93,25" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <!-- Ligne connexion -->
+            <line x1="98" y1="50" x2="60" y2="64" stroke="rgba(74,144,217,0.28)" stroke-width="1" stroke-dasharray="4 3"/>
+
+            <!-- ===== Carte flottante : Document reçu (haut droit) ===== -->
+            <rect x="242" y="28" width="96" height="44" rx="10" fill="rgba(255,255,255,0.94)" stroke="rgba(244,121,32,0.15)" stroke-width="1"/>
+            <!-- Icône document -->
+            <circle cx="258" cy="50" r="11" fill="rgba(244,121,32,0.1)"/>
+            <rect x="251" y="42" width="14" height="17" rx="2" stroke="#F47920" stroke-width="1.2" fill="none"/>
+            <line x1="254" y1="47" x2="262" y2="47" stroke="#F47920" stroke-width="1" stroke-linecap="round"/>
+            <line x1="254" y1="51" x2="262" y2="51" stroke="#F47920" stroke-width="1" stroke-linecap="round"/>
+            <line x1="254" y1="55" x2="259" y2="55" stroke="#F47920" stroke-width="1" stroke-linecap="round"/>
+            <!-- Texte -->
+            <rect x="274" y="40" width="56" height="5" rx="2.5" fill="rgba(10,15,30,0.13)"/>
+            <rect x="274" y="50" width="42" height="4" rx="2" fill="rgba(10,15,30,0.08)"/>
+            <!-- Badge ✓ sur la carte -->
+            <circle cx="252" cy="28" r="10" fill="#F47920" stroke="white" stroke-width="2"/>
+            <polyline points="248,28 251,31 257,25" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <!-- Ligne connexion -->
+            <line x1="242" y1="50" x2="276" y2="64" stroke="rgba(244,121,32,0.28)" stroke-width="1" stroke-dasharray="4 3"/>
+
+            <!-- ===== Toast bas : Espace activé ===== -->
+            <rect x="84" y="214" width="172" height="30" rx="15" fill="rgba(16,185,129,0.85)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+            <circle cx="102" cy="229" r="9" fill="rgba(255,255,255,0.2)"/>
+            <polyline points="99,229 102,232 107,226" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <text x="173" y="233" text-anchor="middle" font-size="9.5" font-weight="700" fill="white" font-family="sans-serif">Espace école activé !</text>
+            <!-- Ligne connexion toast → carte -->
+            <line x1="170" y1="214" x2="168" y2="206" stroke="rgba(16,185,129,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
+
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- Avantages clés -->
+      <div class="reg-benefits">
+        <div class="reg-benefit">
+          <div class="reg-benefit-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <strong>5 minutes</strong>
+            <span>Inscription rapide</span>
+          </div>
+        </div>
+        <div class="reg-benefit-div"></div>
+        <div class="reg-benefit">
+          <div class="reg-benefit-icon reg-benefit-icon--orange">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <strong>100% Sécurisé</strong>
+            <span>Données protégées</span>
+          </div>
+        </div>
+        <div class="reg-benefit-div"></div>
+        <div class="reg-benefit">
+          <div class="reg-benefit-icon reg-benefit-icon--green">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <strong>Gratuit</strong>
+            <span>Sans frais cachés</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accroche -->
+      <div class="reg-tagline">
+        <h2>Rejoignez les <span>120+ écoles</span><br>qui font confiance à ScolarPlus</h2>
+        <p>Inscriptions, frais scolaires, paiements Mobile Money — tout en un seul espace.</p>
+      </div>
+
     </div>
-    <!-- end row -->
+  </div>
+
+  <!-- ========== Panneau droit : formulaire ========== -->
+  <div class="reg-form-panel">
+    <div class="reg-form-inner">
+
+      <!-- Logo mobile -->
+      <div class="reg-mobile-logo">
+        <div class="reg-logo-mark">
+          <span class="reg-lm-s">s</span>
+          <span class="reg-lm-dot"></span>
+        </div>
+        <span class="reg-mobile-brand">Scolar<strong>Plus</strong></span>
+      </div>
+
+      <!-- En-tête -->
+      <div class="reg-form-header">
+        <h3>Inscrire mon école</h3>
+        <p>Créez votre espace ScolarPlus en quelques étapes simples</p>
+      </div>
+
+      <!-- Stepper (masqué si mise à jour d'une école existante) -->
+      <div class="reg-stepper" *ngIf="!isTwiceSubmission">
+        <div class="reg-stepper-item" [class.active]="!isEmailValid" [class.done]="isEmailValid">
+          <div class="reg-stepper-circle">
+            <svg *ngIf="isEmailValid" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span *ngIf="!isEmailValid">1</span>
+          </div>
+          <span>Email</span>
+        </div>
+        <div class="reg-stepper-line" [class.done]="isEmailValid"></div>
+        <div class="reg-stepper-item" [class.active]="isEmailValid && !submitted" [class.done]="submitted">
+          <div class="reg-stepper-circle">
+            <svg *ngIf="submitted" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span *ngIf="!submitted">2</span>
+          </div>
+          <span>Informations</span>
+        </div>
+        <div class="reg-stepper-line" [class.done]="submitted"></div>
+        <div class="reg-stepper-item" [class.active]="submitted">
+          <div class="reg-stepper-circle"><span>3</span></div>
+          <span>Validation</span>
+        </div>
+      </div>
+
+      <!-- Formulaire -->
+      <form class="reg-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <!-- ======== ÉTAPE 1 : Vérification email ======== -->
+        <ng-container *ngIf="!isTwiceSubmission && !isEmailValid">
+
+          <div class="reg-step-block">
+
+            <div class="reg-field">
+              <label class="reg-label">Qui êtes-vous ? <span class="reg-req">*</span></label>
+              <div class="reg-select-wrap">
+                <svg class="reg-select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <select class="form-select reg-select" formControlName="type" id="type">
+                  <option disabled value="">Sélectionnez votre statut</option>
+                  <option value="ecole">Je suis un promoteur d'école</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="reg-field">
+              <label class="reg-label">Adresse email <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input type="text" formControlName="email" class="form-control reg-input" id="email"
+                  placeholder="votre@email.com"
+                  [ngClass]="{'is-invalid': registerForm.get('email')?.touched && !registerForm.get('email')?.valid}">
+              </div>
+              <span class="reg-error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('pattern')">
+                Entrez une adresse email valide.
+              </span>
+            </div>
+
+            <!-- Code de vérification (après envoi) -->
+            <ng-container *ngIf="isEmailSent">
+              <div class="reg-field">
+                <label class="reg-label">Code de vérification <span class="reg-req">*</span></label>
+                <div class="reg-code-row">
+                  <div class="reg-input-wrap" style="flex:1">
+                    <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="text" class="form-control reg-input" formControlName="code_verification"
+                      style="text-transform: uppercase" id="code_verification"
+                      placeholder="Ex: E5D58D" (keyup)="verifyCode()">
+                  </div>
+                  <button type="button" class="reg-btn-resend" (click)="resendEmailVerificationCode()" [disabled]="isProcessing">
+                    Renvoyer
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <button *ngIf="!isEmailSent" type="button" class="btn reg-btn-verify"
+              [disabled]="isProcessing || !registerForm.get('email')?.valid || !registerForm.get('type')?.valid"
+              (click)="sendEmailVerificationCode()">
+              <span *ngIf="!isProcessing" class="reg-btn-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Vérifier mon email
+              </span>
+              <span *ngIf="isProcessing" class="reg-btn-content">
+                <span class="reg-spinner"></span>
+                Envoi en cours…
+              </span>
+            </button>
+
+          </div>
+
+        </ng-container>
+
+        <!-- ======== ÉTAPE 2 : Informations école + responsable ======== -->
+        <ng-container *ngIf="isEmailValid || isTwiceSubmission">
+
+          <!-- Section : Établissement -->
+          <div class="reg-section-title">
+            <div class="reg-section-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span>Informations de l'établissement</span>
+          </div>
+
+          <div class="reg-row">
+            <div class="reg-field">
+              <label class="reg-label">Raison sociale <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <input type="text" class="form-control reg-input" formControlName="social_reason" id="social_reason" placeholder="Nom de votre école">
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">N° Identité Fiscale (IFU)</label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <input type="text" class="form-control reg-input" id="ifu" formControlName="ifu" placeholder="Optionnel">
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-row">
+            <div class="reg-field">
+              <label class="reg-label">Pays <span class="reg-req">*</span></label>
+              <div class="reg-select-wrap">
+                <svg class="reg-select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <select class="form-select reg-select" formControlName="country_id" id="country_id" (change)="getCityByCountry($event)">
+                  <option disabled value="">Sélectionnez votre pays</option>
+                  <option *ngFor="let country of countries" value="{{ country?.id }}">
+                    {{ "("+ country?.phone_code +")" + " " + country?.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">Ville <span class="reg-req">*</span></label>
+              <div class="reg-select-wrap">
+                <svg class="reg-select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <select class="form-select reg-select" formControlName="city_id" id="city_id">
+                  <option disabled value="">Sélectionnez votre ville</option>
+                  <option *ngFor="let city of cities_filtered" value="{{ city?.id }}">{{ city?.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section : Responsable -->
+          <div class="reg-section-title reg-section-title--mt">
+            <div class="reg-section-icon reg-section-icon--orange">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span>Informations du responsable</span>
+          </div>
+
+          <div class="reg-row">
+            <div class="reg-field">
+              <label class="reg-label">Nom <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" class="form-control reg-input" formControlName="last_name" placeholder="Votre nom de famille">
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">Prénom <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" class="form-control reg-input" id="first_name" formControlName="first_name" placeholder="Vos prénoms">
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-row reg-row--3">
+            <div class="reg-field reg-field--narrow">
+              <label class="reg-label">Indicatif</label>
+              <div class="reg-input-wrap">
+                <input type="text" class="form-control reg-input reg-input--center" formControlName="phone_code" id="phone_code">
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">Téléphone <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5a2 2 0 0 1 1.99-2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.4a16 16 0 0 0 6 6l1.27-.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.92z"/></svg>
+                <input type="text" class="form-control reg-input" mask="{{mask_template}}" formControlName="tel" id="tel" placeholder="XX XX XX XX">
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">Adresse <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <input type="text" class="form-control reg-input" formControlName="location" id="location" placeholder="Quartier, Rue...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section : Sécurité -->
+          <div class="reg-section-title reg-section-title--mt">
+            <div class="reg-section-icon reg-section-icon--purple">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <span>Sécurité du compte</span>
+          </div>
+
+          <div class="reg-row">
+            <div class="reg-field">
+              <label class="reg-label">Mot de passe <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" class="form-control reg-input" formControlName="password" id="password" placeholder="••••••••">
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">Confirmation <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" class="form-control reg-input" formControlName="password_conf" placeholder="••••••••">
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            8 caractères minimum · chiffres · majuscules · caractères spéciaux (@, !, #…)
+          </div>
+
+          <!-- Section : Document -->
+          <div class="reg-section-title reg-section-title--mt">
+            <div class="reg-section-icon reg-section-icon--green">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <span>Document justificatif <span class="reg-req">*</span></span>
+          </div>
+
+          <div class="reg-upload-zone">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="reg-upload-text">
+              <strong>Glissez ou cliquez pour joindre votre PDF</strong>
+              <span>Identité administrative, juridique ou fiscale · Max 10 Mo</span>
+            </div>
+            <input class="reg-upload-input" id="document" accept=".pdf" type="file" (change)="fileEvent($event)">
+          </div>
+
+          <!-- Bouton soumettre -->
+          <button type="submit" class="btn reg-btn-submit" [disabled]="!registerForm.valid || isProcessing">
+            <span *ngIf="!isProcessing" class="reg-btn-content">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              Créer mon espace école
+            </span>
+            <span *ngIf="isProcessing" class="reg-btn-content">
+              <span class="reg-spinner"></span>
+              Inscription en cours…
+            </span>
+          </button>
+
+        </ng-container>
+
+      </form>
+
+      <!-- Lien vers login -->
+      <div class="reg-footer-link">
+        <span>Vous avez déjà un compte ?</span>
+        <a routerLink="/auth/login">Se connecter</a>
+      </div>
+
+      <!-- Footer -->
+      <div class="reg-footer">
+        <p>© {{ year }} <strong>Scolar Plus</strong> ·
+          <a routerLink="/auth/scolar-faq">FAQ</a> ·
+          <a routerLink="/">Site web</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
 </div>
-<!-- end container-fluid -->
