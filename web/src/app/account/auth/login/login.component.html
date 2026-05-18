@@ -1,120 +1,249 @@
-<div class="account-pages my-3">
-  <br><br><br>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-5">
-        <div class="card overflow-hidden">
-          <div class="bg-primary-subtle">
-            <div class="row">
-              <div class="col-9">
-                <div class="text-primary p-4">
-                  <h4 class="text-white">Bienvenu à <b class="text-gray h2">Scolar Plus !</b></h4>
-                  <p class="text-white">Veuillez saisir vos identifiants.</p>
-                </div>
-              </div>
-              <div class="col-3 align-self-end">
-                <img src="assets/images/profile-img.png" alt="" class="img-fluid">
-              </div>
-            </div>
+<div class="lp-wrapper">
+
+  <!-- ========== Panneau gauche : illustration ========== -->
+  <div class="lp-visual">
+    <div class="lp-visual-inner">
+
+      <!-- Orbs décoratifs -->
+      <div class="lp-orb lp-orb-1"></div>
+      <div class="lp-orb lp-orb-2"></div>
+      <div class="lp-grid"></div>
+
+      <!-- Logo -->
+      <a routerLink="/" class="lp-logo">
+        <div class="lp-logo-mark">
+          <span class="lp-lm-s">s</span>
+          <span class="lp-lm-dot"></span>
+        </div>
+        <div class="lp-logo-text">
+          <span>Scolar<strong>Plus</strong></span>
+          <small>Votre solution digitale</small>
+        </div>
+      </a>
+
+      <!-- Illustration principale : école digitale -->
+      <div class="lp-scene">
+
+        <!-- SVG École -->
+        <div class="lp-school-wrap">
+          <svg class="lp-school-svg" viewBox="0 0 320 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Sol -->
+            <rect x="20" y="182" width="280" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
+            <!-- Corps du bâtiment -->
+            <rect x="60" y="105" width="200" height="77" rx="6" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <!-- Toiture triangulaire -->
+            <polygon points="50,105 160,45 270,105" fill="rgba(74,144,217,0.35)" stroke="rgba(74,144,217,0.6)" stroke-width="1.5"/>
+            <!-- Faîtière -->
+            <line x1="160" y1="45" x2="160" y2="25" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+            <!-- Drapeau ScolarPlus -->
+            <rect x="160" y="14" width="22" height="13" rx="2" fill="#F47920"/>
+            <text x="163" y="24" font-size="7" font-weight="bold" fill="white" font-family="sans-serif">S+</text>
+            <!-- Porte centrale -->
+            <rect x="140" y="143" width="40" height="39" rx="5" fill="rgba(74,144,217,0.25)" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <circle cx="175" cy="163" r="2.5" fill="rgba(255,255,255,0.5)"/>
+            <!-- Fenêtres gauches -->
+            <rect x="76" y="118" width="32" height="22" rx="3" fill="rgba(74,144,217,0.3)" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <line x1="92" y1="118" x2="92" y2="140" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <line x1="76" y1="129" x2="108" y2="129" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <!-- Fenêtres droites -->
+            <rect x="212" y="118" width="32" height="22" rx="3" fill="rgba(74,144,217,0.3)" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <line x1="228" y1="118" x2="228" y2="140" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <line x1="212" y1="129" x2="244" y2="129" stroke="rgba(74,144,217,0.5)" stroke-width="1"/>
+            <!-- Fenêtres étage -->
+            <rect x="100" y="63" width="22" height="16" rx="2" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <rect x="198" y="63" width="22" height="16" rx="2" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <!-- Petits arbres -->
+            <circle cx="32" cy="178" r="12" fill="rgba(16,185,129,0.25)"/>
+            <rect x="30" y="178" width="4" height="10" rx="1" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="288" cy="178" r="12" fill="rgba(16,185,129,0.25)"/>
+            <rect x="286" y="178" width="4" height="10" rx="1" fill="rgba(255,255,255,0.15)"/>
+            <!-- Lignes connexion digitale (pointillés) -->
+            <line x1="60" y1="130" x2="18" y2="90" stroke="rgba(74,144,217,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="260" y1="130" x2="302" y2="90" stroke="rgba(244,121,32,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="160" y1="105" x2="160" y2="45" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <!-- Halo lumineux sous le bâtiment -->
+            <ellipse cx="160" cy="188" rx="80" ry="8" fill="rgba(74,144,217,0.12)"/>
+          </svg>
+        </div>
+
+        <!-- Cartes fonctionnelles flottantes -->
+        <div class="lp-feat-card lp-fc-tl">
+          <div class="lp-fc-icon lp-fc-icon--blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
           </div>
-          <div class="card-body pt-0">
-            <div>
-              <a routerLink="/">
-                <div class="avatar-md profile-user-wid mb-4">
-                  <span class="avatar-title rounded-circle bg-light">
-                    <img src="assets/images/logo-scolarplus1.png" alt="" class="rounded-circle" height="54">
-                  </span>
-                </div>
-              </a>
-            </div>
-            <div class="p-1">
-              <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-              <form class="form-horizontal" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-
-                <alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</alert>
-
-                <div class="mb-2">
-                  <label for="email">Adresse mail</label>
-                  <input type="text" formControlName="email" class="form-control input" id="email"
-                    placeholder="Entrez votre login" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <div *ngIf="f.email.errors.required">Adresse mail obligatoire</div>
-                    <div *ngIf="f.email.errors.email">Adresse mail doit être valide</div>
-                  </div>
-                </div>
-
-                <div class="mb-2">
-                  <label for="password">Mot de passe</label>
-                  <div class="input-group auth-pass-inputgroup">
-                    <input type="password" class="form-control input" formControlName="password"
-                      placeholder="Entrez votre mot de passe"
-                      [ngClass]="{ 'is-invalid': submitted && f.password.errors }" aria-label="Password"
-                      aria-describedby="password-addon">
-                    <!--button class="btn btn-light ms-0" type="button" id="password-addon"><i
-                        class="mdi mdi-eye-outline"></i></button-->
-                    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                      <span *ngIf="f.password.errors.required">Mot de passe obligatoire</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="mt-2 text-center">
-                  <a routerLink="/recuperation-mot-de-passe" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Mot de
-                    passe oublié ?</a>
-                </div>
-
-                <div class="mt-2 d-grid">
-                  <button class="btn btn-primary" [disabled]="!loginForm.valid || isProcessing" type="submit">Se
-                    Connecter</button>
-                </div>
-                <!--div class="mt-4 text-center">
-                  <h5 class="font-size-14 mb-3">Sign in with</h5>
-
-                  <ul class="list-inline">
-                    <li class="list-inline-item">
-                      <a href="javascript::void()" class="social-list-item bg-primary text-white border-primary">
-                        <i class="mdi mdi-facebook"></i>
-                      </a>
-                    </li>
-                    <li class="list-inline-item">
-                      <a href="javascript::void()" class="social-list-item bg-info text-white border-info">
-                        <i class="mdi mdi-twitter"></i>
-                      </a>
-                    </li>
-                    <li class="list-inline-item">
-                      <a href="javascript::void()" class="social-list-item bg-danger text-white border-danger">
-                        <i class="mdi mdi-google"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div-->
-                <div class="row">
-                  <div class="mt-4 col-md-6 text-center">
-                    <a routerLink="/auth/inscription" class="text-muted h5" title="Devenir Partenaire.">
-                      <i class="mdi mdi-login text-primary mr-1" ></i>
-                      S'Inscrire </a>
-                  </div>
-                  <div class="mt-4 col-md-6 text-center">
-                    <a routerLink="/auth/paiement-scolaire" class="text-muted h5" title="Payer les frais scolaires."><i
-                        class="bx bx-wallet-alt text-warning"></i> Paiement </a>
-                  </div>
-                </div>
-              </form>
-            </div>
-
+          <div class="lp-fc-text">
+            <strong>Paiements Mobile Money</strong>
+            <span>MTN · Moov · Wave</span>
           </div>
         </div>
-        <div class="mt-5 text-center">
-          <!--p>Don't have an account ? <a routerLink="/account/signup" class="fw-medium text-primary"> Signup
-              now
-            </a> </p-->
-          <p>© {{year}} <b>SCOLAR-PLUS</b>. &nbsp; &nbsp; <a routerLink="/auth/scolar-faq" class="text-muted h5">
-              Consulter la FAQ ?</a></p>
+
+        <div class="lp-feat-card lp-fc-tr">
+          <div class="lp-fc-icon lp-fc-icon--orange">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="lp-fc-text">
+            <strong>Tableau de bord</strong>
+            <span>Statistiques en temps réel</span>
+          </div>
+        </div>
+
+        <div class="lp-feat-card lp-fc-bl">
+          <div class="lp-fc-icon lp-fc-icon--green">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="lp-fc-text">
+            <strong>Gestion des élèves</strong>
+            <span>Classes · Notes · Frais</span>
+          </div>
+        </div>
+
+        <div class="lp-feat-card lp-fc-br">
+          <div class="lp-fc-icon lp-fc-icon--purple">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="lp-fc-text">
+            <strong>100% Sécurisé</strong>
+            <span>Transactions chiffrées</span>
+          </div>
         </div>
 
       </div>
+
+      <!-- Statistiques clés -->
+      <div class="lp-key-stats">
+        <div class="lp-key-stat">
+          <strong>120<span>+</span></strong>
+          <span>Écoles</span>
+        </div>
+        <div class="lp-key-stat-div"></div>
+        <div class="lp-key-stat">
+          <strong>15k<span>+</span></strong>
+          <span>Élèves</span>
+        </div>
+        <div class="lp-key-stat-div"></div>
+        <div class="lp-key-stat">
+          <strong>98<span>%</span></strong>
+          <span>Satisfaction</span>
+        </div>
+        <div class="lp-key-stat-div"></div>
+        <div class="lp-key-stat">
+          <strong>24<span>/7</span></strong>
+          <span>Disponible</span>
+        </div>
+      </div>
+
+      <!-- Accroche -->
+      <div class="lp-tagline">
+        <h2>La solution digitale de référence<br>pour les <span>écoles africaines</span></h2>
+        <p>Inscriptions, frais scolaires, paiements Mobile Money — tout en un seul espace.</p>
+      </div>
+
     </div>
   </div>
 
-  <!-- end container -->
+  <!-- ========== Panneau droit : formulaire ========== -->
+  <div class="lp-form-panel">
+    <div class="lp-form-inner">
+
+      <!-- En-tête mobile (logo visible uniquement sur mobile) -->
+      <div class="lp-mobile-logo">
+        <div class="lp-logo-mark">
+          <span class="lp-lm-s">s</span>
+          <span class="lp-lm-dot"></span>
+        </div>
+        <span class="lp-mobile-brand">Scolar<strong>Plus</strong></span>
+      </div>
+
+      <!-- Titre -->
+      <div class="lp-form-header">
+        <h3>Bienvenue sur ScolarPlus</h3>
+        <p>Connectez-vous à votre espace Scolar Plus</p>
+      </div>
+
+      <!-- Erreur -->
+      <alert type="danger" *ngIf="error" [dismissible]="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ error }}
+      </alert>
+
+      <!-- Formulaire -->
+      <form class="lp-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <div class="lp-field">
+          <label for="email" class="lp-label">Adresse email</label>
+          <div class="lp-input-wrap">
+            <svg class="lp-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="text" formControlName="email" class="form-control lp-input" id="email"
+              placeholder="votre@email.com"
+              [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+          </div>
+          <div *ngIf="submitted && f.email.errors" class="lp-error">
+            <div *ngIf="f.email.errors.required">Adresse email obligatoire</div>
+            <div *ngIf="f.email.errors.email">Format d'email invalide</div>
+          </div>
+        </div>
+
+        <div class="lp-field">
+          <div class="lp-label-row">
+            <label for="password" class="lp-label">Mot de passe</label>
+            <a routerLink="/recuperation-mot-de-passe" class="lp-forgot">Mot de passe oublié ?</a>
+          </div>
+          <div class="lp-input-wrap">
+            <svg class="lp-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" class="form-control lp-input" formControlName="password"
+              placeholder="••••••••"
+              [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+              id="password">
+          </div>
+          <div *ngIf="submitted && f.password.errors" class="lp-error">
+            <span *ngIf="f.password.errors.required">Mot de passe obligatoire</span>
+          </div>
+        </div>
+
+        <button class="btn lp-btn-login" [disabled]="!loginForm.valid || isProcessing" type="submit">
+          <span *ngIf="!isProcessing" class="lp-btn-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Se connecter
+          </span>
+          <span *ngIf="isProcessing" class="lp-btn-content">
+            <span class="lp-spinner"></span>
+            Connexion en cours…
+          </span>
+        </button>
+
+      </form>
+
+      <!-- Actions secondaires -->
+      <div class="lp-secondary-actions">
+        <a routerLink="/auth/inscription" class="lp-action-link">
+          <div class="lp-action-icon lp-action-icon--blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <div>
+            <strong>Créer un compte</strong>
+            <span>Inscrire mon école</span>
+          </div>
+        </a>
+        <a routerLink="/auth/paiement-scolaire" class="lp-action-link">
+          <div class="lp-action-icon lp-action-icon--orange">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div>
+            <strong>Payer des frais</strong>
+            <span>Sans connexion</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Footer -->
+      <div class="lp-footer">
+        <p>© {{ year }} <strong>Scolar Plus</strong> ·
+          <a routerLink="/auth/scolar-faq">FAQ</a> ·
+          <a routerLink="/">Site web</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
 </div>
-<!-- end page -->

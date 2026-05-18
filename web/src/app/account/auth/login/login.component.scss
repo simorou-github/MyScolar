@@ -1,20 +1,573 @@
-.bg-primary-subtle{
-    color: #2353A7 !important;
-    background-color: #2353A7 !important;
+// =============================================
+// ScolarPlus Brand Variables
+// =============================================
+$brand-blue      : #4A90D9;
+$brand-blue-dark : #2B6BAA;
+$brand-orange    : #F47920;
+$brand-navy      : #1D3557;
+$text-dark       : #0A0F1E;
+$text-muted      : #6B7280;
+$border-color    : #E5EFF9;
+$white           : #ffffff;
+
+// =============================================
+// Layout global
+// =============================================
+.lp-wrapper {
+  display: flex;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-button{
-    height: 45px !important;
-    font-size: large !important;
-    font-weight: bolder !important;
+// =============================================
+// Panneau gauche — Illustration
+// =============================================
+.lp-visual {
+  width: 42%;
+  background: linear-gradient(160deg, #0D1B2E 0%, #122744 50%, #1A3F6F 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.input{
-    height: 40px !important;
-    font-size: larger !important;
-    font-weight: lighter !important;
+.lp-visual-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 32px 40px;
+  position: relative;
+  z-index: 1;
 }
 
-label{
-    font-size: larger !important;
+// Orbs
+.lp-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+
+  &-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(74, 144, 217, 0.25);
+    top: -100px;
+    right: -100px;
+    animation: lpFloat 10s ease-in-out infinite;
+  }
+
+  &-2 {
+    width: 260px;
+    height: 260px;
+    background: rgba(244, 121, 32, 0.16);
+    bottom: 60px;
+    left: -60px;
+    animation: lpFloat 12s ease-in-out infinite reverse;
+  }
+}
+
+// Grid dots
+.lp-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+// Logo
+.lp-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-bottom: 36px;
+  flex-shrink: 0;
+}
+
+.lp-logo-mark {
+  width: 42px;
+  height: 42px;
+  background: $brand-blue;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+
+  .lp-lm-s {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1;
+  }
+
+  .lp-lm-dot {
+    position: absolute;
+    bottom: 7px;
+    right: 7px;
+    width: 8px;
+    height: 8px;
+    background: $brand-orange;
+    border-radius: 50%;
+  }
+}
+
+.lp-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  span {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: $white;
+    line-height: 1.1;
+    strong { font-weight: 800; }
+  }
+
+  small {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+}
+
+// ============ Scène illustration école ============
+.lp-scene {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.lp-school-wrap {
+  width: 100%;
+  max-width: 340px;
+  animation: lpFloat 8s ease-in-out infinite;
+}
+
+.lp-school-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgba(74,144,217,0.2));
+}
+
+// Cartes fonctionnelles
+.lp-feat-card {
+  position: absolute;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+  white-space: nowrap;
+  z-index: 2;
+
+  &.lp-fc-tl { top: 10%;  left: -8px;  animation: lpFloat 5s ease-in-out infinite 0s; }
+  &.lp-fc-tr { top: 18%;  right: -8px; animation: lpFloat 5s ease-in-out infinite 0.7s; }
+  &.lp-fc-bl { bottom: 22%; left: 0px;  animation: lpFloat 5s ease-in-out infinite 1.2s; }
+  &.lp-fc-br { bottom: 10%; right: -4px; animation: lpFloat 5s ease-in-out infinite 1.8s; }
+}
+
+.lp-fc-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &--blue   { background: rgba(74,144,217,0.12); color: $brand-blue; }
+  &--orange { background: rgba(244,121,32,0.12);  color: $brand-orange; }
+  &--green  { background: rgba(16,185,129,0.12);  color: #10B981; }
+  &--purple { background: rgba(139,92,246,0.12);  color: #7C3AED; }
+}
+
+.lp-fc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  strong {
+    font-size: 12px;
+    font-weight: 700;
+    color: $text-dark;
+    display: block;
+  }
+
+  span {
+    font-size: 10px;
+    color: $text-muted;
+  }
+}
+
+// Stats clés
+.lp-key-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 18px;
+  flex-shrink: 0;
+}
+
+.lp-key-stat {
+  text-align: center;
+  padding: 0 20px;
+
+  strong {
+    display: block;
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1;
+    margin-bottom: 3px;
+
+    span { color: $brand-orange; font-size: 16px; }
+  }
+
+  span {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+.lp-key-stat-div {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+// Accroche
+.lp-tagline {
+  flex-shrink: 0;
+
+  h2 {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1.45;
+    margin-bottom: 6px;
+
+    span { color: $brand-orange; }
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+@keyframes lpFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+// =============================================
+// Panneau droit — Formulaire
+// =============================================
+.lp-form-panel {
+  width: 58%;
+  margin-left: 42%;
+  min-height: 100vh;
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lp-form-inner {
+  width: 100%;
+  max-width: 540px;
+  padding: 52px 40px;
+}
+
+// Logo mobile
+.lp-mobile-logo {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+
+  .lp-mobile-brand {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-dark;
+    strong { font-weight: 800; color: $brand-blue; }
+  }
+}
+
+// En-tête formulaire
+.lp-form-header {
+  margin-bottom: 32px;
+
+  h3 {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: $text-dark;
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: $text-muted;
+    margin: 0;
+  }
+}
+
+// Champs
+.lp-form { display: flex; flex-direction: column; gap: 20px; }
+
+.lp-field { display: flex; flex-direction: column; gap: 6px; }
+
+.lp-label {
+  font-size: 13px !important;
+  font-weight: 600;
+  color: #374151;
+}
+
+.lp-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lp-forgot {
+  font-size: 12px;
+  color: $brand-blue;
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover { color: $brand-blue-dark; text-decoration: underline; }
+}
+
+.lp-input-wrap {
+  position: relative;
+  height: 52px;
+
+  .lp-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 16px;
+    color: #9CA3AF;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .lp-input {
+    height: 52px !important;
+    margin: 0;
+  }
+}
+
+.lp-input {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  height: 52px !important;
+  padding-left: 46px !important;
+  border: 1.5px solid $border-color;
+  border-radius: 10px;
+  background: $white;
+  color: $text-dark;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    border-color: $brand-blue;
+    box-shadow: 0 0 0 3px rgba(74,144,217,0.12);
+    outline: none;
+  }
+
+  &.is-invalid {
+    border-color: #EF4444;
+    &:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
+  }
+}
+
+.lp-error {
+  font-size: 12px;
+  color: #EF4444;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// Bouton connexion
+.lp-btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: lpSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes lpSpin {
+  to { transform: rotate(360deg); }
+}
+
+.lp-btn-login {
+  height: 54px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  background: $brand-blue;
+  color: $white;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(74,144,217,0.3);
+  margin-top: 4px;
+
+  &:hover:not(:disabled) {
+    background: $brand-blue-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(74,144,217,0.4);
+    color: $white;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Actions secondaires
+.lp-secondary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.lp-action-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: $white;
+  border: 1.5px solid $border-color;
+  border-radius: 12px;
+  padding: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: $brand-blue;
+    box-shadow: 0 4px 12px rgba(74,144,217,0.1);
+    transform: translateY(-1px);
+  }
+
+  div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    strong {
+      font-size: 13px;
+      font-weight: 700;
+      color: $text-dark;
+    }
+
+    span {
+      font-size: 11px;
+      color: $text-muted;
+    }
+  }
+}
+
+.lp-action-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &--blue {
+    background: rgba(74,144,217,0.1);
+    color: $brand-blue;
+  }
+
+  &--orange {
+    background: rgba(244,121,32,0.1);
+    color: $brand-orange;
+  }
+}
+
+// Footer
+.lp-footer {
+  margin-top: 32px;
+  text-align: center;
+
+  p {
+    font-size: 12px;
+    color: #9CA3AF;
+    margin: 0;
+
+    strong { color: $text-dark; }
+
+    a {
+      color: $brand-blue;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 4px;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+}
+
+// =============================================
+// Responsive — mobile
+// =============================================
+@media (max-width: 991px) {
+  .lp-visual      { display: none; }
+  .lp-form-panel  { width: 100%; margin-left: 0; }
+  .lp-mobile-logo { display: flex; }
+  .lp-form-inner  { padding: 40px 24px; max-width: 100%; }
 }
