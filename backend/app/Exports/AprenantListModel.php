@@ -53,7 +53,7 @@ class AprenantListModel implements FromCollection, WithHeadings, WithDrawings, W
         $drawing = new Drawing();
         $drawing->setName('Logo');
         $drawing->setDescription('Logo Scolarpay');
-        $drawing->setPath(public_path('/images/scolar_logo.jpg')); 
+        $drawing->setPath(public_path('/images/ScolarPlusLogo_AvecFond_1.png')); 
         $drawing->setHeight(60);
         $drawing->setCoordinates('A1');
 

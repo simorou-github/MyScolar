@@ -1,31 +1,47 @@
 <div class="account-pages my-3">
-  <br><br><br>
-  <div class="container mt-5">
+  <br>
+  <div class="container mt-1">
     <div class="row justify-content-center">
       <div class="col-md-8 col-lg-6 col-xl-5">
         <div class="card overflow-hidden">
           <div class="bg-primary-subtle">
             <div class="row">
-              <div class="col-9">
+              <div class="col-12">
                 <div class="text-primary p-4">
-                  <h4 class="text-white">Bienvenu à <b class="text-gray h2">Scolar Plus !</b></h4>
-                  <p class="text-white">Veuillez saisir vos identifiants.</p>
+                  <h4 class="text-white">Bienvenu sur <b class="text-gray h2">Scolar Plus!</b></h4>
                 </div>
               </div>
-              <div class="col-3 align-self-end">
-                <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+            </div>
+            <div class="row">
+              <div class="col-4"></div>
+              <!--div class="col-8">
+                <div class="text-primary p-4">
+                  <h4 class="text-white">Bienvenu sur <b class="text-gray h3">Scolar Plus!</b></h4>
+                  
+                  <p class="text-white">Veuillez saisir vos identifiants pour accéder à votre espace.</p>
+                </div>
+              </div-->
+              <div class="col-8 align-self-end" style="text-align: right !important; padding-right: 40px !important;">
+                <img src="assets/images/users/ScolarPlusLogo_Blanc.png" style="width: 180px; height: 60px;" alt=""
+                  class="img-fluid">
               </div>
             </div>
           </div>
           <div class="card-body pt-0">
-            <div>
-              <a routerLink="/">
-                <div class="avatar-md profile-user-wid mb-4">
-                  <span class="avatar-title rounded-circle bg-light">
-                    <img src="assets/images/logo-scolarplus1.png" alt="" class="rounded-circle" height="54">
-                  </span>
-                </div>
-              </a>
+            <div class="row">
+              <div class="col-4">
+                <a routerLink="/">
+                  <div class="avatar-md profile-user-wid mb-4">
+                    <span class="avatar-title rounded-circle bg-light">
+                      <img src="assets/images/users/user-dummy-img.jpg" alt="" class="rounded-circle" height="65px">
+                    </span>
+                  </div>
+                </a>
+              </div>
+              <div class="col-8">
+                <span class="text-gray font-size-12">Veuillez saisir vos identifiants pour accéder à votre
+                  espace.</span>
+              </div>
             </div>
             <div class="p-1">
               <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
@@ -65,8 +81,8 @@
                 </div>
 
                 <div class="mt-2 d-grid">
-                  <button class="btn btn-primary" [disabled]="!loginForm.valid || isProcessing" type="submit">Se
-                    Connecter</button>
+                  <button class="btn btn-primary pt-O pb-2" [disabled]="!loginForm.valid || isProcessing" type="submit">
+                    Se Connecter <i class="mdi mdi-login pull-right"></i> </button>
                 </div>
                 <!--div class="mt-4 text-center">
                   <h5 class="font-size-14 mb-3">Sign in with</h5>
@@ -91,13 +107,13 @@
                 </div-->
                 <div class="row">
                   <div class="mt-4 col-md-6 text-center">
-                    <a routerLink="/auth/inscription" class="text-muted h5" title="Devenir Partenaire.">
-                      <i class="mdi mdi-login text-primary mr-1"></i>
-                      S'Inscrire </a>
+                    <a routerLink="/auth/inscription" class="text-muted h6" title="Devenir Partenaire.">
+                      <i class="fa fa-user-plus fa-1x text-info mr-1"></i>
+                      S'inscrire </a>
                   </div>
                   <div class="mt-4 col-md-6 text-center">
-                    <a routerLink="/auth/paiement-scolaire" class="text-muted h5" title="Payer les frais scolaires."><i
-                        class="bx bx-wallet-alt text-warning"></i> Paiement </a>
+                    <a routerLink="/auth/paiement-scolaire" class="text-muted h6" title="Payer les frais scolaires."><i
+                        class="fa fa-wallet fa-1x text-warning"></i> Paiement </a>
                   </div>
                 </div>
               </form>
@@ -105,12 +121,13 @@
 
           </div>
         </div>
-        <div class="mt-5 text-center">
+        <div class="mt-2 text-center">
           <!--p>Don't have an account ? <a routerLink="/account/signup" class="fw-medium text-primary"> Signup
               now
             </a> </p-->
-          <p>© {{year}} <b>SCOLAR-PLUS</b>. &nbsp; &nbsp; <a routerLink="/auth/scolar-faq" class="text-muted h5">
-              Consulter la FAQ ?</a></p>
+          <p>© 2026 <b>NOVAPLUS CORPORATION</b> &nbsp; &nbsp; <a href="https://portal.scolarco.com/faqs.html"
+              target="_blank" class="text-muted h5">
+              <i class="mdi mdi-help-circle"></i> FAQ</a></p>
         </div>
 
       </div>
