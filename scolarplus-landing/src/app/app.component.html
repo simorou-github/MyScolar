@@ -1,0 +1,492 @@
+<!-- Cookie Consent -->
+<div class="consent-banner" *ngIf="consentVisible()">
+  <div class="consent-inner">
+    <div class="consent-icon">🍪</div>
+    <div class="consent-text">
+      <strong>Nous utilisons des cookies</strong>
+      <p>Pour améliorer votre expérience sur notre plateforme.</p>
+    </div>
+    <button class="btn-consent" (click)="acceptConsent()">J'accepte</button>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" [class.scrolled]="scrolled()">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-mark">S+</div>
+      <span class="logo-text">Scolar<strong>Plus</strong></span>
+    </a>
+
+    <ul class="nav-links" [class.open]="mobileOpen()">
+      <li><a href="#accueil" (click)="mobileOpen.set(false)">Accueil</a></li>
+      <li class="has-dropdown">
+        <a href="#">Solutions <span class="arrow">▾</span></a>
+        <div class="dropdown">
+          <a href="#solutions">Scolar Pay</a>
+          <a href="#solutions" class="soon">Scolar Educ <span>Bientôt</span></a>
+          <a href="#solutions" class="soon">Scolar Link <span>Bientôt</span></a>
+        </div>
+      </li>
+      <li><a href="#services" (click)="mobileOpen.set(false)">Services</a></li>
+      <li><a href="#partenaires" (click)="mobileOpen.set(false)">Partenaires</a></li>
+      <li><a href="#contact" (click)="mobileOpen.set(false)">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="https://web.scolarco.com/#/" class="btn-nav-login">Se Connecter</a>
+      <a href="https://web.scolarco.com/#/auth/inscription" class="btn-nav-cta">Créer un compte</a>
+    </div>
+
+    <button class="burger" (click)="toggleMenu()" [class.active]="mobileOpen()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+  <div class="hero-bg">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-grid"></div>
+  </div>
+
+  <div class="container hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Plateforme #1 de paiements scolaires en Afrique
+      </div>
+
+      <h1 class="hero-title">
+        La gestion scolaire<br>
+        <span class="gradient-text">réinventée</span> pour<br>
+        votre établissement
+      </h1>
+
+      <p class="hero-desc">
+        Scolar Plus digitalise la gestion de vos frais scolaires. 
+        Inscrivez votre école, déclarez vos classes et recevez vos paiements 
+        par <strong>Mobile Money</strong> en toute simplicité.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://web.scolarco.com/#/auth/inscription" class="btn-hero-primary">
+          Inscrire mon école
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://web.scolarco.com/#/auth/paiement-scolaire" class="btn-hero-secondary">
+          <span class="pay-icon">💳</span>
+          Payer des frais
+        </a>
+      </div>
+
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <div class="avatar av1">🏫</div>
+          <div class="avatar av2">🎓</div>
+          <div class="avatar av3">👨‍👩‍👦</div>
+        </div>
+        <p><strong>+120 écoles</strong> nous font déjà confiance</p>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="phone-mockup">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="app-bar">
+              <div class="app-logo-small">S+</div>
+              <span>Scolar Pay</span>
+            </div>
+            <div class="app-balance">
+              <p class="balance-label">Solde collecté ce mois</p>
+              <h3 class="balance-amount">₣ 2,847,500</h3>
+              <div class="balance-change up">↑ +23% vs mois dernier</div>
+            </div>
+            <div class="app-transactions">
+              <div class="txn-item" *ngFor="let t of [
+                {name:'Kwame A.', amount:'45 000', time:'il y a 2min', color:'#10B981'},
+                {name:'Adjoa M.', amount:'30 000', time:'il y a 15min', color:'#1B4FD8'},
+                {name:'Kofi B.', amount:'60 000', time:'il y a 1h', color:'#F59E0B'}
+              ]">
+                <div class="txn-avatar" [style.background]="t.color + '22'" [style.color]="t.color">{{ t.name[0] }}</div>
+                <div class="txn-info">
+                  <span class="txn-name">{{ t.name }}</span>
+                  <span class="txn-time">{{ t.time }}</span>
+                </div>
+                <span class="txn-amount">+{{ t.amount }} ₣</span>
+              </div>
+            </div>
+            <div class="app-btn-pay">
+              <button>📲 Nouveau paiement</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-glow"></div>
+      </div>
+
+      <!-- Floating stats -->
+      <div class="float-card fc-1">
+        <span class="fc-icon">✅</span>
+        <div>
+          <strong>Paiement confirmé</strong>
+          <p>MTN Mobile Money</p>
+        </div>
+      </div>
+      <div class="float-card fc-2">
+        <span class="fc-icon">🔒</span>
+        <div>
+          <strong>100% Sécurisé</strong>
+          <p>Transactions chiffrées</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="hero-stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <strong>{{ countSchools() }}+</strong>
+          <span>Écoles partenaires</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>{{ countStudents() | number:'1.0-0' }}+</strong>
+          <span>Élèves gérés</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>{{ countPayments() }}%</strong>
+          <span>Taux de satisfaction</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>24/7</strong>
+          <span>Disponibilité plateforme</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div class="about-visual">
+      <div class="about-card-main">
+        <div class="about-img-placeholder">
+          <div class="about-illustration">
+            <div class="school-icon">🏫</div>
+            <div class="africa-text">Bénin · Afrique de l'Ouest</div>
+          </div>
+        </div>
+        <div class="about-badge-float">
+          <span>🎖️</span>
+          <div>
+            <strong>Fondée en 2023</strong>
+            <p>Capital : 3 000 000 FCFA</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-card-small">
+        <div class="mission-icon">🌍</div>
+        <h4>Vision Panafricaine</h4>
+        <p>Première entreprise digitale scolaire de la sous-région</p>
+      </div>
+    </div>
+
+    <div class="about-content">
+      <div class="section-label"><span class="dot"></span> Qui sommes-nous</div>
+      <h2>Scolar Plus, votre partenaire numérique pour l'excellence scolaire</h2>
+      <p>
+        Société privée à responsabilités limitées spécialisée dans les solutions numériques scolaires, 
+        Scolar Plus a été créée avec une ambition claire : <strong>révolutionner la gestion scolaire en Afrique</strong>.
+      </p>
+      <p>
+        Notre vision est de nous positionner comme la première entreprise digitale de la sous-région 
+        apportant des solutions concrètes à l'excellence académique en Afrique.
+      </p>
+
+      <div class="missions-grid">
+        <div class="mission-item" *ngFor="let m of [
+          {icon:'💰', label:'Collectes progressives'},
+          {icon:'📱', label:'Paiements en ligne'},
+          {icon:'📈', label:'Rapports détaillés'},
+          {icon:'🏆', label:'Excellence scolaire'}
+        ]">
+          <span class="mi-icon">{{ m.icon }}</span>
+          <span>{{ m.label }}</span>
+        </div>
+      </div>
+
+      <a href="#services" class="btn-about">Découvrir Scolar Pay →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-bg">
+    <div class="srv-orb srv-orb-1"></div>
+  </div>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span> Ce que vous pouvez faire</div>
+      <h2>Des services pensés <span class="gradient-text">pour vous</span></h2>
+      <p class="section-sub">Que vous soyez promoteur d'école, parent ou étudiant, Scolar Plus a la solution adaptée.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let s of services; let i = index"
+           [style.animation-delay]="(i * 0.15) + 's'">
+        <div class="sc-number" [style.color]="s.color">{{ s.number }}</div>
+        <div class="sc-icon-wrap" [style.background]="s.color + '15'">
+          <span class="sc-icon">
+            <ng-container [ngSwitch]="s.icon">
+              <svg *ngSwitchCase="'school'" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18V16c.08 0 4.45 1.48 7 3 2.55-1.52 6.92-3 7-3v-4.82L22 9 12 3zm6 12.99c-1.29.47-3.14 1.05-4.5 1.69V12.5l-1.5.82V17.7C10.64 17.06 8.79 16.48 7.5 16v-3.5l1.5-.82V9.68L5.5 11 12 5l6.5 3.5L12 12l-3-1.64V11l3 1.64 6 0.18v3.17z"/></svg>
+              <svg *ngSwitchCase="'payments'" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+              <svg *ngSwitchCase="'schedule'" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+            </ng-container>
+          </span>
+        </div>
+        <h3 [style.color]="s.color">{{ s.title }}</h3>
+        <p>{{ s.desc }}</p>
+        <div class="sc-tags">
+          <span class="sc-tag" *ngFor="let t of s.tags" [style.color]="s.color" [style.background]="s.color + '12'">{{ t }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="services-cta">
+      <a href="https://web.scolarco.com/#/auth/paiement-scolaire" class="btn-services-pay">
+        💳 Payer des frais scolaires maintenant
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="comment">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span> Comment ça marche</div>
+      <h2>Lancez-vous en <span class="gradient-text">4 étapes</span></h2>
+    </div>
+
+    <div class="steps-layout">
+      <div class="steps-nav">
+        <div class="step-btn"
+             *ngFor="let step of steps; let i = index"
+             [class.active]="activeStep() === i"
+             (click)="setStep(i)">
+          <div class="step-num">{{ i + 1 }}</div>
+          <div class="step-info">
+            <strong>{{ step.title }}</strong>
+            <p>{{ step.desc }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps-visual">
+        <div class="step-display" *ngFor="let step of steps; let i = index"
+             [class.active]="activeStep() === i">
+          <div class="step-emoji">{{ step.icon }}</div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.desc }}</p>
+        </div>
+        <div class="step-progress">
+          <div class="step-prog-bar" [style.width]="((activeStep() + 1) / steps.length * 100) + '%'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values" id="valeurs">
+  <div class="container">
+    <div class="section-header centered">
+      <div class="section-label"><span class="dot"></span> Votre partenaire engagé</div>
+      <h2>Nos valeurs, votre <span class="gradient-text">confiance</span></h2>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let v of values; let i = index"
+           [style.animation-delay]="(i * 0.2) + 's'">
+        <div class="vc-icon">{{ v.icon }}</div>
+        <h3>{{ v.title }}</h3>
+        <p>{{ v.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-us" id="pourquoi">
+  <div class="container why-grid">
+    <div class="why-content">
+      <div class="section-label"><span class="dot"></span> Nos atouts</div>
+      <h2>Pourquoi choisir <span class="gradient-text">Scolar Plus</span> ?</h2>
+      <p>Nous sommes la solution pensée par des Africains, pour les écoles africaines. Simple, rapide, et fiable.</p>
+
+      <div class="why-features">
+        <div class="wf-item" *ngFor="let f of [
+          {icon:'⚡', title:'Instantané', desc:'Paiements reçus en temps réel sur votre compte'},
+          {icon:'🔒', title:'Sécurisé', desc:'Transactions chiffrées et traçables à 100%'},
+          {icon:'📱', title:'Mobile First', desc:'Interface optimisée pour smartphones africains'},
+          {icon:'🌍', title:'Pan-Africain', desc:'Déploiement prévu dans toute la sous-région'},
+          {icon:'📊', title:'Analytics', desc:'Tableaux de bord et rapports détaillés'},
+          {icon:'🛎️', title:'Support 24/7', desc:'Une équipe dédiée à votre service'}
+        ]">
+          <div class="wf-icon">{{ f.icon }}</div>
+          <div>
+            <strong>{{ f.title }}</strong>
+            <p>{{ f.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-solutions">
+      <div class="section-label"><span class="dot"></span> Nos solutions</div>
+      <h3>L'écosystème Scolar Plus</h3>
+      <div class="solutions-list">
+        <div class="solution-item" *ngFor="let s of solutions"
+             [class.active]="s.active">
+          <div class="sol-dot" [style.background]="s.color"></div>
+          <div class="sol-info">
+            <strong [style.color]="s.color">{{ s.name }}</strong>
+            <p>{{ s.desc }}</p>
+          </div>
+          <div class="sol-status" *ngIf="s.active">Disponible</div>
+          <div class="sol-status soon" *ngIf="!s.active">Bientôt</div>
+        </div>
+      </div>
+      <a href="https://web.scolarco.com/#/auth/inscription" class="btn-why-cta">
+        Commencer gratuitement →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners" id="partenaires">
+  <div class="container">
+    <div class="section-header centered">
+      <div class="section-label"><span class="dot"></span> Les leaders du monde scolaire</div>
+      <h2>Ils nous font <span class="gradient-text">confiance</span></h2>
+    </div>
+
+    <div class="partners-marquee-wrap">
+      <div class="partners-marquee">
+        <div class="partners-track">
+          <div class="partner-chip" *ngFor="let p of partners">
+            <div class="pc-avatar">{{ p.name[0] }}</div>
+            <div>
+              <strong>{{ p.name }}</strong>
+              <span>{{ p.subtitle }}</span>
+            </div>
+          </div>
+          <div class="partner-chip" *ngFor="let p of partners">
+            <div class="pc-avatar">{{ p.name[0] }}</div>
+            <div>
+              <strong>{{ p.name }}</strong>
+              <span>{{ p.subtitle }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="partners-grid">
+      <div class="partner-card" *ngFor="let p of partners">
+        <div class="pcard-avatar">{{ p.name[0] }}</div>
+        <h4>{{ p.name }}</h4>
+        <p>{{ p.subtitle }}</p>
+        <div class="pcard-stars">⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="cta-bg">
+    <div class="cta-orb cta-orb-1"></div>
+    <div class="cta-orb cta-orb-2"></div>
+  </div>
+  <div class="container cta-inner">
+    <div class="cta-text">
+      <h2>Prêt à digitaliser votre école ?</h2>
+      <p>Rejoignez les +120 établissements qui ont fait confiance à Scolar Plus pour moderniser leur gestion des paiements scolaires.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="https://web.scolarco.com/#/auth/inscription" class="btn-cta-primary">
+        Créer mon espace école
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="mailto:info&#64;scolarplus.com" class="btn-cta-ghost">Nous contacter</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="logo-mark">S+</div>
+        <span>Scolar<strong>Plus</strong></span>
+      </div>
+      <p>Pour le rayonnement de la formation numérique en Afrique.</p>
+      <div class="footer-contacts">
+        <a href="mailto:info&#64;scolarplus.com">📧 info&#64;scolarplus.com</a>
+        <a href="tel:+22901660000009">📞 (+229) 01 66 00 00 09</a>
+      </div>
+      <div class="footer-socials">
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">f</a>
+        <a href="#" class="social-btn">ig</a>
+      </div>
+    </div>
+
+    <div class="footer-links-group">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#accueil">Accueil</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#partenaires">Partenaires</a></li>
+        <li><a href="faqs.html">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links-group">
+      <h4>Solutions</h4>
+      <ul>
+        <li><a href="#">Scolar Pay</a></li>
+        <li><a href="#" class="soon-link">Scolar Educ <span>Bientôt</span></a></li>
+        <li><a href="#" class="soon-link">Scolar Link <span>Bientôt</span></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links-group">
+      <h4>Légal</h4>
+      <ul>
+        <li><a href="#">Mentions légales</a></li>
+        <li><a href="#">CGU</a></li>
+        <li><a href="#">Confidentialité</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>© 2025 Scolar Plus. Tous droits réservés.</p>
+      <p>Fait avec ❤️ au Bénin, pour l'Afrique</p>
+    </div>
+  </div>
+</footer>
