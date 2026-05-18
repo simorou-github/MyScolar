@@ -14,8 +14,14 @@
 <nav class="navbar" [class.scrolled]="scrolled()">
   <div class="container nav-inner">
     <a href="#" class="nav-logo">
-      <div class="logo-mark">S+</div>
-      <span class="logo-text">Scolar<strong>Plus</strong></span>
+      <div class="logo-mark">
+        <span class="lm-s">s</span>
+        <span class="lm-dot"></span>
+      </div>
+      <div class="logo-text-group">
+        <span class="logo-text">Scolar<strong>Plus</strong></span>
+        <span class="logo-tagline">Votre solution digitale</span>
+      </div>
     </a>
 
     <ul class="nav-links" [class.open]="mobileOpen()">
@@ -54,15 +60,14 @@
 
   <div class="container hero-content">
     <div class="hero-left">
-      <div class="hero-badge">
+      <!-- <div class="hero-badge">
         <span class="badge-dot"></span>
         Plateforme #1 de paiements scolaires en Afrique
-      </div>
+      </div> -->
 
       <h1 class="hero-title">
         La gestion scolaire<br>
-        <span class="gradient-text">réinventée</span> pour<br>
-        votre établissement
+        <span class="gradient-text">réinventée</span>
       </h1>
 
       <p class="hero-desc">
@@ -108,8 +113,8 @@
             <div class="app-transactions">
               <div class="txn-item" *ngFor="let t of [
                 {name:'Kwame A.', amount:'45 000', time:'il y a 2min', color:'#10B981'},
-                {name:'Adjoa M.', amount:'30 000', time:'il y a 15min', color:'#1B4FD8'},
-                {name:'Kofi B.', amount:'60 000', time:'il y a 1h', color:'#F59E0B'}
+                {name:'Adjoa M.', amount:'30 000', time:'il y a 15min', color:'#4A90D9'},
+                {name:'Kofi B.', amount:'60 000', time:'il y a 1h', color:'#F47920'}
               ]">
                 <div class="txn-avatar" [style.background]="t.color + '22'" [style.color]="t.color">{{ t.name[0] }}</div>
                 <div class="txn-info">
@@ -242,7 +247,8 @@
 
     <div class="services-grid">
       <div class="service-card" *ngFor="let s of services; let i = index"
-           [style.animation-delay]="(i * 0.15) + 's'">
+           [style.animation-delay]="(i * 0.15) + 's'"
+           [style.--srv-color]="s.color">
         <div class="sc-number" [style.color]="s.color">{{ s.number }}</div>
         <div class="sc-icon-wrap" [style.background]="s.color + '15'">
           <span class="sc-icon">

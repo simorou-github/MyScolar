@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b)",
+      "Bash(Get-ChildItem -Path . -Directory)",
+      "Bash(Select-Object Name)",
+      "PowerShell(Head -50)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\laragon\\\\www\\\\MyScolar\\\\scolarplus-landing\\\\src\" -Recurse | Where-Object { $_.Extension -in @\\('.ts', '.html', '.scss', '.css', '.json'\\) } | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\laragon\\\\www\\\\MyScolar\\\\scolarplus-landing\\\\\", \"\"\\) })"
+    ]
+  }
+}

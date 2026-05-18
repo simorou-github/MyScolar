@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     {
       number: '01',
       icon: 'school',
-      color: '#1B4FD8',
+      color: '#4A90D9',
       title: 'Espace École',
       desc: "En tant que promoteur d'école, université ou centre de formation, obtenez un espace numérique personnalisé pour administrer vos opérations.",
       tags: ['Tableau de bord', 'Multi-classes', 'Rapports']
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
     {
       number: '03',
       icon: 'schedule',
-      color: '#F59E0B',
+      color: '#F47920',
       title: 'Paiements Progressifs',
       desc: "Parents et étudiants payez vos frais en plusieurs tranches selon le calendrier fixé par votre établissement, sans stress.",
       tags: ['Tranche', 'Flexible', 'Rappels']
@@ -97,8 +97,8 @@ export class AppComponent implements OnInit {
   ];
 
   solutions = [
-    { name: 'Scolar Pay', desc: 'Paiements scolaires', color: '#1B4FD8', active: true },
-    { name: 'Scolar Educ', desc: 'Gestion pédagogique', color: '#F59E0B', active: false },
+    { name: 'Scolar Pay', desc: 'Paiements scolaires', color: '#4A90D9', active: true },
+    { name: 'Scolar Educ', desc: 'Gestion pédagogique', color: '#F47920', active: false },
     { name: 'Scolar Link', desc: 'Communication école', color: '#10B981', active: false }
   ];
 

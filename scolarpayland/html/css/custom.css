@@ -34,8 +34,14 @@
 /************************************/
 /*** 	 01. Global Variables	  ***/
 /************************************/
+/* ScolarPlus Brand Colors:
+   Blue   : #4A90D9
+   Orange : #F47920
+   Navy   : #1D3557
+*/
+
 .primary-color{
-    color: #454b80 !important;
+    color: #1D3557 !important;
 }
 
 .success-color{
@@ -43,22 +49,22 @@
 }
 
 .warning-color{
-    color: #f0a22d !important;
+    color: #F47920 !important;
 }
 
 .second-color {
-    color:#3b78a9 !important;
+    color: #4A90D9 !important;
 }
 
 .primary-bg{
-    background-color: #454b80 !important;
+    background-color: #1D3557 !important;
 }
 
 .second-bg {
-    background-color:#3b78a9 !important;
+    background-color: #4A90D9 !important;
 }
 .warning-bg {
-    background-color: #f0a22d !important;
+    background-color: #F47920 !important;
 }
 
 .center{
@@ -66,19 +72,19 @@
 }
 
 .pay_button{
-    background-color: #f0a22d !important;
-    border-color: blanchedalmond !important; 
+    background-color: #F47920 !important;
+    border-color: #F47920 !important;
     margin-left: 10px !important;
 }
 
 :root{
-	/*--primary-color		: #15161B;*/
-	--primary-color		: #454b80;
-	--secondary-color	: #F7F8FD;
-	--text-color		: #9C9FA6;
-	--accent-color		: #3b78a9;
+	--primary-color		: #1D3557;
+	--secondary-color	: #F0F6FF;
+	--text-color		: #6B7280;
+	--accent-color		: #4A90D9;
+	--orange-color		: #F47920;
 	--white-color		: #FFFFFF;
-	--divider-color		: #E1E4EB;
+	--divider-color		: #D1E3F5;
 	--error-color		: rgb(230, 87, 87);
 	--default-font		: "Manrope", sans-serif;
 }
@@ -435,10 +441,40 @@ header.main-header .header-sticky.active{
 .navbar-brand{
 	padding: 0;
 	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 12px;
 }
 
 .navbar-brand img{
-	min-width: 140px;
+	min-width: 130px;
+	max-height: 48px;
+	object-fit: contain;
+}
+
+.navbar-tagline{
+	display: flex;
+	flex-direction: column;
+	line-height: 1.1;
+}
+
+.navbar-tagline .brand-name{
+	font-size: 18px;
+	font-weight: 800;
+	color: var(--primary-color);
+	letter-spacing: -0.02em;
+}
+
+.navbar-tagline .brand-name span{
+	color: var(--accent-color);
+}
+
+.navbar-tagline .brand-slogan{
+	font-size: 9px;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--text-color);
 }
 
 .main-menu .nav-menu-wrapper{
@@ -527,6 +563,19 @@ header.main-header .header-sticky.active{
 
 .main-menu ul li.highlighted-menu{
     display: none;
+}
+
+.main-menu ul li a.nav-faq{
+    border: 1.5px solid var(--accent-color);
+    border-radius: 100px;
+    padding: 6px 18px !important;
+    color: var(--accent-color);
+    transition: all 0.3s ease-in-out;
+}
+
+.main-menu ul li a.nav-faq:hover{
+    background: var(--accent-color);
+    color: var(--white-color);
 }
 
 .responsive-menu,
@@ -634,8 +683,34 @@ header.main-header .header-sticky.active{
 
 .hero{
 	position: relative;
-	background: var(--secondary-color) url(../images/hero-bg.png) no-repeat bottom center;
+	background: linear-gradient(160deg, #EBF4FF 0%, #F0F6FF 50%, #FEF3EB 100%) url(../images/hero-bg.png) no-repeat bottom center;
+	background-blend-mode: multiply;
 	padding: 140px 0;
+	overflow: hidden;
+}
+
+.hero::before{
+	content: '';
+	position: absolute;
+	top: -120px;
+	right: -120px;
+	width: 480px;
+	height: 480px;
+	background: radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%);
+	border-radius: 50%;
+	pointer-events: none;
+}
+
+.hero::after{
+	content: '';
+	position: absolute;
+	bottom: -80px;
+	left: -80px;
+	width: 360px;
+	height: 360px;
+	background: radial-gradient(circle, rgba(244,121,32,0.08) 0%, transparent 70%);
+	border-radius: 50%;
+	pointer-events: none;
 }
 
 .hero-content{
@@ -738,6 +813,140 @@ header.main-header .header-sticky.active{
 
 .hero-layout-2 .hero-footer .btn-default:last-child{
     margin-right: 0;
+}
+
+/* Hero badge */
+.hero-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(74,144,217,0.1);
+    border: 1px solid rgba(74,144,217,0.3);
+    color: var(--accent-color);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+.hero-badge .badge-dot{
+    width: 8px;
+    height: 8px;
+    background: var(--orange-color);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulseDot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulseDot{
+    0%, 100%{ transform: scale(1); opacity: 1; }
+    50%{ transform: scale(1.4); opacity: 0.7; }
+}
+
+/* Pay button orange hover */
+.pay_button:hover{
+    color: var(--orange-color) !important;
+}
+
+.pay_button::before{
+    color: var(--white-color) !important;
+}
+
+.pay_button:hover::before{
+    color: var(--orange-color) !important;
+}
+
+/* Stats strip in hero */
+.hero-stats{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--divider-color);
+}
+
+.hero-stat-item{
+    text-align: center;
+}
+
+.hero-stat-item .stat-number{
+    display: block;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.hero-stat-item .stat-number span{
+    color: var(--accent-color);
+}
+
+.hero-stat-item .stat-label{
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hero-stat-divider{
+    width: 1px;
+    height: 40px;
+    background: var(--divider-color);
+}
+
+/* Explore solution tags */
+.explore-item-tags ul{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.explore-tag{
+    font-size: 14px !important;
+    padding: 10px 28px 10px 18px !important;
+}
+
+.explore-tag--primary{
+    background: transparent !important;
+    color: var(--primary-color) !important;
+    border: 2px solid var(--primary-color) !important;
+}
+
+.explore-tag--primary:hover{
+    background: var(--primary-color) !important;
+    color: var(--white-color) !important;
+}
+
+.explore-tag--orange{
+    background: transparent !important;
+    color: var(--orange-color) !important;
+    border: 2px solid var(--orange-color) !important;
+}
+
+.explore-tag--orange:hover{
+    background: var(--orange-color) !important;
+    color: var(--white-color) !important;
+}
+
+.explore-tag--accent{
+    background: transparent !important;
+    color: var(--accent-color) !important;
+    border: 2px solid var(--accent-color) !important;
+}
+
+.explore-tag--accent:hover{
+    background: var(--accent-color) !important;
+    color: var(--white-color) !important;
 }
 
 /************************************/
