@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://coopstats.coopdicpa.com/scolar_service/public/api',
-  domainUrl: 'https://coopstats.coopdicpa.com',
-  baseUrl: 'https://scolar-web.coopdicpa.com/web/',
+  apiUrl: 'https://services.scolarco.com/public/api',
+  domainUrl: 'https://services.scolarco.com',
+  baseUrl: 'https://web.scolarco.com',
 
   /*apiUrl: 'http://127.0.0.1:8000/api',
   domainUrl: 'http://127.0.0.1:8000',

@@ -5,6 +5,7 @@ $brand-blue     : #4A90D9;
 $brand-blue-dark: #2B6BAA;
 $brand-orange   : #F47920;
 $brand-navy     : #1D3557;
+$brand-green    : #10B981;
 $brand-light    : #F0F6FF;
 $text-dark      : #0A0F1E;
 $text-muted     : #6B7280;
@@ -514,6 +515,27 @@ $white          : #ffffff;
   }
 }
 
+// Spinner & bouton content (commun)
+.pfp-btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pfp-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: pfpSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pfpSpin {
+  to { transform: rotate(360deg); }
+}
+
 // Bouton recherche
 .pfp-btn-search {
   background: $brand-blue;
@@ -663,6 +685,7 @@ $white          : #ffffff;
     border-bottom: 2px solid rgba(74,144,217,0.15);
     padding: 12px 14px;
     white-space: nowrap;
+    vertical-align: middle;
   }
 
   tbody tr td {
@@ -682,11 +705,27 @@ $white          : #ffffff;
   }
 }
 
+// Checkbox — centrage vertical parfait
+.pfp-th-check {
+  width: 44px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.pfp-td-check {
+  text-align: center;
+  vertical-align: middle !important;
+  padding: 0 14px !important;
+}
+
 .pfp-checkbox {
-  width: 16px;
-  height: 16px;
+  display: block;
+  width: 17px;
+  height: 17px;
+  margin: 0 auto;
   cursor: pointer;
   accent-color: $brand-blue;
+  vertical-align: middle;
 }
 
 // Badges solde
@@ -753,69 +792,328 @@ $white          : #ffffff;
 }
 
 // =============================================
-// Modals
+// Modals — Refonte charte ScolarPlus
 // =============================================
-.pfp-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px;
-  border-bottom: 1px solid $border-color;
-  background: $white;
-}
 
-.pfp-modal-title-wrap {
+// ---- Header gradient modal ----
+.pfp-mhdr {
+  position: relative;
+  background: linear-gradient(135deg, #0D1B2E 0%, #122744 60%, #1A3F6F 100%);
+  padding: 22px 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.pfp-modal-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(74,144,217,0.1);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $brand-blue;
+  gap: 14px;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
 
   &--orange {
-    background: rgba(244,121,32,0.1);
-    color: $brand-orange;
+    background: linear-gradient(135deg, #1A1008 0%, #7A3A08 60%, $brand-orange 100%);
   }
 }
 
-.pfp-modal-section-label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 700;
-  color: $text-muted;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid $border-color;
-
-  svg { color: $brand-blue; }
+.pfp-mhdr-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
 }
 
-.pfp-operator-card {
+.pfp-mhdr-orb {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(74,144,217,0.2);
+  filter: blur(60px);
+  top: -80px;
+  right: -40px;
+  pointer-events: none;
+}
+
+.pfp-mhdr-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.pfp-mhdr-icon {
+  width: 46px;
+  height: 46px;
+  background: rgba(74,144,217,0.25);
+  border: 1.5px solid rgba(74,144,217,0.4);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  flex-shrink: 0;
+
+  &--orange {
+    background: rgba(244,121,32,0.25);
+    border-color: rgba(244,121,32,0.4);
+  }
+}
+
+.pfp-mhdr-text {
+  h5 {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: $white;
+    margin: 0 0 3px;
+  }
+
+  small {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+}
+
+.pfp-mhdr-close {
+  position: relative;
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  padding: 0;
+
+  &:hover {
+    background: rgba(255,255,255,0.2);
+    color: $white;
+  }
+}
+
+// ---- Body modal ----
+.pfp-modal-body {
+  padding: 24px;
+  background: #F8FAFC;
+}
+
+// ---- Récapitulatif montant ----
+.pfp-modal-summary {
+  display: flex;
+  align-items: stretch;
+  background: linear-gradient(135deg, $brand-blue, $brand-blue-dark);
+  border-radius: 14px;
+  padding: 0;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(74,144,217,0.25);
+
+  &--orange {
+    background: linear-gradient(135deg, $brand-orange, darken($brand-orange, 12%));
+    box-shadow: 0 4px 20px rgba(244,121,32,0.25);
+  }
+}
+
+.pfp-sum-item {
+  flex: 1;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 8px;
-  border-radius: 10px;
+  gap: 4px;
 
   span {
     font-size: 11px;
     font-weight: 600;
-    color: $text-dark;
-    text-align: center;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
+
+  strong {
+    font-size: 16px;
+    font-weight: 800;
+    color: $white;
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+
+  &--highlight strong {
+    color: #6EE7B7;
+    font-size: 17px;
+  }
+}
+
+.pfp-sum-type {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: rgba(255,255,255,0.85) !important;
+}
+
+.pfp-sum-sep {
+  width: 1px;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+  margin: 12px 0;
+}
+
+// ---- Sections dans le modal ----
+.pfp-modal-section {
+  background: $white;
+  border: 1.5px solid $border-color;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.pfp-modal-section-hdr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $border-color;
+
+  span {
+    font-size: 13px;
+    font-weight: 700;
+    color: $text-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.pfp-msd {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--blue   { background: $brand-blue; box-shadow: 0 0 0 3px rgba(74,144,217,0.2); }
+  &--orange { background: $brand-orange; box-shadow: 0 0 0 3px rgba(244,121,32,0.2); }
+  &--green  { background: $brand-green; box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
+}
+
+// ---- Opérateurs Mobile Money ----
+.pfp-operators-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pfp-op-radio {
+  flex: 1;
+  min-width: 100px;
+  max-width: 160px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.pfp-op-radio-input {
+  display: none;
+}
+
+.pfp-op-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 10px 12px;
+  border: 2px solid $border-color;
+  border-radius: 12px;
+  background: $white;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  img {
+    object-fit: contain;
+    height: 34px;
+    width: auto;
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-muted;
+    text-align: center;
+    transition: color 0.2s;
+  }
+
+  &:hover {
+    border-color: $brand-blue;
+    background: rgba(74,144,217,0.03);
+  }
+}
+
+.pfp-op-check {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $brand-blue;
+  color: $white;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(74,144,217,0.4);
+}
+
+.pfp-op-radio-input:checked + .pfp-op-card {
+  border-color: $brand-blue;
+  background: rgba(74,144,217,0.06);
+  box-shadow: 0 0 0 3px rgba(74,144,217,0.12);
+
+  span { color: $brand-blue-dark; }
+
+  .pfp-op-check { display: flex; }
+}
+
+// Champ montant mis en valeur
+.pfp-input--amount {
+  border-color: $brand-blue !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  color: $brand-blue-dark !important;
+}
+
+// ---- Footer modal ----
+.pfp-modal-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.pfp-modal-security {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: $brand-green;
+
+  svg { flex-shrink: 0; }
+}
+
+.pfp-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 // Boutons modal
@@ -826,22 +1124,32 @@ $white          : #ffffff;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
-  padding: 11px 24px;
+  padding: 11px 22px;
   display: inline-flex;
   align-items: center;
   gap: 7px;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(74,144,217,0.25);
+  box-shadow: 0 4px 14px rgba(74,144,217,0.3);
+  height: 44px;
 
   &:hover:not(:disabled) {
     background: $brand-blue-dark;
     transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(74,144,217,0.4);
     color: $white;
   }
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  &:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  &--orange {
+    background: $brand-orange;
+    box-shadow: 0 4px 14px rgba(244,121,32,0.3);
+
+    &:hover:not(:disabled) {
+      background: darken($brand-orange, 8%);
+      box-shadow: 0 8px 20px rgba(244,121,32,0.4);
+      color: $white;
+    }
   }
 }
 
@@ -852,14 +1160,11 @@ $white          : #ffffff;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
-  padding: 11px 20px;
+  padding: 11px 18px;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  height: 44px;
   transition: all 0.2s;
 
-  &:hover {
-    background: #E5E7EB;
-    color: $text-dark;
-  }
+  &:hover { background: #E5E7EB; color: $text-dark; }
 }

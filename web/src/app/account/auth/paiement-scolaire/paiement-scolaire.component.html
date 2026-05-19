@@ -19,7 +19,6 @@
 
                 <!-- Illustration centrale -->
                 <div class="pvp-illustration">
-                    <!-- Orbs décoratifs -->
                     <div class="pvp-orb pvp-orb-1"></div>
                     <div class="pvp-orb pvp-orb-2"></div>
 
@@ -101,7 +100,6 @@
 
             </div>
         </div>
-        <!-- end col gauche -->
 
         <!-- Formulaire -->
         <div class="col-xl-7 pay-form-panel" style="position: absolute; right: 0;">
@@ -151,13 +149,18 @@
                                 </div>
                                 <div class="col-lg-3 d-flex align-items-end">
                                     <button type="submit" class="btn pfp-btn-search w-100"
-                                        [disabled]="!searchForm.valid">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                                        Rechercher
+                                        [disabled]="!searchForm.valid || isProcessing">
+                                        <span *ngIf="!isProcessing" class="pfp-btn-content">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                                            Rechercher
+                                        </span>
+                                        <span *ngIf="isProcessing" class="pfp-btn-content">
+                                            <span class="pfp-spinner"></span>
+                                            Recherche…
+                                        </span>
                                     </button>
                                 </div>
                             </div>
-                            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
                         </form>
                     </div>
                 </div>
@@ -223,7 +226,7 @@
                         <table class="table pfp-table mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-center" style="width:40px">#</th>
+                                    <th class="pfp-th-check">#</th>
                                     <th>Frais</th>
                                     <th>Montant</th>
                                     <th>Solde</th>
@@ -233,7 +236,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let balance of balanceFees | paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
-                                    <td class="text-center">
+                                    <td class="pfp-td-check">
                                         <input type="checkbox" class="pfp-checkbox"
                                             [disabled]="balance.balance == 0"
                                             (change)="selectBalanceRow($event, balance)">
@@ -277,180 +280,292 @@
 
             </div>
         </div>
-        <!-- end col formulaire -->
 
     </div>
 </div>
 
-<!-- Modal paiement unique -->
+<!-- ============================================================ -->
+<!-- Modal paiement unique                                        -->
+<!-- ============================================================ -->
 <ng-template #paiement role="document" let-modal>
-    <div class="modal-header pfp-modal-header">
-        <div class="pfp-modal-title-wrap">
-            <div class="pfp-modal-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+
+    <!-- Header gradient -->
+    <div class="pfp-mhdr">
+        <div class="pfp-mhdr-grid"></div>
+        <div class="pfp-mhdr-orb"></div>
+        <div class="pfp-mhdr-content">
+            <div class="pfp-mhdr-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
-            <div>
-                <h5 class="modal-title mb-0">Paiement de frais</h5>
-                <small class="text-muted">{{ curr_fees.type_fees?.label }} — {{ curr_student.last_name }} {{ curr_student.first_name }}</small>
+            <div class="pfp-mhdr-text">
+                <h5>Paiement de frais</h5>
+                <small>{{ curr_fees.type_fees?.label }} &nbsp;·&nbsp; {{ curr_student.last_name }} {{ curr_student.first_name }}</small>
             </div>
         </div>
-        <button type="button" class="btn-close" (click)="modalRef?.hide()"></button>
+        <button type="button" class="pfp-mhdr-close" (click)="modalRef?.hide()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
     </div>
-    <div class="modal-body p-4">
+
+    <div class="pfp-modal-body">
         <form (ngSubmit)="processUniquePayment(paymentForm.value)" [formGroup]="paymentForm">
 
-            <div class="pfp-modal-section-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-                Mode de paiement
-            </div>
-            <div class="row mb-3">
-                <div class="col-xl-3 col-sm-4" *ngFor="let operator of operators; let i=index;">
-                    <label class="card-radio-label mb-3">
-                        <input type="radio" id="op-{{i}}" required class="card-radio-input"
+            <!-- Récapitulatif montants -->
+            <!-- <div class="pfp-modal-summary">
+                <div class="pfp-sum-item">
+                    <span>Montant du frais</span>
+                    <strong>{{ curr_fees.fees_amount | currency:'XOF' }}</strong>
+                </div>
+                <div class="pfp-sum-sep"></div>
+                <div class="pfp-sum-item pfp-sum-item--highlight">
+                    <span>Solde restant</span>
+                    <strong>{{ curr_fees.balance | currency:'XOF' }}</strong>
+                </div>
+                <div class="pfp-sum-sep"></div>
+                <div class="pfp-sum-item">
+                    <span>Type</span>
+                    <strong class="pfp-sum-type">{{ curr_fees.type_fees?.label }}</strong>
+                </div>
+            </div> -->
+
+            <!-- Section : Opérateur -->
+            <div class="pfp-modal-section">
+                <div class="pfp-modal-section-hdr">
+                    <div class="pfp-msd pfp-msd--blue"></div>
+                    <span>Mode de paiement</span>
+                </div>
+                <div class="pfp-operators-grid">
+                    <label *ngFor="let operator of operators; let i=index" class="pfp-op-radio">
+                        <input type="radio" id="op-{{i}}" required class="pfp-op-radio-input"
                             formControlName="operator" value="{{operator.id}}">
-                        <div class="card-radio pfp-operator-card">
-                            <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="50" height="30">
+                        <div class="pfp-op-card">
+                            <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="58" height="34">
                             <span>{{ operator.name }}</span>
+                            <div class="pfp-op-check">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
                         </div>
                     </label>
                 </div>
             </div>
 
-            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-
-            <div class="pfp-modal-section-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Détail du montant
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-4">
-                    <label class="pfp-label">Montant total</label>
-                    <input type="number" class="form-control pfp-input pfp-input-readonly"
-                        formControlName="fees_amount" readonly>
+            <!-- Section : Montant -->
+            <div class="pfp-modal-section">
+                <div class="pfp-modal-section-hdr">
+                    <div class="pfp-msd pfp-msd--orange"></div>
+                    <span>Détail du règlement</span>
                 </div>
-                <div class="col-lg-4">
-                    <label class="pfp-label">Reste à payer</label>
-                    <input type="number" class="form-control pfp-input pfp-input-readonly"
-                        formControlName="balance" readonly>
+                <div class="row g-3">
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Montant total</label>
+                        <input type="number" class="form-control pfp-input pfp-input-readonly"
+                            formControlName="fees_amount" readonly>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Reste à payer</label>
+                        <input type="number" class="form-control pfp-input pfp-input-readonly"
+                            formControlName="balance" readonly>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Montant à régler <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control pfp-input pfp-input--amount"
+                            formControlName="amount" required>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <label class="pfp-label">Montant à payer <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control pfp-input" formControlName="amount" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-4">
-                    <label class="pfp-label">Téléphone <span class="text-danger">*</span></label>
-                    <input type="phone" class="form-control pfp-input" formControlName="phone" required maxlength="20">
-                </div>
-                <div class="col-lg-8">
-                    <label class="pfp-label">Email <span class="text-danger">*</span></label>
-                    <input type="email" class="form-control pfp-input" formControlName="email">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="pfp-label">Commentaires</label>
-                <textarea class="form-control pfp-input" formControlName="details" rows="2"></textarea>
             </div>
 
-            <div class="d-flex justify-content-end gap-2 mt-3">
-                <button type="button" class="btn pfp-btn-cancel" (click)="closeModal()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    Fermer
-                </button>
-                <button type="submit" class="btn pfp-btn-confirm"
-                    [disabled]="!paymentForm.valid || isProcessing">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                    Confirmer le paiement
-                </button>
+            <!-- Section : Contact -->
+            <div class="pfp-modal-section">
+                <div class="pfp-modal-section-hdr">
+                    <div class="pfp-msd pfp-msd--green"></div>
+                    <span>Informations de contact</span>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Téléphone Mobile Money <span class="text-danger">*</span></label>
+                        <input type="phone" class="form-control pfp-input" formControlName="phone"
+                            required maxlength="20" placeholder="+229 XX XX XX XX">
+                    </div>
+                    <div class="col-lg-8">
+                        <label class="pfp-label">Email (reçu électronique) <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control pfp-input" formControlName="email"
+                            placeholder="votre@email.com">
+                    </div>
+                </div>
+                <div>
+                    <label class="pfp-label">Commentaires</label>
+                    <textarea class="form-control pfp-input" formControlName="details" rows="2"
+                        placeholder="Informations complémentaires…"></textarea>
+                </div>
             </div>
+
+            <!-- Footer modal -->
+            <div class="pfp-modal-footer-row">
+                <div class="pfp-modal-security">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Paiement 100% sécurisé par ScolarPlus</span>
+                </div>
+                <div class="pfp-modal-actions">
+                    <button type="button" class="btn pfp-btn-cancel" (click)="closeModal()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn pfp-btn-confirm"
+                        [disabled]="!paymentForm.valid || isProcessing">
+                        <span *ngIf="!isProcessing" class="pfp-btn-content">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Confirmer le paiement
+                        </span>
+                        <span *ngIf="isProcessing" class="pfp-btn-content">
+                            <span class="pfp-spinner"></span>
+                            Traitement en cours…
+                        </span>
+                    </button>
+                </div>
+            </div>
+
         </form>
     </div>
 </ng-template>
 
-<!-- Modal paiement par lot -->
+<!-- ============================================================ -->
+<!-- Modal paiement par lot                                       -->
+<!-- ============================================================ -->
 <ng-template #multiplePaiement role="document" let-modal>
-    <div class="modal-header pfp-modal-header">
-        <div class="pfp-modal-title-wrap">
-            <div class="pfp-modal-icon pfp-modal-icon--orange">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+
+    <!-- Header gradient orange -->
+    <div class="pfp-mhdr pfp-mhdr--orange">
+        <div class="pfp-mhdr-grid"></div>
+        <div class="pfp-mhdr-orb"></div>
+        <div class="pfp-mhdr-content">
+            <div class="pfp-mhdr-icon pfp-mhdr-icon--orange">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
-            <div>
-                <h5 class="modal-title mb-0">Paiement par lot</h5>
-                <small class="text-muted">{{ curr_student.last_name }} {{ curr_student.first_name }}</small>
+            <div class="pfp-mhdr-text">
+                <h5>Paiement par lot</h5>
+                <small>{{ curr_student.last_name }} {{ curr_student.first_name }} &nbsp;·&nbsp; {{ totalBalances | currency:'XOF' }}</small>
             </div>
         </div>
-        <button type="button" class="btn-close" (click)="modalRef?.hide()"></button>
+        <button type="button" class="pfp-mhdr-close" (click)="modalRef?.hide()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
     </div>
-    <div class="modal-body p-4">
+
+    <div class="pfp-modal-body">
         <form (ngSubmit)="processBatchPayment(batchPaymentForm.value)" [formGroup]="batchPaymentForm">
 
-            <div class="pfp-modal-section-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-                Mode de paiement
+            <!-- Récapitulatif lot -->
+            <div class="pfp-modal-summary pfp-modal-summary--orange">
+                <div class="pfp-sum-item">
+                    <span>Montant total sélectionné</span>
+                    <strong>{{ batchPaymentForm.get('fees_amount')?.value | currency:'XOF' }}</strong>
+                </div>
+                <div class="pfp-sum-sep"></div>
+                <div class="pfp-sum-item pfp-sum-item--highlight">
+                    <span>Total à régler</span>
+                    <strong>{{ batchPaymentForm.get('amount')?.value | currency:'XOF' }}</strong>
+                </div>
+                <div class="pfp-sum-sep"></div>
+                <div class="pfp-sum-item">
+                    <span>Frais sélectionnés</span>
+                    <strong class="pfp-sum-type">Lot groupé</strong>
+                </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-xl-3 col-sm-4" *ngFor="let operator of operators; let i=index;">
-                    <label class="card-radio-label mb-3">
-                        <input type="radio" id="bop-{{i}}" required class="card-radio-input"
+
+            <!-- Section : Opérateur -->
+            <div class="pfp-modal-section">
+                <div class="pfp-modal-section-hdr">
+                    <div class="pfp-msd pfp-msd--blue"></div>
+                    <span>Mode de paiement</span>
+                </div>
+                <div class="pfp-operators-grid">
+                    <label *ngFor="let operator of operators; let i=index" class="pfp-op-radio">
+                        <input type="radio" id="bop-{{i}}" required class="pfp-op-radio-input"
                             formControlName="operator" value="{{operator.id}}">
-                        <div class="card-radio pfp-operator-card">
-                            <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="50" height="30">
+                        <div class="pfp-op-card">
+                            <img [src]="path_part + operator.path_logo" alt="{{operator.name}}" width="58" height="34">
                             <span>{{ operator.name }}</span>
+                            <div class="pfp-op-check">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
                         </div>
                     </label>
                 </div>
             </div>
 
-            <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-
-            <div class="pfp-modal-section-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Détail du montant
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-4">
-                    <label class="pfp-label">Montant total</label>
-                    <input type="number" class="form-control pfp-input pfp-input-readonly"
-                        formControlName="fees_amount" readonly>
+            <!-- Section : Montant -->
+            <div class="pfp-modal-section">
+                <div class="pfp-modal-section-hdr">
+                    <div class="pfp-msd pfp-msd--orange"></div>
+                    <span>Détail du règlement</span>
                 </div>
-                <div class="col-lg-4">
-                    <label class="pfp-label">Reste à payer</label>
-                    <input type="number" class="form-control pfp-input pfp-input-readonly"
-                        formControlName="balance" readonly>
+                <div class="row g-3">
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Montant total</label>
+                        <input type="number" class="form-control pfp-input pfp-input-readonly"
+                            formControlName="fees_amount" readonly>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Reste à payer</label>
+                        <input type="number" class="form-control pfp-input pfp-input-readonly"
+                            formControlName="balance" readonly>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Montant à régler</label>
+                        <input type="number" class="form-control pfp-input pfp-input-readonly"
+                            formControlName="amount" readonly>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <label class="pfp-label">Montant à payer</label>
-                    <input type="number" class="form-control pfp-input pfp-input-readonly"
-                        formControlName="amount" readonly>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-4">
-                    <label class="pfp-label">Téléphone <span class="text-danger">*</span></label>
-                    <input type="phone" class="form-control pfp-input" formControlName="phone" required maxlength="20">
-                </div>
-                <div class="col-lg-8">
-                    <label class="pfp-label">Email <span class="text-danger">*</span></label>
-                    <input type="email" class="form-control pfp-input" formControlName="email">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="pfp-label">Commentaires</label>
-                <textarea class="form-control pfp-input" formControlName="details" rows="2"></textarea>
             </div>
 
-            <div class="d-flex justify-content-end gap-2 mt-3">
-                <button type="button" class="btn pfp-btn-cancel" (click)="closeModal()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    Fermer
-                </button>
-                <button type="submit" class="btn pfp-btn-confirm"
-                    [disabled]="!batchPaymentForm.valid || isProcessing">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                    Payer le lot de frais
-                </button>
+            <!-- Section : Contact -->
+            <div class="pfp-modal-section">
+                <div class="pfp-modal-section-hdr">
+                    <div class="pfp-msd pfp-msd--green"></div>
+                    <span>Informations de contact</span>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-4">
+                        <label class="pfp-label">Téléphone Mobile Money <span class="text-danger">*</span></label>
+                        <input type="phone" class="form-control pfp-input" formControlName="phone"
+                            required maxlength="20" placeholder="+229 XX XX XX XX">
+                    </div>
+                    <div class="col-lg-8">
+                        <label class="pfp-label">Email (reçu électronique) <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control pfp-input" formControlName="email"
+                            placeholder="votre@email.com">
+                    </div>
+                </div>
+                <div>
+                    <label class="pfp-label">Commentaires</label>
+                    <textarea class="form-control pfp-input" formControlName="details" rows="2"
+                        placeholder="Informations complémentaires…"></textarea>
+                </div>
             </div>
+
+            <!-- Footer modal -->
+            <div class="pfp-modal-footer-row">
+                <div class="pfp-modal-security">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Paiement 100% sécurisé par ScolarPlus</span>
+                </div>
+                <div class="pfp-modal-actions">
+                    <button type="button" class="btn pfp-btn-cancel" (click)="closeModal()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn pfp-btn-confirm pfp-btn-confirm--orange"
+                        [disabled]="!batchPaymentForm.valid || isProcessing">
+                        <span *ngIf="!isProcessing" class="pfp-btn-content">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            Payer le lot de frais
+                        </span>
+                        <span *ngIf="isProcessing" class="pfp-btn-content">
+                            <span class="pfp-spinner"></span>
+                            Traitement en cours…
+                        </span>
+                    </button>
+                </div>
+            </div>
+
         </form>
     </div>
 </ng-template>
