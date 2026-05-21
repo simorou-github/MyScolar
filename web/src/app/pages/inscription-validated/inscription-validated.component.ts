@@ -21,6 +21,8 @@ export class InscriptionValidatedComponent implements OnInit {
   breadCrumbItems: Array<{}>; message: any; inscriptionsValidated: any; isProcessing: boolean = false; p: number = 1;
   academicYear: string; schoolId: string; schoolName: string; isSearchForm: boolean = false; searchForm!: FormGroup;
   countries: any;
+  isSearching: boolean = false;   // spinner du bouton Rechercher
+  processingId: any = null;       // id de la ligne dont le bouton tourne
 
   constructor(private fb: FormBuilder, private ngxLoader: NgxUiLoaderService, public toastr: ToastrService, private school_inscription_service: SchoolInscriptionService,
     private tokenService: TokenService, private inscriptionService: SchoolInscriptionService) {
@@ -82,28 +84,25 @@ export class InscriptionValidatedComponent implements OnInit {
       confirmButtonText: 'Oui'
     }).then(result => {
       if (result.value) {
-        this.ngxLoader.startLoader('loader-spin');
+        this.processingId = school_id;          // spinner sur la ligne cliquée
         this.inscriptionService.changeStatusOfInscription({ 'id': school_id, 'status': status }).subscribe(
           {
             next: (v: any) => {
               if (v.status == 200) {
                 this.showSuccess(v.message);
-                this.ngxLoader.stopLoader('loader-spin');
                 this.getListInscriptionValidated();
               } else {
                 this.showError(v.message);
-                this.ngxLoader.stopLoader('loader-spin');
               }
-              this.isProcessing = false;
+              this.processingId = null;
             },
 
             error: (e) => {
               console.error(e);
+              this.processingId = null;
             },
 
-            complete: () => {
-
-            }
+            complete: () => { }
           }
         )
       }
@@ -112,27 +111,24 @@ export class InscriptionValidatedComponent implements OnInit {
 
 
   getListInscriptionValidated() {
-    this.ngxLoader.startLoader('loader-spin');
+    this.isSearching = true;
     this.inscriptionService.listInscriptionsValidated(this.searchForm.value).subscribe(
       {
         next: (v: any) => {
           this.message = v.message;
           if (v.status == 200) {
             this.inscriptionsValidated = v.data;
-            this.ngxLoader.stopLoader('loader-spin');
-          } else {
-            this.ngxLoader.stopLoader('loader-spin');
           }
+          this.isSearching = false;
         },
 
         error: (e) => {
           console.error(e);
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
+          this.isSearching = false;
         },
 
-        complete: () => {
-
-        }
+        complete: () => { }
       }
     )
   }

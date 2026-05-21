@@ -1,347 +1,164 @@
 <header id="page-topbar">
-  <div class="navbar-header" >
-    <div class="d-flex" >
-      <!-- LOGO -->
-      <div class="navbar-brand-box" style="padding-top: 0px !important;">
-        <a routerLink="/" class="logo logo-dark">
-          <span class="logo-sm">
-            <img src="assets/images/logo-scolarplus1.png" style="border-radius: 55%;" alt="" height="35">
-            <b class="text-uppercase h3" style="padding-top: 0px !important; color: white  !important;" *ngIf="!isToogle">  &nbsp; Scolar Plus</b>
-          </span>
+  <div class="navbar-header">
+
+    <!-- ── Left : logo + menu toggle ─────────────────── -->
+    <div class="d-flex align-items-center">
+
+      <!-- Logo -->
+      <div class="navbar-brand-box">
+        <a routerLink="/dashboard" class="logo logo-dark">
+          <!-- <span class="logo-sm">
+            <div class="sp-logo-sm">
+              <span class="sp-lm-s">S</span>
+              <span class="sp-lm-dot"></span>
+            </div>
+          </span> -->
           <span class="logo-lg">
-            <img src="assets/images/logo-scolarplus1.png" style="border-radius: 55%;"  alt="" height="35">
-            <b class="text-uppercase h3" style="padding-top: 0px !important; color: white  !important;"  *ngIf="!isToogle">  &nbsp; Scolar Plus</b>
+            <div class="sp-logo-full">
+              <div class="sp-logo-mark">
+                <span class="sp-lm-s">S</span>
+                <span class="sp-lm-dot"></span>
+              </div>
+              <div class="sp-logo-text" *ngIf="!isToogle">
+                <span>Scolar<strong>Plus</strong></span>
+                <!-- <small>Gestion Scolaire</small> -->
+              </div>
+            </div>
           </span>
         </a>
 
-        <a routerLink="/" class="logo logo-light">
-          <span class="logo-sm">
-            <img src="assets/images/logo-scolarplus1.png" style="border-radius: 55%;"  alt="" height="35">
-            <b class="text-uppercase h3" style="padding-top: 0px !important; color: white  !important;"  *ngIf="!isToogle"> &nbsp; Scolar Plus</b>
-          </span>
+        <!-- logo-light mirrors logo-dark (shown when sidebar=dark) -->
+        <a routerLink="/dashboard" class="logo logo-light">
+          <!-- <span class="logo-sm">
+            <div class="sp-logo-sm">
+              <span class="sp-lm-s">S</span>
+              <span class="sp-lm-dot"></span>
+            </div>
+          </span> -->
           <span class="logo-lg">
-            <img src="assets/images/logo-scolarplus1.png" style="border-radius: 55%;"  alt="" height="35">
-            <b class="text-uppercase h3" style="padding-top: 0px !important; color: white  !important;"  *ngIf="!isToogle"> &nbsp;  Scolar Plus</b>
+            <div class="sp-logo-full">
+              <div class="sp-logo-mark">
+                <span class="sp-lm-s">S</span>
+                <span class="sp-lm-dot"></span>
+              </div>
+              <div class="sp-logo-text" *ngIf="!isToogle">
+                <span>Scolar<strong>Plus</strong></span>
+                <!-- <small>Gestion Scolaire</small> -->
+              </div>
+            </div>
           </span>
         </a>
       </div>
 
-      <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn"
-        (click)="toggleMobileMenu($event)">
-        <i class="fa fa-fw fa-bars"></i>
+      <!-- Sidebar toggle -->
+      <button type="button"
+              class="btn tp-toggle-btn"
+              id="vertical-menu-btn"
+              (click)="toggleMobileMenu($event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6"  x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
       </button>
-
-      <!-- App Search-->
-      <!-- <form class="app-search d-none d-xl-block" >
-        <div class="position-relative">
-          <input type="text" class="form-control" placeholder="{{'HEADER.SEARCH' | translate}}">
-          <span class="bx bx-search-alt"></span>
-        </div>
-      </form> -->
-
-      <!-- <div class="dropdown-mega d-none d-lg-block ms-2" dropdown >
-        <button type="button" class="btn header-item" dropdownToggle data-toggle="dropdown" aria-haspopup="false"
-          aria-expanded="false">
-          {{ 'HEADER.MEGA_MENU' | translate}}
-          <i class="mdi mdi-chevron-down"></i>
-        </button>
-        <div class="dropdown-menu dropdown-megamenu" *dropdownMenu>
-          <div class="row">
-            <div class="col-sm-8">
-
-              <div class="row">
-                <div class="col-md-4">
-                  <h5 class="font-size-14 mt-0"> {{ 'HEADER.UI.TITLE' | translate}}</h5>
-                  <ul class="list-unstyled megamenu-list">
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.LIGHTBOX' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.RANGE_SLIDER' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.SWEET_ALERT' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.RATING' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.FORMS' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.TABLES' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.CHARTS' | translate}}</a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="col-md-4">
-                  <h5 class="font-size-14 mt-0">{{ 'HEADER.APPLICATIONS.TITLE' | translate}}</h5>
-                  <ul class="list-unstyled megamenu-list">
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.APPLICATIONS.ECOMMERCE' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.APPLICATIONS.CALENDAR' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.APPLICATIONS.EMAIL' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.APPLICATIONS.PROJECTS' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.APPLICATIONS.TASKS' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.APPLICATIONS.CONTACTS' | translate}}</a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="col-md-4">
-                  <h5 class="font-size-14 mt-0">{{ 'HEADER.EXTRA_PAGES.TITLE' | translate}}</h5>
-                  <ul class="list-unstyled megamenu-list">
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.LIGHT_SIDEBAR' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.COMPACT_SIDEBAR' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.HORIZONTAL_LAYOUT' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.MAINTENANCE' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.COMING SOON' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.TIMELINE' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.EXTRA_PAGES.FAQ' | translate}}</a>
-                    </li>
-
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="row">
-                <div class="col-sm-6">
-                  <h5 class="font-size-14 mt-0"> {{ 'HEADER.UI.TITLE' | translate}}</h5>
-                  <ul class="list-unstyled megamenu-list">
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.LIGHTBOX' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.RANGE_SLIDER' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.SWEET_ALERT' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.RATING' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.FORMS' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.TABLES' | translate}}</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0);">{{ 'HEADER.UI.CHARTS' | translate}}</a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="col-sm-5">
-                  <div>
-                    <img src="assets/images/megamenu-img.png" alt="" class="img-fluid mx-auto d-block">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>  -->
     </div>
 
-    <div class="d-flex">
-      <!--<div class="dropdown d-inline-block d-lg-none ms-2" dropdown style="background-color: azure !important;">
-         <button type="button" class="btn header-item noti-icon" id="page-header-search-dropdown" data-toggle="dropdown"
-          aria-haspopup="true" dropdownToggle aria-expanded="false">
-          <i class="mdi mdi-magnify"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" *dropdownMenu
-          aria-labelledby="page-header-search-dropdown">
-          <form class="p-3">
-            <div class="m-0">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
-                <div class="input-group-append">
-                  <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+    <!-- ── Right : notifications + user ──────────────── -->
+    <div class="d-flex align-items-center gap-1">
 
-      <div class="dropdown d-inline-block" dropdown style="background-color: azure !important;">
-        <button type="button" class="btn header-item" id="page-header-user-dropdown" dropdownToggle>
-          <img *ngIf="flagvalue !== undefined" src="{{flagvalue}}" alt="Header Language" height="16"> 
-          <img *ngIf="flagvalue === undefined" src="{{valueset}}" alt="Header Language" height="16">
+      <!-- Bell (only when pending inscriptions) -->
+      <div class="dropdown" dropdown *ngIf="inscriptions > 0">
+        <button type="button"
+                class="btn tp-icon-btn"
+                id="page-header-notifications-dropdown"
+                dropdownToggle>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="tp-badge">{{ inscriptions }}</span>
         </button>
-        <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-         
-          <a href="javascript:void(0);" class="dropdown-item notify-item" *ngFor="let item of listLang"
-            (click)="setLanguage(item.text, item.lang, item.flag)" [ngClass]="{'active': cookieValue === item.lang}">
-            <img src="{{item.flag}}" alt="user-image" class="me-1" height="12"> <span
-              class="align-middle">{{item.text}}</span>
-          </a>
-          
-        </div>
-      </div>
 
-      <div class="dropdown d-none d-lg-inline-block ms-1" dropdown style="background-color: azure !important;">
-        <button type="button" class="btn header-item noti-icon" dropdownToggle>
-          <i class="bx bx-customize"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" *dropdownMenu>
-          <div class="px-lg-2">
-            <div class="row no-gutters">
-              <div class="col">
-                <a class="dropdown-icon-item" href="javascript: void(0);">
-                  <img src="assets/images/brands/github.png" alt="Github">
-                  <span>GitHub</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="javascript: void(0);">
-                  <img src="assets/images/brands/bitbucket.png" alt="bitbucket">
-                  <span>Bitbucket</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="javascript: void(0);">
-                  <img src="assets/images/brands/dribbble.png" alt="dribbble">
-                  <span>Dribbble</span>
-                </a>
-              </div>
-            </div>
-
-            <div class="row no-gutters">
-              <div class="col">
-                <a class="dropdown-icon-item" href="javascript: void(0);">
-                  <img src="assets/images/brands/dropbox.png" alt="dropbox">
-                  <span>Dropbox</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="javascript: void(0);">
-                  <img src="assets/images/brands/mail_chimp.png" alt="mail_chimp">
-                  <span>Mail Chimp</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="javascript: void(0);">
-                  <img src="assets/images/brands/slack.png" alt="slack">
-                  <span>Slack</span>
-                </a>
-              </div>
-            </div>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end tp-notif-drop"
+             *dropdownMenu>
+          <div class="tp-notif-head">
+            <span>Notifications</span>
+            <a href="javascript:void(0);" class="tp-notif-see-all">Voir tout</a>
           </div>
-        </div> 
-      </div> -->
-
-      <!-- <div class="dropdown d-none d-lg-inline-block ms-1">
-        <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">
-          <i class="bx bx-fullscreen" style="color: rgb(10, 10, 10) !important;"></i>
-        </button>
-      </div>
-      <div class="dropdown d-inline-block" dropdown *ngIf="inscriptions > 0">
-        <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
-          dropdownToggle>
-          <i class="bx bx-bell bx-tada" style="color: rgb(17, 17, 17);"></i>
-          <span class="badge bg-danger rounded-pill">{{inscriptions}}</span>
-        </button>
-      </div> -->
-
-      <div class="dropdown d-inline-block" dropdown *ngIf="inscriptions > 0">
-        <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
-          dropdownToggle>
-          <i class="bx bx-bell bx-tada"></i>
-          <span class="badge bg-danger rounded-pill">{{inscriptions}}</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-          aria-labelledby="page-header-notifications-dropdown" *dropdownMenu>
-          <div class="p-3">
-            <div class="row align-items-center">
-              <div class="col">
-                <h6 class="m-0">Notifications</h6>
+          <ngx-simplebar style="height: 220px;">
+            <a href="javascript:void(0);" class="tp-notif-item">
+              <div class="tp-notif-icon tp-notif-icon--blue">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="8.5" cy="7" r="4"/>
+                  <line x1="20" y1="8" x2="20" y2="14"/>
+                  <line x1="23" y1="11" x2="17" y2="11"/>
+                </svg>
               </div>
-              <div class="col-auto">
-                <a href="javascript: void(0);" class="small">Voir Tous</a>
-              </div>
-            </div>
-          </div>
-          <ngx-simplebar style="position: relative; height: 230px;">
-            <a href="javascript: void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="avatar-xs me-3">
-                  <span class="avatar-title bg-primary rounded-circle font-size-16">
-                    <i class="bx bx-user-plus"></i>
-                  </span>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">Inscriptions en attentes</h6>
-                  <div class="font-size-13 text-muted">
-                    <p class="mb-1">{{ inscriptions }} nouvelle(s) inscription(s) en attente de validation.</p>
-                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> </p>
-                  </div>
-                </div>
+              <div class="tp-notif-body">
+                <p class="tp-notif-title">Inscriptions en attente</p>
+                <p class="tp-notif-text">
+                  {{ inscriptions }} nouvelle(s) inscription(s) à valider.
+                </p>
               </div>
             </a>
           </ngx-simplebar>
-        </div> 
-      </div>
-      
-      <div class="dropdown d-inline-block" dropdown>
-        <button type="button" class="btn header-item" dropdownToggle id="page-header-user-dropdown">
-          <!--img class="rounded-circle header-profile-user" src="assets/images/logo-scolarplus.png" alt="Header Avatar"-->
-          <img class="rounded-circle header-profile-user" src="assets/images/users/user-dummy-img.jpg" alt="Avatar">
-          <span class="d-none d-xl-inline-block ms-1">{{username}} </span>
-          <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-          
-          <a class="dropdown-item" routerLink="/scolar/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i>
-            Mon profil</a>
-          <!--a class="dropdown-item" href="javascript: void(0);"><i
-              class="bx bx-wallet font-size-16 align-middle me-1"></i>{{ 'HEADER.LOGIN.MY_WALLET' | translate}}</a>
-          <a class="dropdown-item d-block" href="javascript: void(0);"><span
-              class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i>{{
-            'HEADER.LOGIN.SETTINGS' | translate}} </a>
-          <a class="dropdown-item" href="javascript: void(0);"><i
-              class="bx bx-lock-open font-size-16 align-middle me-1"></i>
-            {{ 'HEADER.LOGIN.LOCK_SCREEN' | translate}}</a-->
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" href="javascript: void(0);" (click)="logout()"><i
-              class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i>
-            Se déconnecter</a>
         </div>
       </div>
 
-      <!-- <div class="dropdown d-inline-block">
-        <button type="button" class="btn header-item noti-icon right-bar-toggle" (click)="toggleRightSidebar()">
-          <i class="bx bx-cog bx-spin"></i>
+      <!-- User profile -->
+      <div class="dropdown" dropdown>
+        <button type="button"
+                class="btn tp-user-btn"
+                dropdownToggle
+                id="page-header-user-dropdown">
+          <img class="tp-avatar"
+               src="assets/images/users/user-dummy-img.jpg"
+               alt="Avatar">
+          <span class="tp-username d-none d-xl-inline-block">{{ username }}</span>
+          <svg class="d-none d-xl-inline-block tp-chevron"
+               width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
         </button>
-      </div> -->
+
+        <div class="dropdown-menu dropdown-menu-end tp-user-drop" *dropdownMenu>
+          <div class="tp-user-drop-header">
+            <img class="tp-drop-avatar"
+                 src="assets/images/users/user-dummy-img.jpg"
+                 alt="Avatar">
+            <div>
+              <p class="tp-drop-name">{{ username }}</p>
+              <p class="tp-drop-role">Administrateur</p>
+            </div>
+          </div>
+          <div class="dropdown-divider m-0"></div>
+          <a class="dropdown-item tp-drop-item" routerLink="/scolar/profile">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Mon profil
+          </a>
+          <div class="dropdown-divider m-0"></div>
+          <a class="dropdown-item tp-drop-item tp-drop-item--danger"
+             href="javascript:void(0);"
+             (click)="logout()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Se déconnecter
+          </a>
+        </div>
+      </div>
 
     </div>
   </div>

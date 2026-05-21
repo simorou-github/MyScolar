@@ -1,4 +1,133 @@
-a{
-    font-size: 13.5px !important;
-    color: black !important;
+// =============================================
+// ScolarPlus Sidebar – Light sky-blue theme
+//
+// Palette dérivée : #4A90D9 (brand blue) + blanc
+//   Fond sidebar  : #EDF4FB  (mix 10% blue + 90% white)
+//   Accent actif  : #4A90D9  (brand blue)
+//   Texte regular : #3D5A7A  (marine lisible)
+//   Texte hover   : #0D1B2E  (navy profond)
+// =============================================
+
+$brand-blue   : #4A90D9;
+$brand-navy   : #0D1B2E;
+$sidebar-soft : #EDF4FB;
+$font-brand   : 'Sora', 'Segoe UI', sans-serif;
+$font-body    : 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+::ng-deep {
+
+  // ------------------------------------------
+  // Fond et bordure du conteneur
+  // ------------------------------------------
+  .vertical-menu {
+    background: $sidebar-soft !important;
+    border-right: 1.5px solid rgba(74, 144, 217, 0.12) !important;
+    box-shadow: 2px 0 16px rgba(74, 144, 217, 0.06) !important;
+  }
+
+  // ------------------------------------------
+  // Titres de section (MENU PRINCIPAL…)
+  // ------------------------------------------
+  body[data-sidebar="light"] .menu-title {
+    font-family    : $font-brand !important;
+    font-size      : 9.5px !important;
+    font-weight    : 700 !important;
+    letter-spacing : 0.14em !important;
+    text-transform : uppercase !important;
+    color          : rgba(74, 144, 217, 0.50) !important;
+    padding        : 22px 20px 8px !important;
+  }
+
+  // ------------------------------------------
+  // Liens niveau 1
+  // ------------------------------------------
+  body[data-sidebar="light"] #sidebar-menu ul li a {
+    font-family    : $font-body !important;
+    font-size      : 13.5px !important;
+    font-weight    : 500 !important;
+    letter-spacing : 0.01em;
+    color          : #3D5A7A !important;
+    border-left    : 3px solid transparent;
+    padding-left   : calc(1.5rem - 3px) !important;
+    transition     : all 0.18s ease !important;
+    border-radius  : 0 8px 8px 0;
+
+    i {
+      color      : #8BAAC8 !important;
+      transition : color 0.18s ease !important;
+    }
+
+    &:hover {
+      color            : $brand-navy !important;
+      background       : rgba(74, 144, 217, 0.10) !important;
+      border-left-color: rgba(74, 144, 217, 0.40) !important;
+
+      i { color: $brand-blue !important; }
+    }
+  }
+
+  // ------------------------------------------
+  // Liens niveau 2 (sous-menu)
+  // ------------------------------------------
+  body[data-sidebar="light"] #sidebar-menu ul li ul.sub-menu li a {
+    font-size      : 13px !important;
+    color          : #5A789A !important;
+    padding-left   : calc(3.5rem - 3px) !important;
+    border-left    : none !important;
+    border-radius  : 0 8px 8px 0;
+
+    &:hover {
+      color      : $brand-navy !important;
+      background : rgba(74, 144, 217, 0.08) !important;
+    }
+  }
+
+  // Niveau 3
+  body[data-sidebar="light"] #sidebar-menu ul li ul.sub-menu li ul.sub-menu li a {
+    padding-left: calc(4.5rem - 3px) !important;
+  }
+
+  // ------------------------------------------
+  // Lien actif — feuille (routerLinkActive)
+  // ------------------------------------------
+  body[data-sidebar="light"] #sidebar-menu ul li a.active {
+    color             : #2B6BAA !important;
+    font-weight       : 600 !important;
+    background        : rgba(74, 144, 217, 0.14) !important;
+    border-left-color : $brand-blue !important;
+
+    i { color: $brand-blue !important; }
+  }
+
+  // Actif niveau 2
+  body[data-sidebar="light"] #sidebar-menu ul li ul.sub-menu li a.active {
+    color       : $brand-blue !important;
+    font-weight : 600 !important;
+    background  : rgba(74, 144, 217, 0.10) !important;
+    border-left : none !important;
+  }
+
+  // ------------------------------------------
+  // Parent ouvert (mm-active sur le <li>)
+  // ------------------------------------------
+  body[data-sidebar="light"] #sidebar-menu .mm-active > a {
+    color             : $brand-navy !important;
+    font-weight       : 600 !important;
+    background        : rgba(74, 144, 217, 0.10) !important;
+    border-left-color : rgba(74, 144, 217, 0.45) !important;
+
+    i { color: $brand-blue !important; }
+  }
+
+  // Chevron de la flèche has-arrow
+  body[data-sidebar="light"] #sidebar-menu .mm-active > .has-arrow::after {
+    color: $brand-blue;
+  }
+
+  // ------------------------------------------
+  // Scrollbar simplebar
+  // ------------------------------------------
+  .vertical-menu .simplebar-scrollbar::before {
+    background: rgba(74, 144, 217, 0.25) !important;
+  }
 }

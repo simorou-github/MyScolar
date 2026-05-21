@@ -4,22 +4,23 @@
 // custom-variables
 //
 
-// Vertical Sidebar  Light
-$sidebar-bg:                                          #ffffff;
-$sidebar-menu-item-color:                             #545a6d;
-$sidebar-menu-sub-item-color:                         #545a6d;
-$sidebar-menu-item-icon-color:                        #7f8387;
-$sidebar-menu-item-hover-color:                       #383c40;
-$sidebar-menu-item-active-color:                      #556ee6;
+// Vertical Sidebar – Light (ScolarPlus soft sky-blue)
+// Fond = mix 10 % #4A90D9 + 90 % blanc → #EDF4FB
+$sidebar-bg:                                          #EDF4FB;
+$sidebar-menu-item-color:                             #3D5A7A; // bleu-marine lisible
+$sidebar-menu-sub-item-color:                         #5A789A; // légèrement plus clair
+$sidebar-menu-item-icon-color:                        #8BAAC8; // icône atténuée
+$sidebar-menu-item-hover-color:                       #0D1B2E; // navy au survol
+$sidebar-menu-item-active-color:                      #2B6BAA; // bleu actif charte
 $sidebar-width:                                       250px;
 $sidebar-collapsed-width:                             70px;
 $sidebar-width-sm:                                    160px;
 
-// Vertical Sidebar - Dark
-$sidebar-dark-bg:                                     #2a3042; //2c313a
-$sidebar-dark-menu-item-color:                        #a6b0cf;
-$sidebar-dark-menu-sub-item-color:                    #79829c;
-$sidebar-dark-menu-item-icon-color:                   #6a7187;
+// Vertical Sidebar - Dark (ScolarPlus brand)
+$sidebar-dark-bg:                                     #0D1B2E; // brand deep navy
+$sidebar-dark-menu-item-color:                        #8E9FBE; // muted blue-gray
+$sidebar-dark-menu-sub-item-color:                    #6B7D9A; // dimmer sub-items
+$sidebar-dark-menu-item-icon-color:                   #556080; // icon dim
 $sidebar-dark-menu-item-hover-color:                  #ffffff;
 $sidebar-dark-menu-item-active-color:                 #ffffff;
 
@@ -28,9 +29,9 @@ $header-height:                                       70px;
 $header-bg:                                           $white;
 $header-item-color:                                   #555b6d;
 
-// Topbar - Dark
-$header-dark-bg:                                      #2a3042;
-$header-dark-item-color:                              #e9ecef;
+// Topbar - Dark (ScolarPlus brand)
+$header-dark-bg:                                      #0D1B2E; // brand deep navy
+$header-dark-item-color:                              rgba(255,255,255,0.75);
 
 // Topbar Search
 $topbar-search-bg:                                    #f3f3f9;

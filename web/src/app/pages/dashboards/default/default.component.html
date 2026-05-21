@@ -1,215 +1,164 @@
 <app-loader></app-loader>
-<div class="container-fluid">
-    <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 font-size-18">TABLEAU DE BORD</h4>
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <ng-container>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Tableau de bord</a>
-                            </li>
-                        </ng-container>
-                    </ol>
-                </div>
-            </div>
-        </div>
+<div class="db-wrapper">
+
+  <!-- ── Page title ────────────────────────────── -->
+  <div class="db-page-head">
+    <div class="db-page-head-left">
+      <h1 class="db-page-title">Tableau de bord</h1>
+      <p class="db-page-sub">Vue d'ensemble de votre établissement</p>
+    </div>
+    <div class="db-page-head-right">
+      <span class="db-year-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Année scolaire {{ academicYear }}
+      </span>
+    </div>
+  </div>
+
+  <!-- ── Stat cards ────────────────────────────── -->
+  <div class="db-stats-row">
+
+    <div class="db-stat-card">
+      <div class="db-stat-icon db-stat-icon--blue">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="db-stat-body">
+        <span class="db-stat-label">Classes</span>
+        <strong class="db-stat-value">{{ schoolClasses?.length ?? '—' }}</strong>
+        <span class="db-stat-hint">Classes enregistrées</span>
+      </div>
     </div>
 
-
-    <div class="row">
-        <div class="col-xl-6">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">NOMBRE DE CLASSES</p>
-                                    <h4 class="mb-0">{{schoolClasses?.length }}</h4>
-                                </div>
-                                <div class="flex-shrink-0 align-self-center">
-                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                        <span class="avatar-title">
-                                            <i class="bx bx bxs-building font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">NOMBRE DE FRAIS</p>
-                                    <h4 class="mb-0">{{typeFees?.length}}</h4>
-                                </div>
-                                <div class="flex-shrink-0 align-self-center">
-                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                        <span class="avatar-title">
-                                            <i class="bx bx bxs-wallet font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-        </div>
-        <div class="col-xl-6">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">APPRENANTS</p>
-                                    <h4 class="mb-0"> {{ students?.length }} </h4>
-                                </div>
-                                <div class="flex-shrink-0 align-self-center">
-                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                        <span class="avatar-title">
-                                            <i class="bx bx bxs-group font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">TRANSACTIONS</p>
-                                    <h4 class="mb-0">{{ payments?.length }}</h4>
-                                </div>
-                                <div class="flex-shrink-0 align-self-center">
-                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                        <span class="avatar-title">
-                                            <i class="bx bx bxs-dollar-circle font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="db-stat-card">
+      <div class="db-stat-icon db-stat-icon--orange">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div class="db-stat-body">
+        <span class="db-stat-label">Types de frais</span>
+        <strong class="db-stat-value">{{ typeFees?.length ?? '—' }}</strong>
+        <span class="db-stat-hint">Frais à collecter</span>
+      </div>
     </div>
 
-    <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-
-    <!-- Liste des frais de l'école -->
-    <div class="card">
-        <div class="card-body">
-            <div class="row ht-2">
-                <div class="col-md-12 h5">Liste des frais à collecter : ({{typeFees?.length}}) </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
-                    id="projectList-table">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col" style="width: 50px">#</th>
-                            <th scope="col">Libellé frais</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngIf="isProcessing" class="text-center">
-                            <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
-                        </tr>
-                        <tr *ngIf="typeFees?.length == 0" class="text-center">
-                            <td colspan="5">Aucune donnée trouvée !</td>
-                        </tr>
-                        <tr
-                            *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-                            <td>{{i+1}}</td>
-                            <td>{{typefee.label}}</td>
-                            <td>{{typefee.created_at | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
-                            <td>
-                                <span class="badge p-1" [ngClass]="{ 'bg-success': typefee?.status == '1',
-                        'bg-danger': typefee?.status == '0' }">{{typefee.status ? 'Activé' :
-                                    'Désactivé'}}</span>
-                            </td>
-
-                        </tr>
-                    </tbody>
-
-                </table>
-                <div class="pagination-style">
-                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
-                        (pageChange)="p = $event"></pagination-controls>
-                </div>
-            </div>
-        </div>
-
+    <div class="db-stat-card">
+      <div class="db-stat-icon db-stat-icon--green">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="db-stat-body">
+        <span class="db-stat-label">Apprenants</span>
+        <strong class="db-stat-value">{{ students?.length ?? '—' }}</strong>
+        <span class="db-stat-hint">Élèves inscrits</span>
+      </div>
     </div>
 
+    <div class="db-stat-card">
+      <div class="db-stat-icon db-stat-icon--purple">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="db-stat-body">
+        <span class="db-stat-label">Transactions</span>
+        <strong class="db-stat-value">{{ payments?.length ?? '—' }}</strong>
+        <span class="db-stat-hint">Paiements effectués</span>
+      </div>
+    </div>
 
-    <ng-template #notifDashboardModal role="document" let-modal>
-        <div class="modal-header">
-            <h3 class="modal-title" id="addClassForm"><b>Notification</b></h3>
-        </div>
+  </div>
 
-        <div class="modal-body">
-            <div class="card">
-                <div class="card-body p-1">
-                    <div class="text-center">
-                        <div class="avatar-md mx-auto mb-4">
-                            <div class="avatar-title bg-light rounded-circle text-primary h1">
-                                <i class="mdi mdi-email-open"></i>
-                            </div>
-                        </div>
+  <!-- ── Loader ─────────────────────────────────── -->
+  <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
 
-                        <div class="row justify-content-center">
-                            <div class="col-xl-10 p-2">
-                                <h3 class="text-danger"><b>Attention !</b></h3>
-                                <p class="text-muted h5 mb-2">Il existe des frais non encore affectés et/ou des classes
-                                    sans auccun frais associé.</p>
-                                <div class="bg-light rounded p-2">
-                                    <table>
-                                        <tr *ngFor="let sc of scNotAssigned">
-                                            <td style="text-align: left !important;">
-                                                <span class="label">La classe <b>{{sc.classe?.code}} - {{sc.groupe?.code}}</b> n'a accun frais associé.</span>
-                                            </td>
-                                        </tr>
-                                        <tr *ngFor="let fees of feesNotAssigned">
-                                            <td style="text-align: left !important;">
-                                                <span class="label">Les <b>{{fees.label}}</b> ne sont affectés à aucune classe.</span>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>                                
-                                <p>
-                                    <span>Veuillez compléter les affectations nécessaires pour garantir le bon
-                                        fonctionnement de votre espace.</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- ── Fees table ─────────────────────────────── -->
+  <div class="db-card">
+    <div class="db-card-header">
+      <div class="db-card-header-left">
+        <div class="db-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-        <div class="modal-footer">
-            <div class="hstack gap-2 justify-content-end">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                    (click)="closeModal()">Fermer</button>
-            </div>
+        <div>
+          <h2 class="db-card-title">Frais à collecter</h2>
+          <p class="db-card-sub">{{ typeFees?.length ?? 0 }} type(s) de frais configurés</p>
         </div>
-    </ng-template>
+      </div>
+    </div>
+
+    <div class="db-table-wrap">
+      <table class="db-table">
+        <thead>
+          <tr>
+            <th class="db-th-num">#</th>
+            <th>Libellé du frais</th>
+            <th>Date de création</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isProcessing">
+            <td colspan="4" class="db-td-empty">
+              <span class="db-loading-dots">
+                <span></span><span></span><span></span>
+              </span>
+              Chargement en cours…
+            </td>
+          </tr>
+          <tr *ngIf="!isProcessing && typeFees?.length == 0">
+            <td colspan="4" class="db-td-empty">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              <span>Aucune donnée trouvée</span>
+            </td>
+          </tr>
+          <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+            <td class="db-td-num">{{ i + 1 }}</td>
+            <td class="db-td-label">{{ typefee.label }}</td>
+            <td class="db-td-date">{{ typefee.created_at | date : 'dd/MM/yyyy · HH:mm' }}</td>
+            <td>
+              <span class="db-badge" [ngClass]="typefee?.status == '1' ? 'db-badge--active' : 'db-badge--inactive'">
+                <span class="db-badge-dot"></span>
+                {{ typefee.status ? 'Activé' : 'Désactivé' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-end">
+      <pagination-controls previousLabel="Précédent" nextLabel="Suivant" (pageChange)="p = $event"></pagination-controls>
+    </div>
+  </div>
+
+  <!-- ── Notification modal ─────────────────────── -->
+  <ng-template #notifDashboardModal role="document" let-modal>
+    <div class="db-notif-header">
+      <div class="db-notif-header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div>
+        <h3 class="db-notif-title">Affectations incomplètes</h3>
+        <p class="db-notif-subtitle">Des configurations requièrent votre attention</p>
+      </div>
+    </div>
+
+    <div class="db-notif-body">
+      <p class="db-notif-intro">Les éléments suivants ne sont pas encore configurés correctement :</p>
+      <div class="db-notif-list">
+        <div class="db-notif-item db-notif-item--class" *ngFor="let sc of scNotAssigned">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          La classe <strong>{{ sc.classe?.code }} – {{ sc.groupe?.code }}</strong> n'a aucun frais associé.
+        </div>
+        <div class="db-notif-item db-notif-item--fee" *ngFor="let fees of feesNotAssigned">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Les <strong>{{ fees.label }}</strong> ne sont affectés à aucune classe.
+        </div>
+      </div>
+      <p class="db-notif-note">Veuillez compléter les affectations nécessaires pour garantir le bon fonctionnement de votre espace.</p>
+    </div>
+
+    <div class="db-notif-footer">
+      <button type="button" class="db-notif-close-btn" (click)="closeModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Fermer
+      </button>
+    </div>
+  </ng-template>
+
 </div>

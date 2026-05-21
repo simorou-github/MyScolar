@@ -7,6 +7,6 @@ export const LAYOUT_WIDTH = 'fluid';
 
 export const SIDEBAR_TYPE = 'light';
 
-export const TOPBAR = 'dark';
+export const TOPBAR = 'light';
 
 export const LAYOUT_MODE = 'light';
