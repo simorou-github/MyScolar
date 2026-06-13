@@ -135,18 +135,66 @@
                                     </div>
 
                                     <hr>
-                                    <h5 class="mt-2 mb-2"><i class="fa fa-magic text-warning"></i> Permissions du
-                                        Rôle</h5>
-                                    <ng-container *ngFor="let perm of permissions; let i = index;">
-                                        <div class="col-3">
-                                            <input class="form-check-input" type="checkbox"
-                                                [checked]="isPermissionChecked(perm.name)"
-                                                (change)="checkBox($event, perm.name)">&nbsp;&nbsp;
-                                            <label class="form-check-label" for="formRadio{{i}}">
-                                                {{perm.label}}
-                                            </label>
+
+                                    <!-- En-tête permissions -->
+                                    <div class="mp-perm-header">
+                                      <div class="mp-perm-title">
+                                        <i class="fa fa-magic text-warning me-2"></i>
+                                        <span>Permissions du Rôle</span>
+                                        <span class="mp-total-badge">
+                                          {{ permissionsTab.length }} / {{ permissions?.length ?? 0 }}
+                                        </span>
+                                      </div>
+                                      <div class="mp-bulk-actions">
+                                        <button type="button" class="mp-bulk-btn mp-bulk-btn--select" (click)="selectAll()">
+                                          Tout sélectionner
+                                        </button>
+                                        <button type="button" class="mp-bulk-btn mp-bulk-btn--deselect" (click)="deselectAll()">
+                                          Tout désélectionner
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    <!-- Groupes de permissions -->
+                                    <div class="mp-groups">
+                                      <div class="mp-group"
+                                           *ngFor="let group of permissionsGrouped; trackBy: trackByGroup">
+
+                                        <!-- En-tête du groupe -->
+                                        <div class="mp-group-header">
+                                          <button type="button"
+                                                  class="mp-group-toggle-btn"
+                                                  [class.mp-group-toggle-btn--full]="isGroupFullySelected(group)"
+                                                  (click)="toggleGroupPermissions(group)">
+                                            <span>{{ isGroupFullySelected(group) ? '−' : '+' }}</span>
+                                          </button>
+                                          <span class="mp-group-name">{{ group.name }}</span>
+                                          <span class="mp-group-badge">
+                                            {{ getGroupSelectedCount(group) }}/{{ group.permissions.length }}
+                                          </span>
+                                          <button type="button" class="mp-group-chevron" (click)="toggleGroup(group)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2.5">
+                                              <polyline *ngIf="group.expanded" points="18 15 12 9 6 15"/>
+                                              <polyline *ngIf="!group.expanded" points="6 9 12 15 18 9"/>
+                                            </svg>
+                                          </button>
                                         </div>
-                                    </ng-container>
+
+                                        <!-- Permissions du groupe -->
+                                        <div class="mp-group-body" *ngIf="group.expanded">
+                                          <div class="mp-perm-item"
+                                               *ngFor="let perm of group.permissions; trackBy: trackByPerm"
+                                               (click)="togglePermission(perm.name)">
+                                            <span class="mp-perm-checkmark"
+                                                  [class.mp-perm-checkmark--checked]="isPermissionChecked(perm.name)">
+                                            </span>
+                                            <span class="mp-perm-text">{{ perm.label }}</span>
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>

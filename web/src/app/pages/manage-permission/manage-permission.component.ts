@@ -17,10 +17,11 @@ export class ManagePermissionComponent {
   message: any; roleForm!: FormGroup; roleSearchForm!: FormGroup; modalRef?: BsModalRef;
   isSearchForm: boolean; p: number = 1; permissionsTab: any[] = [];
   term: string = '';
-  rolePermissions: any; 
+  rolePermissions: any;
   permissions: any; isRoleForm: boolean = false;
-  isEditing: boolean = false; // Nouvelle variable pour gérer l'état d'édition
-  currentRoleId: number | null = null; // Nouvelle variable pour stocker l'ID du rôle en cours d'édition
+  isEditing: boolean = false;
+  currentRoleId: number | null = null;
+  permissionsGrouped: { name: string; permissions: any[]; expanded: boolean }[] = [];
 
   constructor(private fb: FormBuilder, private manageRolePermission: ManageRolePermissionService, private tokenService: TokenService,
     private modalService: BsModalService, private toastr: ToastrService, private ngxLoader: NgxUiLoaderService) {
@@ -74,6 +75,7 @@ export class ManagePermissionComponent {
           this.permissions = v.data;
           this.ngxLoader.stopLoader('loader-spin');
           this.message = v.message;
+          this.buildGroups();
         } else {
           this.ngxLoader.stopLoader('loader-spin');
         }
@@ -87,6 +89,69 @@ export class ManagePermissionComponent {
       complete: () => {
       }
     });
+  }
+
+  // ── Groupement des permissions ───────────────────────────
+  private buildGroups() {
+    if (!this.permissions) return;
+    const map = new Map<string, any[]>();
+    for (const perm of this.permissions) {
+      const words = (perm.label as string).trim().split(/\s+/);
+      const last = words[words.length - 1];
+      const key = last.charAt(0).toUpperCase() + last.slice(1);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(perm);
+    }
+    this.permissionsGrouped = Array.from(map.entries()).map(([name, perms]) => ({
+      name,
+      permissions: perms,
+      expanded: true
+    }));
+  }
+
+  trackByGroup(_: number, g: any) { return g.name; }
+  trackByPerm(_: number, p: any) { return p.name; }
+
+  toggleGroup(group: any) {
+    group.expanded = !group.expanded;
+  }
+
+  getGroupSelectedCount(group: any): number {
+    return group.permissions.filter((p: any) => this.permissionsTab.includes(p.name)).length;
+  }
+
+  isGroupFullySelected(group: any): boolean {
+    return group.permissions.length > 0 &&
+           group.permissions.every((p: any) => this.permissionsTab.includes(p.name));
+  }
+
+  toggleGroupPermissions(group: any) {
+    if (this.isGroupFullySelected(group)) {
+      this.permissionsTab = this.permissionsTab.filter(
+        n => !group.permissions.some((p: any) => p.name === n)
+      );
+    } else {
+      const toAdd = group.permissions
+        .filter((p: any) => !this.permissionsTab.includes(p.name))
+        .map((p: any) => p.name);
+      this.permissionsTab = [...this.permissionsTab, ...toAdd];
+    }
+  }
+
+  togglePermission(name: string) {
+    if (this.permissionsTab.includes(name)) {
+      this.permissionsTab = this.permissionsTab.filter(n => n !== name);
+    } else {
+      this.permissionsTab = [...this.permissionsTab, name];
+    }
+  }
+
+  selectAll() {
+    this.permissionsTab = this.permissions.map((p: any) => p.name);
+  }
+
+  deselectAll() {
+    this.permissionsTab = [];
   }
 
 
@@ -103,7 +168,7 @@ export class ManagePermissionComponent {
 
   checkBox(event: any, perm: any) {
     if (event.target.checked) {
-      this.permissionsTab.push(perm);
+      this.permissionsTab = [...this.permissionsTab, perm];
     } else {
       this.permissionsTab = this.permissionsTab.filter(element => element !== perm);
     }

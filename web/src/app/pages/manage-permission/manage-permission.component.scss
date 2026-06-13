@@ -1,0 +1,212 @@
+// ── En-tête permissions ─────────────────────────────────
+.mp-perm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 0;
+}
+
+.mp-perm-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.mp-total-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+// ── Boutons bulk ────────────────────────────────────────
+.mp-bulk-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.mp-bulk-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &--select {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+
+    &:hover { background: #DBEAFE; }
+  }
+
+  &--deselect {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+
+    &:hover { background: #FEE2E2; }
+  }
+}
+
+// ── Conteneur des groupes ───────────────────────────────
+.mp-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+// ── Groupe individuel ───────────────────────────────────
+.mp-group {
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.mp-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+// Bouton toggle tout le groupe (carré bleu avec + ou -)
+.mp-group-toggle-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: #BFDBFE;
+  color: #1D4ED8;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+
+  &--full {
+    background: #1D4ED8;
+    color: #fff;
+  }
+
+  &:hover {
+    background: #93C5FD;
+    color: #1D4ED8;
+  }
+
+  &--full:hover {
+    background: #1E40AF;
+    color: #fff;
+  }
+}
+
+.mp-group-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.mp-group-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  border-radius: 20px;
+  padding: 1px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mp-group-chevron {
+  border: none;
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color 0.15s;
+
+  &:hover { color: #1D4ED8; }
+}
+
+// ── Corps du groupe (permissions) ───────────────────────
+.mp-group-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0;
+  padding: 4px 0;
+}
+
+.mp-perm-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover { background: #F1F5F9; }
+  &:hover .mp-perm-checkmark { border-color: #1D4ED8; }
+}
+
+.mp-perm-checkmark {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 4px;
+  background: #fff;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.15s;
+
+  &--checked {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+  }
+}
+
+.mp-perm-text {
+  font-size: 12.5px;
+  color: #334155;
+  line-height: 1.4;
+}
