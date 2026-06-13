@@ -363,8 +363,9 @@ class FeesManageController extends Controller
 
             //Get School country's operator
             $operators = Operator::with('country')
-                ->where('country_id', $student->school->country_id)->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
-                ->whereNotNull('balance_request_url')->get();
+                ->where('country_id', $student->school->country_id)
+                ->where('is_cash_mode', false)
+                ->where('status', true)->get();
 
             return response()->json([
                 'balanceFees' => $balanceFees,
@@ -562,8 +563,7 @@ class FeesManageController extends Controller
         //Log::info($request->school_id);
         
         if (!$operator = Operator::where('id',$request->operator)
-            ->whereNull('api_key')->whereNull('token_url')->whereNull('pay_request_url')
-                ->whereNull('balance_request_url')->first()) {
+            ->where('is_cash_mode', true)->first()) {
             return response()->json([
                 'data' => null,
                 'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
@@ -702,8 +702,7 @@ class FeesManageController extends Controller
         }
 
         if (!$operator = Operator::where('id',$request->data['operator'])
-            ->whereNull('api_key')->whereNull('token_url')->whereNull('pay_request_url')
-                ->whereNull('balance_request_url')->first()) {
+            ->where('is_cash_mode', true)->first()) {
             return response()->json([
                 'data' => null,
                 'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
@@ -820,7 +819,8 @@ class FeesManageController extends Controller
             // Set options of page and load data in blade file
             $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])
                 ->where('payment_id', $payment->id)->get();
-                
+
+            $operator = Operator::with('country')->find($payment->operator);
             $qrSvg = QrCode::format('svg')->size($size)->generate($payment->id);
             $pdf = PDF::setOptions([
                 'isJavascriptEnabled' => true,
@@ -828,7 +828,7 @@ class FeesManageController extends Controller
                 'isRemoteEnabled' => true,
                 'isPhpEnabled' => true,
                 "dpi" => 96,
-            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details, 'qrSvg' => $qrSvg,]);
+            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details, 'qrSvg' => $qrSvg, 'operator' => $operator]);
 
             // Name of file
             $file_name = "Recu_SP_" . $id . ".pdf";

@@ -31,7 +31,7 @@ export class PaiementScolaireComponent {
       fees_amount: ['', [Validators.required]],
       balance: ['', [Validators.required]],
       amount: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
+      phone: ['', [Validators.required, Validators.pattern("^[0-9]+$")]],
       email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"), Validators.required]],
       details: [],
     });
@@ -41,10 +41,19 @@ export class PaiementScolaireComponent {
       fees_amount: ['', [Validators.required]],
       balance: ['', [Validators.required]],
       amount: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
+      phone: ['', [Validators.required, Validators.pattern("^[0-9]+$")]],
       email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"), Validators.required]],
       details: [],
     });
+  }
+
+  onPhoneInput(event: any, form: FormGroup) {
+    const input = event.target as HTMLInputElement;
+    const digitsOnly = input.value.replace(/\D/g, '');
+    if (digitsOnly !== input.value) {
+      input.value = digitsOnly;
+    }
+    form.controls['phone'].setValue(digitsOnly, { emitEvent: false });
   }
 
   openPayementModal(student: any, fees: any, content: any) {
@@ -91,7 +100,7 @@ export class PaiementScolaireComponent {
             fees_amount: ['', [Validators.required]],
             balance: ['', [Validators.required]],
             amount: ['', [Validators.required]],
-            phone: ['', [Validators.required]],
+            phone: ['', [Validators.required, Validators.pattern("^[0-9]+$")]],
             email: ['', [Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
             details: [],
           });

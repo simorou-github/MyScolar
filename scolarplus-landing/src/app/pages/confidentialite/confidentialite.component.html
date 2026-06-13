@@ -1,0 +1,120 @@
+<!-- NAVBAR -->
+<nav class="pc-navbar">
+  <div class="container nav-inner">
+    <a routerLink="/" class="nav-logo">
+      <div class="logo-mark">
+        <span class="lm-s">s</span>
+        <span class="lm-dot"></span>
+      </div>
+      <div class="logo-text-group">
+        <span class="logo-text">Scolar<strong><b style="color: #ea5f2c;">P</b>lus</strong></span>
+        <span class="logo-tagline">Votre solution digitale</span>
+      </div>
+    </a>
+    <a routerLink="/" class="btn-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Retour à l'accueil
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="pc-hero">
+  <div class="container">
+    <div class="section-label"><span class="dot"></span> Données &amp; vie privée</div>
+    <h1>Politique de <span class="gradient-text">Confidentialité</span></h1>
+    <p class="pc-subtitle">
+      Découvrez comment NOVAPLUS CORPORATION collecte, utilise et protège
+      vos données personnelles sur la plateforme Scolar Plus.
+    </p>
+    <div class="pc-meta">
+      <span>📅 Dernière mise à jour : {{ lastUpdate }}</span>
+      <span>🛡️ Conforme à la loi béninoise n° 2017-20</span>
+    </div>
+  </div>
+</header>
+
+<!-- WIZARD -->
+<section class="pc-body">
+  <div class="container pc-layout">
+
+    <!-- Step dots / mini nav -->
+    <div class="pc-steps-nav">
+      <button class="pc-step-dot"
+              *ngFor="let s of sections; let i = index"
+              [class.active]="current() === i"
+              [class.done]="i < current()"
+              (click)="goTo(i)"
+              [attr.aria-label]="s.title">
+        <span class="dot-num">{{ i + 1 }}</span>
+        <span class="dot-label">{{ s.title }}</span>
+      </button>
+    </div>
+
+    <!-- Card -->
+    <div class="pc-card">
+      <div class="pc-progress">
+        <div class="pc-progress-bar" [style.width]="progress() + '%'"></div>
+      </div>
+
+      <div class="pc-card-head">
+        <span class="pc-step-tag">Étape {{ current() + 1 }} / {{ total }}</span>
+        <h2>{{ sections[current()].title }}</h2>
+      </div>
+
+      <div class="pc-card-content">
+        <p *ngFor="let p of sections[current()].paragraphs">{{ p }}</p>
+
+        <ul class="pc-list" *ngIf="sections[current()].list">
+          <li *ngFor="let item of sections[current()].list">{{ item }}</li>
+        </ul>
+
+        <div class="pc-table-wrap" *ngIf="sections[current()].table as t">
+          <table class="pc-table">
+            <thead>
+              <tr>
+                <th *ngFor="let h of t.headers">{{ h }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of t.rows">
+                <td *ngFor="let cell of row">{{ cell }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pc-subsection" *ngFor="let sub of sections[current()].subsections">
+          <h3 *ngIf="sub.title">{{ sub.title }}</h3>
+          <p *ngFor="let p of sub.paragraphs">{{ p }}</p>
+          <ul class="pc-list" *ngIf="sub.list">
+            <li *ngFor="let item of sub.list">{{ item }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="pc-nav-buttons">
+        <button class="btn-pc-prev" (click)="prev()" [disabled]="current() === 0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Précédent
+        </button>
+
+        <span class="pc-page-indicator">{{ current() + 1 }} / {{ total }}</span>
+
+        <button class="btn-pc-next" (click)="next()" [disabled]="current() === total - 1">
+          Suivant
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="pc-page-footer">
+  <div class="container footer-bottom-inner">
+    <p>© 2026 Scolar Plus. Tous droits réservés.</p>
+    <p>Editeur | NovaPlus Corporation</p>
+  </div>
+</footer>

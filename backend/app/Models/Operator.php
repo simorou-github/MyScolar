@@ -12,23 +12,16 @@ class Operator extends Model
     public $keyType = 'string'; 
     public $fillable = [
         'id',
-        'name', 
-        'path_logo', 
+        'name',
+        'path_logo',
         'is_cash_mode',
-        'status', 
+        'status',
         'country_id',
-        'token_url',
-        'pay_request_url',
-        'balance_request_url',        
-        'api_key',
         'reference_id',
-        'secondary_key',
         'scolar_rate',
     ];
 
     protected $hidden = [
-        'api_key',
-        'secondary_key',
         'reference_id',
     ];
 

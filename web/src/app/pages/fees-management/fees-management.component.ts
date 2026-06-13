@@ -111,7 +111,7 @@ export class FeesManagementComponent {
             this.feesTypeForm.get('school_id').patchValue(data.school_id);
             this.feesTypeForm.get('action').setValue('update');
         }
-        this.modalRef = this.modalService.show(feesTypeModal, { class: 'modal-md' });
+        this.modalRef = this.modalService.show(feesTypeModal, { class: 'drawer-end' });
     }
 
     showSuccess(msg: string) {

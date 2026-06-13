@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="pvp-screen-amount-wrap">
                                     <p class="pvp-amount-label">Montant à payer</p>
-                                    <h3 class="pvp-amount">₣ 45 000</h3>
+                                    <h3 class="pvp-amount">45 000 FCFA</h3>
                                     <div class="pvp-amount-badge">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                         Paiement sécurisé
@@ -129,23 +129,28 @@
                         </p>
                         <form #searchForm="ngForm" (ngSubmit)="getDataForPayment(searchForm)">
                             <div class="row g-3">
-                                <div class="col-lg-3">
+                                <div class="col-lg-4">
                                     <label class="pfp-label">Code Scolar</label>
                                     <input class="form-control pfp-input text-uppercase" type="text"
-                                        ngModel required name="code_scolar" placeholder="Ex : SC-00123">
+                                        ngModel required name="code_scolar" placeholder="Ex : BJ900001">
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-4">
                                     <label class="pfp-label">Date de naissance</label>
                                     <input class="form-control pfp-input" type="date"
                                         name="birthday" ngModel required>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-4">
                                     <label class="pfp-label">Année scolaire</label>
                                     <select class="form-select pfp-input" name="academic_year" ngModel required>
                                         <option *ngFor="let year of academic_years" value="{{year.academic_year}}">
                                             {{year?.academic_year}}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-lg-9">
+                                    
                                 </div>
                                 <div class="col-lg-3 d-flex align-items-end">
                                     <button type="submit" class="btn pfp-btn-search w-100"
@@ -220,7 +225,7 @@
                 <div class="pfp-card" *ngIf="balanceFees">
                     <div class="pfp-card-header pfp-card-header--blue">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                        Frais scolaires
+                        Frais scolaires ({{ balanceFees?.length }})
                     </div>
                     <div class="pfp-card-body p-0">
                         <table class="table pfp-table mb-0">
@@ -258,6 +263,7 @@
                                     <td>{{ balance.due_date | date:'dd/MM/yyyy' }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn pfp-btn-pay"
+                                            [class.pfp-btn-pay--partial]="balance.balance > 0 && balance.balance < balance.fees_amount"
                                             *ngIf="balance.balance > 0"
                                             (click)="openPayementModal(student, balance, paiement)">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -383,8 +389,9 @@
                 <div class="row g-3 mb-3">
                     <div class="col-lg-4">
                         <label class="pfp-label">Téléphone Mobile Money <span class="text-danger">*</span></label>
-                        <input type="phone" class="form-control pfp-input" formControlName="phone"
-                            required maxlength="20" placeholder="+229 XX XX XX XX">
+                        <input type="text" class="form-control pfp-input" formControlName="phone"
+                            required maxlength="20" inputmode="numeric" pattern="[0-9]*"
+                            (input)="onPhoneInput($event, paymentForm)" placeholder="XX XX XX XX">
                     </div>
                     <div class="col-lg-8">
                         <label class="pfp-label">Email (reçu électronique) <span class="text-danger">*</span></label>
@@ -403,7 +410,7 @@
             <div class="pfp-modal-footer-row">
                 <div class="pfp-modal-security">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <span>Paiement 100% sécurisé par ScolarPlus</span>
+                    <span>Paiement 100% sécurisé</span>
                 </div>
                 <div class="pfp-modal-actions">
                     <button type="button" class="btn pfp-btn-cancel" (click)="closeModal()">
@@ -526,8 +533,9 @@
                 <div class="row g-3 mb-3">
                     <div class="col-lg-4">
                         <label class="pfp-label">Téléphone Mobile Money <span class="text-danger">*</span></label>
-                        <input type="phone" class="form-control pfp-input" formControlName="phone"
-                            required maxlength="20" placeholder="+229 XX XX XX XX">
+                        <input type="text" class="form-control pfp-input" formControlName="phone"
+                            required maxlength="20" inputmode="numeric" pattern="[0-9]*"
+                            (input)="onPhoneInput($event, batchPaymentForm)" placeholder="XX XX XX XX">
                     </div>
                     <div class="col-lg-8">
                         <label class="pfp-label">Email (reçu électronique) <span class="text-danger">*</span></label>
@@ -546,7 +554,7 @@
             <div class="pfp-modal-footer-row">
                 <div class="pfp-modal-security">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <span>Paiement 100% sécurisé par ScolarPlus</span>
+                    <span>Paiement 100% sécurisé</span>
                 </div>
                 <div class="pfp-modal-actions">
                     <button type="button" class="btn pfp-btn-cancel" (click)="closeModal()">

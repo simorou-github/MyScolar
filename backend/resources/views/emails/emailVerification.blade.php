@@ -9,31 +9,17 @@
     <style type="text/css">
         @media screen {
             @font-face {
-                font-family: 'Lato';
+                font-family: 'Plus Jakarta Sans';
                 font-style: normal;
                 font-weight: 400;
-                src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+                src: url(https://fonts.gstatic.com/s/plusjakartasans/v8/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NShXUEKi4Rw.woff2) format('woff2');
             }
 
             @font-face {
-                font-family: 'Lato';
+                font-family: 'Plus Jakarta Sans';
                 font-style: normal;
                 font-weight: 700;
-                src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
-            }
-
-            @font-face {
-                font-family: 'Lato';
-                font-style: italic;
-                font-weight: 400;
-                src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
-            }
-
-            @font-face {
-                font-family: 'Lato';
-                font-style: italic;
-                font-weight: 700;
-                src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+                src: url(https://fonts.gstatic.com/s/plusjakartasans/v8/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NShXUEKi4Rw.woff2) format('woff2');
             }
         }
 
@@ -74,6 +60,7 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
+            background-color: #F0F6FF;
         }
 
         /* iOS BLUE LINKS */
@@ -89,30 +76,80 @@
         /* MOBILE STYLES */
         @media screen and (max-width:600px) {
             h1 {
-                font-size: 32px !important;
+                font-size: 28px !important;
                 line-height: 32px !important;
+            }
+
+            .verif-code {
+                font-size: 28px !important;
+                letter-spacing: 6px !important;
             }
         }
     </style>
 </head>
 
-<body style="margin: 0 !important; padding: 0 !important;">
+<body style="margin: 0 !important; padding: 0 !important; background-color: #F0F6FF;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
-            <td bgcolor="#0080ff" align="center">
+            <td bgcolor="#F0F6FF" align="center">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
-                        <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
+                        <td align="center" valign="top" style="padding: 30px 10px 20px 10px;"> </td>
                     </tr>
                 </table>
             </td>
         </tr>
+
+        <!-- HEADER -->
         <tr>
-            <td bgcolor="#0080ff" align="center" style="padding: 0px 10px 0px 10px;">
+            <td bgcolor="#F0F6FF" align="center" style="padding: 0px 10px 0px 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; border-radius: 12px 12px 0px 0px; overflow: hidden;">
+                    <tr>
+                        <td align="center" valign="top" style="background: linear-gradient(135deg, #4A90D9 0%, #2B6BAA 100%); background-color: #2B6BAA; padding: 32px 20px; border-radius: 12px 12px 0px 0px;">
+                            <img src="{{ $message->embed(public_path('images/scolarplus-icon-3x.png')) }}" alt="ScolarPlus" width="56" height="56" style="display: block; margin: 0 auto 12px auto; width: 56px; height: 56px;">
+                            <p style="margin: 0; font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 1px; color: #ffffff;">{{ $name }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" bgcolor="#ffffff" style="padding: 30px 20px 10px 20px; font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif;">
+                            <h2 style="margin: 0; font-size: 22px; font-weight: 700; color: #0A0F1E;">Bienvenue chez {{ $name }} !</h2>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- BODY -->
+        <tr>
+            <td bgcolor="#F0F6FF" align="center" style="padding: 0px 10px 0px 10px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
-                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 28px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <h3 style="font-size: 28px; font-weight: 400; margin: 2;">Bienvenu chez <br> {{$name}}!</h3>
+                        <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 0px 30px; font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px; color: #333333;">
+                            <p style="margin: 0;"><b>Veuillez confirmer votre adresse mail</b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 20px 30px; font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px; color: #333333;">
+                            <p style="margin: 0;">{{ $_message }}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td bgcolor="#ffffff" align="center" style="padding: 0px 30px 30px 30px;">
+                            <table cellpadding="0" cellspacing="0" border="0" align="center">
+                                <tr>
+                                    <td class="verif-code" style="background-color: #F0F6FF; border: 1px dashed #4A90D9; border-radius: 10px; padding: 18px 36px; font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: 10px; color: #2B6BAA; text-align: center;">
+                                        {{ $data['code'] }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 30px 30px; border-radius: 0px 0px 12px 12px; font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 22px; color: #999999; border-top: 1px solid #F0F6FF;">
+                            <p style="margin: 18px 0 0 0;">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail.</p>
+                            <p style="margin: 12px 0 0 0;">Merci de votre confiance,<br>L'équipe {{ $name }}</p>
                         </td>
                     </tr>
                 </table>
@@ -120,36 +157,16 @@
         </tr>
 
         <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+            <td bgcolor="#F0F6FF" align="center" style="padding: 24px 10px 24px 10px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 20px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><b>
-                                    Veuillez confirmer votre adresse mail</b></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 10px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">{{$_message}}</p>
-                        </td>
-                    </tr>
-
-                    <tr style="margin: 0 15px 0 15px;">
-                        <td bgcolor="#ddd" align="center" style="padding: 10px 30px 10px 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 2% 1% 2% 1%;">{{$data['code']}}</p>
-                        </td>
-                    </tr>
-
-                   
-                    <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 5px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">MERCI</p>
+                        <td align="center" style="font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; font-size: 12px; color: #9AA8C7;">
+                            &copy; {{ date('Y') }} {{ $name }}. Tous droits réservés.
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
-
     </table>
 </body>
 

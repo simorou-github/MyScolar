@@ -17,6 +17,51 @@
   }
 }
 
+/* Drawer (off-canvas) modal sliding from right to left */
+.drawer-end {
+  display: flex !important;
+  justify-content: flex-end;
+
+  .modal-dialog {
+    position: fixed;
+    margin: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    max-width: 480px;
+    width: 100%;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  &.show .modal-dialog {
+    transform: translateX(0);
+  }
+
+  .modal-content {
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    overflow-y: auto;
+  }
+
+  .modal-body {
+    flex: 1 1 auto;
+  }
+
+  .modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+  }
+}
+
+@media (max-width: 576px) {
+  .drawer-end .modal-dialog {
+    max-width: 100%;
+  }
+}
+
 input{
   height: 38px;
   font-size: larger !important;

@@ -24,7 +24,8 @@ $white           : #ffffff;
 // =============================================
 .lp-visual {
   width: 42%;
-  background: linear-gradient(160deg, #0D1B2E 0%, #122744 50%, #1A3F6F 100%);
+  background: linear-gradient(160deg, #C7DFF7 0%, #AFCFF2 55%, #8FBBE8 100%);
+  box-shadow: 4px 0 24px rgba(43, 107, 170, 0.18);
   position: fixed;
   top: 0;
   left: 0;
@@ -53,7 +54,7 @@ $white           : #ffffff;
   &-1 {
     width: 400px;
     height: 400px;
-    background: rgba(74, 144, 217, 0.25);
+    background: rgba(74, 144, 217, 0.18);
     top: -100px;
     right: -100px;
     animation: lpFloat 10s ease-in-out infinite;
@@ -62,7 +63,7 @@ $white           : #ffffff;
   &-2 {
     width: 260px;
     height: 260px;
-    background: rgba(244, 121, 32, 0.16);
+    background: rgba(244, 121, 32, 0.12);
     bottom: 60px;
     left: -60px;
     animation: lpFloat 12s ease-in-out infinite reverse;
@@ -74,8 +75,8 @@ $white           : #ffffff;
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(43,107,170,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43,107,170,0.05) 1px, transparent 1px);
   background-size: 50px 50px;
   pointer-events: none;
 }
@@ -129,7 +130,7 @@ $white           : #ffffff;
     font-family: 'Sora', 'Segoe UI', sans-serif;
     font-size: 17px;
     font-weight: 600;
-    color: $white;
+    color: $text-dark;
     line-height: 1.1;
     strong { font-weight: 800; }
   }
@@ -139,7 +140,7 @@ $white           : #ffffff;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
+    color: $text-muted;
   }
 }
 
@@ -226,8 +227,8 @@ $white           : #ffffff;
   justify-content: center;
   gap: 0;
   padding: 14px 0;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(43,107,170,0.12);
+  border-bottom: 1px solid rgba(43,107,170,0.12);
   margin-bottom: 18px;
   flex-shrink: 0;
 }
@@ -241,7 +242,7 @@ $white           : #ffffff;
     font-family: 'Sora', 'Segoe UI', sans-serif;
     font-size: 22px;
     font-weight: 800;
-    color: $white;
+    color: $text-dark;
     line-height: 1;
     margin-bottom: 3px;
 
@@ -250,7 +251,7 @@ $white           : #ffffff;
 
   span {
     font-size: 10px;
-    color: rgba(255,255,255,0.4);
+    color: $text-muted;
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
@@ -259,7 +260,7 @@ $white           : #ffffff;
 .lp-key-stat-div {
   width: 1px;
   height: 28px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(43,107,170,0.15);
   flex-shrink: 0;
 }
 
@@ -271,7 +272,7 @@ $white           : #ffffff;
     font-family: 'Sora', 'Segoe UI', sans-serif;
     font-size: 17px;
     font-weight: 800;
-    color: $white;
+    color: $text-dark;
     line-height: 1.45;
     margin-bottom: 6px;
 
@@ -280,7 +281,7 @@ $white           : #ffffff;
 
   p {
     font-size: 13px;
-    color: rgba(255,255,255,0.45);
+    color: $text-muted;
     line-height: 1.6;
     margin: 0;
   }

@@ -55,7 +55,7 @@ export class GroupeManagementComponent implements OnInit{
 
   // Fonction pour afficher ou cacher le modal
   displayModalGroupe(modalGroupe: any) {
-    this.modalRef = this.modalService.show(modalGroupe, { class: 'modal-md' });
+    this.modalRef = this.modalService.show(modalGroupe, { class: 'drawer-end' });
   }
 
   // Fonction pour ajouter un groupe
@@ -176,7 +176,7 @@ export class GroupeManagementComponent implements OnInit{
   // Fonction pour modifier un groupe
   update(modalGroupe: any, groupe: any) {
     this.is_modified = true;
-    this.modalRef = this.modalService.show(modalGroupe, { class: 'modal-md' });
+    this.modalRef = this.modalService.show(modalGroupe, { class: 'drawer-end' });
     this.groupeForm.patchValue({
       id: groupe?.id,
       code: groupe?.code,

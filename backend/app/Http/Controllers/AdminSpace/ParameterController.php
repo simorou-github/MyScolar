@@ -358,13 +358,13 @@ class ParameterController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('logos_operateurs', 'public');
         }
-
-        if(!$user = User::where('id', $request->user_id)->first()){
+        
+        /*if(!$user = User::where('id', $request->user_id)->first()){
             return response()->json([
                 'message' => 'Votre compte n\'est pas autorisé.',
                 'status' => 300
             ]);
-        }
+        }*/
 
         if ($request->id == 'null') {
             try {
@@ -382,14 +382,9 @@ class ParameterController extends Controller
                         'is_cash_mode' => $request->is_cash_mode,
                         'path_logo' => $path,
                         'status' => true,
-                        'token_url' => $request->token_url,
-                        'pay_request_url' => $request->pay_request_url,
-                        'balance_request_url' => $request->balance_request_url,
-                        'api_key' => $request->api_key,
                         'reference_id' => $request->reference_id,
-                        'secondary_key' => $request->secondary_key,
                         'scolar_rate' => $request->scolar_rate,
-                        'create_id' => $user->id
+                        //'create_id' => $user->id
                     ]);
 
                     return response()->json([
@@ -435,7 +430,7 @@ class ParameterController extends Controller
                     $data->path_logo = $request->file('image')->store('logos_operateurs', 'public');
                 }
 
-                $data->update(array_merge($request->all(), ['update_id' => $user->id]));
+                $data->update(array_merge($request->all(), ['updated_at' => now()]));
 
                 return response()->json([
                     'data' => $data,

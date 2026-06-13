@@ -70,18 +70,18 @@ export class LoginComponent implements OnInit {
             }
 
           } else {
+            this.isProcessing = false;
             this.message = v.message;
             this.loginForm.patchValue({
               password: ''
             });
             this.showError(this.message);
-            this.isProcessing = false;
           }
 
         },
         error: (error: any) => {
-          this.error = 'Impossible de valider vos identifiants. Veuillez réessayer.';
           this.isProcessing = false;
+          this.error = 'Impossible de valider vos identifiants. Veuillez réessayer.';
         },
         complete: () => {
         },

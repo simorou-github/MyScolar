@@ -39,9 +39,10 @@ class SchoolInscriptionController extends Controller
     public function getCodeOfVerification(Request $request)
     {
 
+        Log::info($request);
+
         if ($request->email) {
             $this->school_inscription_service->getCodeVerificarion($request);
-
             return response()->json([
                 'message' => 'Code de vérification envoyé par mail.',
             ], 200);
@@ -241,10 +242,8 @@ class SchoolInscriptionController extends Controller
     public function getUrlFileForSchool(Request $request)
     {
         try {
-            Log::info('est ici');
             $school = School::find($request->id);
             $file_path = 'storage/inscription_files/' . $school->document;
-            Log::info($file_path);
             //return response()->file(public_path($file_path));
             return response()->file(
                 public_path($file_path)

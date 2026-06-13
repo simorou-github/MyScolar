@@ -41,6 +41,7 @@ export class DefaultComponent implements OnInit {
           this.message = v.message;
           if (v.status == 200) {
             this.payments = v.data;
+            this.isProcessing = false;
           }
         },
 
@@ -49,6 +50,7 @@ export class DefaultComponent implements OnInit {
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
         },
         complete: () => {
+          this.isProcessing = false;
         }
       }
     )
@@ -58,6 +60,7 @@ export class DefaultComponent implements OnInit {
     this.parameterService.listTypeFees({ school_id: this.schoolId }).subscribe({
       next: (v: any) => {
         this.typeFees = v.data;
+            this.isProcessing = false;
       }
     });
   }
@@ -100,16 +103,18 @@ export class DefaultComponent implements OnInit {
         next: (v: any) => {
           if (v.status == 200) {
             this.students = v.data;
+            this.isProcessing = false;
           } 
         },
 
         error: (e) => {
           console.error(e);
+            this.isProcessing = false;
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
         },
 
         complete: () => {
-
+          this.isProcessing = false;
         }
       }
     )

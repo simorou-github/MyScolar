@@ -117,7 +117,7 @@ class SchoolController extends Controller
             }
 
             $data = SchoolClasse::with(['school', 'classe', 'groupe'])->where($params)
-                ->orderByRaw('(SELECT rank FROM classes WHERE classes.id = school_classes.classe_id) ASC')->get();
+                /*->orderByRaw('(SELECT rank FROM classes WHERE classes.id = school_classes.classe_id) ASC')*/->get();
 
             return response()->json([
                 'data' => $data,

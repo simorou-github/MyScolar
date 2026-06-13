@@ -32,15 +32,11 @@ export class OperatorComponent implements OnInit {
       country_id: ['', [Validators.required]],
       is_cash_mode: ['', [Validators.required]],
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      token_url: [''],
-      pay_request_url: [''],
-      balance_request_url: [''],
-      api_key: [''],
       reference_id: [''],
-      secondary_key: [''],
       scolar_rate: [''],
       user_id: [localStorage.getItem('user')],
     });
+    console.log(localStorage.getItem('user'));
     this.searchForm = this.fb.group({
       name: [''],
       country_id: [''],
@@ -92,12 +88,7 @@ export class OperatorComponent implements OnInit {
     formData.append('id', this.operatorForm.get('id')?.value);
     formData.append('is_cash_mode', this.operatorForm.get('is_cash_mode')?.value);
     formData.append('country_id', this.operatorForm.get('country_id')?.value);
-    formData.append('token_url', this.operatorForm.get('token_url')?.value);
-    formData.append('pay_request_url', this.operatorForm.get('pay_request_url')?.value);
-    formData.append('balance_request_url', this.operatorForm.get('balance_request_url')?.value);
-    formData.append('api_key', this.operatorForm.get('api_key')?.value);
     formData.append('reference_id', this.operatorForm.get('reference_id')?.value);
-    formData.append('secondary_key', this.operatorForm.get('secondary_key')?.value);
     formData.append('scolar_rate', this.operatorForm.get('scolar_rate')?.value);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -140,7 +131,7 @@ export class OperatorComponent implements OnInit {
   openViewModal(modelOperator: any) {
     this.labelFormTitle = 'Ajout d\'un opérateur';
     this.btnFormTitle = 'Ajouter';
-    this.modalRef = this.modalService.show(modelOperator, { class: 'modal-md' });
+    this.modalRef = this.modalService.show(modelOperator, { class: 'drawer-end' });
   }
 
   showSuccess(msg: string) {
@@ -179,12 +170,14 @@ export class OperatorComponent implements OnInit {
   update(modelOperator: any, operator: any) {
     this.labelFormTitle = 'Modification d\'un opérateur';
     this.btnFormTitle = 'Modifier';
-    this.modalRef = this.modalService.show(modelOperator, { class: 'modal-md' });
+    this.modalRef = this.modalService.show(modelOperator, { class: 'drawer-end' });
     this.operatorForm.patchValue({
       id: operator?.id,
       country_id: operator?.country_id,
       name: operator?.name,
-      is_cash_mode: operator?.is_cash_mode
+      is_cash_mode: operator?.is_cash_mode,
+      reference_id: operator?.reference_id,
+      scolar_rate: operator?.scolar_rate
     });
   }
 

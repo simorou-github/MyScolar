@@ -16,56 +16,37 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use PDF;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Http;
 
 class MTNPaymentController extends Controller
 {
 
-    private $secondary_key = '96ea56ca1194463fbdae1ea331861c43';
-    private $reference_id = 'f98a342e-269a-4780-bfed-b0ac90859ed2'; //UUID
-    private $api_key = '5f9a11757aa74a4e8c8646b0e9b3b7f1';
+    private $primary_key = '2f98a313aa654a21ba504a621e989978';
+    private $reference_id = '1b66b822-c10e-4555-8d67-8d30afb4e73b'; //UUID
+    private $api_key = '1892dedea5da4afca765b27c32aa4ad6'; //Clé API de l'application créée sur le portail développeur de MTN
+    private $token_url = 'https://sandbox.momodeveloper.mtn.com/collection/token/';
+    private $pay_request_url = 'https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay';
 
     //Create access token
-    public function createAccessToken($token_url, $reference_id, $api_key, $secondary_key)
+    public function createAccessToken()
     {
-        if(!$token_url || !$reference_id || !$api_key || !$secondary_key){
-            Log::error("Paramètre d'accès au token non fournis.");
-            return null;  
-        }
-
-        $url = $token_url;
-
-        //Set Header
-        $header = array(
-            'Authorization : Basic ' . base64_encode($reference_id . ':' . $api_key),
-            'Ocp-Apim-Subscription-Key: ' . $secondary_key
-        );
-
-        //Initialize cURL
-        $curl = curl_init();
-
-        //Set cURL options
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => $header,
-        ));
-
-        //Execute the cURL request
-        $response = curl_exec($curl);
-        //check for cURL error
-        if (curl_errno($curl)) {
-            Log::error(curl_error($curl));
-            return null;
-        }
-
-        //Close cURL session
-        curl_close($curl);
-        $data = json_decode($response);
-        // Log::info($response);
-        if ($data) {
-            return $data;
-        } else {
+        try {
+            $response = Http::withHeaders([
+                'Authorization'             => 'Basic ' . base64_encode($this->reference_id . ':' . $this->api_key),
+                'Ocp-Apim-Subscription-Key' => $this->primary_key,
+                'Content-Length'            => '0',
+                'Accept'                    => '*/*',
+                'User-Agent'                => 'PostmanRuntime/7.54.0',
+            ])->withoutVerifying()->post($this->token_url);
+            if ($response->successful()) {
+                Log::info("Token MTN récupéré avec succès.");
+                return $response->json();
+            } else {
+                Log::error("Erreur lors de la récupération du token: " . $response->body());
+                return null;
+            }
+        } catch (Exception $e) {
+            Log::error("Exception lors de la récupération du token: " . $e->getMessage());
             return null;
         }
     }
@@ -88,8 +69,7 @@ class MTNPaymentController extends Controller
         }
 
         if (!$operator = Operator::where('id',$request->data['operator'])
-            ->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
-                ->whereNotNull('balance_request_url')->first()) {
+            ->where('is_cash_mode', false)->first()) {
             return response()->json([
                 'data' => null,
                 'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
@@ -112,10 +92,18 @@ class MTNPaymentController extends Controller
 
         $scolar_rate = $operator->scolar_rate;
 
-        $access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token;
+        $token_data = $this->createAccessToken();
+        if (!$token_data || !isset($token_data['access_token'])) {
+            return response()->json([
+                'data' => [],
+                'message' => "Impossible de joindre l'opérateur. Veuillez contacter le Groupe Scolar Plus.",
+                'status' => 500
+            ]);
+        }
+        $access_token = $token_data['access_token'];
         $environment = 'sandbox';
         $reference_uuid = Str::uuid();
-        $url = $operator->pay_request_url; //URL de paiement
+        $url = $this->pay_request_url; //URL de paiement
 
         //Set Header
         $header = array(
@@ -123,7 +111,7 @@ class MTNPaymentController extends Controller
             'X-Reference-Id: ' . $reference_uuid,
             'X-Target-Environment: ' . $environment,
             'Content-Type: application/json',
-            'Ocp-Apim-Subscription-Key: ' . $this->secondary_key
+            'Ocp-Apim-Subscription-Key: ' . $this->primary_key
         );
 
         //Generate an External ID 8 digits
@@ -154,7 +142,9 @@ class MTNPaymentController extends Controller
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => $header,
-            CURLOPT_POSTFIELDS => $json_body
+            CURLOPT_POSTFIELDS => $json_body,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 20,
         ));
 
         //Execute the cURL request
@@ -297,26 +287,27 @@ class MTNPaymentController extends Controller
         }
 
         if (!$operator = Operator::where('id',$request->operator)
-            ->whereNotNull('api_key')->whereNotNull('token_url')->whereNotNull('pay_request_url')
-                ->whereNotNull('balance_request_url')->first()) {
+            ->where('is_cash_mode', false)->first()) {
             return response()->json([
                 'data' => null,
-                'message' => "L'opérateur sélectionné n'est pas conforme. Veuillez contacter le Groupe Scolar.",
+                'message' => "L'opérateur sélectionné n'est pas autorisé. Veuillez contacter le Groupe Scolar.",
                 'status' => 300
             ]);
         }
         //Get MTN Token
-        if(!$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token){
+        $token_data = $this->createAccessToken();
+        if (!$token_data || !isset($token_data['access_token'])) {
             return response()->json([
                 'data' => [],
                 'message' => "Impossible de joindre l'opérateur. Veuillez contacter le Groupe Scolar Plus.",
                 'status' => 500
             ]);
         }
+        $access_token = $token_data['access_token'];
 
         $environment = 'sandbox';
         $reference_uuid = Str::uuid();
-        $url = $operator->pay_request_url;
+        $url = $this->pay_request_url;
 
         //Set Header
         $header = array(
@@ -324,7 +315,7 @@ class MTNPaymentController extends Controller
             'X-Reference-Id: ' . $reference_uuid,
             'X-Target-Environment: ' . $environment,
             'Content-Type: application/json',
-            'Ocp-Apim-Subscription-Key: ' . $this->secondary_key
+            'Ocp-Apim-Subscription-Key: ' . $this->primary_key
         );
 
         //Generate an External ID 8 digits
@@ -355,7 +346,9 @@ class MTNPaymentController extends Controller
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => $header,
-            CURLOPT_POSTFIELDS => $json_body
+            CURLOPT_POSTFIELDS => $json_body,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 20,
         ));
 
         //Execute the cURL request
@@ -484,7 +477,7 @@ class MTNPaymentController extends Controller
     //Account Balance 
     public function requestToAccountBalance(Request $request)
     {
-        /*$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->secondary_key)->access_token;
+        /*$access_token = $this->createAccessToken($operator->token_url, $operator->reference_id, $operator->api_key, $operator->primary_key)->access_token;
         $environment = 'sandbox';
         $url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/account/balance";
 
@@ -509,7 +502,9 @@ class MTNPaymentController extends Controller
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => $header,
-            CURLOPT_POSTFIELDS => $json_body
+            CURLOPT_POSTFIELDS => $json_body,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 20,
         ));
 
         //Execute the cURL request
@@ -542,6 +537,7 @@ class MTNPaymentController extends Controller
             // Set options of page and load data in blade file
             $payment_details = PaymentDetail::with(['type_fees', 'school_classe_fees', 'balance_fees'])
                 ->where('payment_id', $payment->id)->get();
+            $operator = Operator::with('country')->find($payment->operator);
             $qrSvg = QrCode::format('svg')->size($size)->generate($payment->id);
             $pdf = PDF::setOptions([
                 'isJavascriptEnabled' => true,
@@ -549,7 +545,7 @@ class MTNPaymentController extends Controller
                 'isRemoteEnabled' => true,
                 'isPhpEnabled' => true,
                 "dpi" => 96,
-            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details, 'qrSvg' => $qrSvg]);
+            ])->loadView('emails.invoicePayment', ['payment' => $payment, 'payment_details' => $payment_details, 'qrSvg' => $qrSvg, 'operator' => $operator]);
 
             //Log::info($payment_details);
             // Name of file
