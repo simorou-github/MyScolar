@@ -51,6 +51,7 @@ export class ClasseComponent implements OnInit {
       id: [],
       code: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
       label: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      rank: [null, [Validators.required, Validators.min(1)]],
     });
     
    this.getAllClasses();
@@ -176,7 +177,8 @@ export class ClasseComponent implements OnInit {
     this.classeForm.patchValue({
       id: classe?.id,
       code: classe?.code,
-      label: classe?.label
+      label: classe?.label,
+      rank: classe?.rank,
     });
   }
 

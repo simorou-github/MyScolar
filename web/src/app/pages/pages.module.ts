@@ -71,10 +71,11 @@ import { SchoolUserManagementComponent } from './school-user-management/school-u
 import { NgxCaptureModule } from 'ngx-capture';
 import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
 import { CashPaymentComponent } from './fees-management/cash-payment/cash-payment.component';
+import { ActivityLogComponent } from './activity-log/activity-log.component';
 
 @NgModule({
-  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent, 
-    StatisticsComponent, UrlPipe, InscriptionPendingComponent, ClasseComponent, InscriptionValidatedComponent, AddClasseSchoolComponent, FeesManagementComponent, ClasseManagementComponent, PaymentHistoryComponent, SchoolStatisticsComponent, StudentManagementComponent, AssignFeesToClasseComponent, StudentListByClasseComponent, OperatorComponent, GroupeManagementComponent, SystemParameterComponent, ManageUserComponent, ManagePermissionComponent, SchoolUserManagementComponent, FeesBalanceFollowupComponent, CashPaymentComponent],
+  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,
+    StatisticsComponent, UrlPipe, InscriptionPendingComponent, ClasseComponent, InscriptionValidatedComponent, AddClasseSchoolComponent, FeesManagementComponent, ClasseManagementComponent, PaymentHistoryComponent, SchoolStatisticsComponent, StudentManagementComponent, AssignFeesToClasseComponent, StudentListByClasseComponent, OperatorComponent, GroupeManagementComponent, SystemParameterComponent, ManageUserComponent, ManagePermissionComponent, SchoolUserManagementComponent, FeesBalanceFollowupComponent, CashPaymentComponent, ActivityLogComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -46,6 +46,13 @@ class RoleController extends Controller
 
         $role->givePermissionTo($request->permissions);
 
+        activity('rôle')
+            ->causedBy($user)
+            ->performedOn($role)
+            ->event('created')
+            ->withProperties(['permissions' => $request->permissions])
+            ->log("Création du rôle : {$role->label}");
+
         return response()->json([
             'message' => 'Rôle créé avec succès',
             'data' => $role->load('permissions'),
@@ -65,6 +72,13 @@ class RoleController extends Controller
         $role->update(['label' => $request->label]);
         $role->syncPermissions($request->permissions);
 
+        activity('rôle')
+            ->causedBy(auth()->user())
+            ->performedOn($role)
+            ->event('updated')
+            ->withProperties(['permissions' => $request->permissions])
+            ->log("Modification du rôle : {$role->label}");
+
         return response()->json([
             'message' => 'Rôle mis à jour avec succès',
             'data' => $role->load('permissions'),
@@ -75,7 +89,15 @@ class RoleController extends Controller
     
     public function destroy(Role $role)
     {
+        $label = $role->label;
+        activity('rôle')
+            ->causedBy(auth()->user())
+            ->withProperties(['role' => $label])
+            ->event('deleted')
+            ->log("Suppression du rôle : {$label}");
+
         $role->delete();
+
         return response()->json([
             'message' => 'Rôle supprimé avec succès',
             'data' => null,

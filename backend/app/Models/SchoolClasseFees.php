@@ -4,10 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class SchoolClasseFees extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['amount_fees', 'type_payment', 'status', 'academic_year', 'classe_id', 'type_fees_id'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $e) => match($e) {
+                'created' => 'Frais scolaires créés',
+                'updated' => 'Frais scolaires mis à jour',
+                'deleted' => 'Frais scolaires supprimés',
+                default   => "Frais scolaires : $e",
+            })
+            ->useLogName('frais-scolaires');
+    }
     public $incrementing = false;
     public $keyType = 'string'; 
     

@@ -79,9 +79,10 @@ class ClasseController extends Controller
                     ]);
                 } else {
                     $classe = Classe::create([
-                        'id'=> generateDBTableId(20, 'App\Models\Classe'),
-                        'code' => $code,
+                        'id'    => generateDBTableId(15, 'App\Models\Classe'),
+                        'code'  => $code,
                         'label' => strtoupper($label),
+                        'rank'  => (int) $request->rank,
                     ]);
 
                     return response()->json([

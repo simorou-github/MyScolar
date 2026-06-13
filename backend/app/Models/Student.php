@@ -4,10 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Student extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['last_name', 'first_name', 'email', 'matricule', 'sex', 'birthday', 'phone', 'status'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $e) => match($e) {
+                'created' => 'Apprenant créé',
+                'updated' => 'Apprenant mis à jour',
+                'deleted' => 'Apprenant supprimé',
+                default   => "Apprenant : $e",
+            })
+            ->useLogName('apprenant');
+    }
     public $incrementing = false;
     public $keyType = 'string'; 
     

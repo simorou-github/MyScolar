@@ -8,12 +8,28 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['last_name', 'first_name', 'email', 'status'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => match ($eventName) {
+                'created' => "Création utilisateur : {$this->email}",
+                'updated' => "Mise à jour utilisateur : {$this->email}",
+                'deleted' => "Suppression utilisateur : {$this->email}",
+                default   => "Utilisateur {$eventName}",
+            })
+            ->useLogName('utilisateur');
+    }
     public $incrementing = false;
     public $keyType = 'string';
 

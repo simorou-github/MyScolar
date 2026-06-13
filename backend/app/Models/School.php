@@ -4,10 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class School extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['social_reason', 'email', 'status', 'owner', 'country_id'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => match ($eventName) {
+                'created'  => "Nouvelle inscription école : {$this->social_reason}",
+                'updated'  => "Mise à jour école : {$this->social_reason}",
+                'deleted'  => "Suppression école : {$this->social_reason}",
+                default    => "École {$eventName}",
+            })
+            ->useLogName('inscription');
+    }
     public $incrementing = false;
     public $keyType = 'string'; 
     

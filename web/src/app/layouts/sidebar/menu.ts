@@ -94,7 +94,8 @@ export const MENU: MenuItem[] = [
             { id: 7001, label: 'Classes', link: '/classes', parentId: 7, rolesAllowed: ['super-admin', 'admin'] },
             { id: 7002, label: 'Opérateurs', link: '/scolar/operators', parentId: 7, rolesAllowed: ['super-admin', 'admin'] },
             { id: 7003, label: 'Utilisateurs', link: '/scolar/manage-user', parentId: 7, rolesAllowed: ['super-admin', 'admin'] },
-            { id: 7004, label: 'Roles & Permissions', link: '/scolar/manage-permission', parentId: 7, rolesAllowed: ['super-admin'] }
+            { id: 7004, label: 'Roles & Permissions', link: '/scolar/manage-permission', parentId: 7, rolesAllowed: ['super-admin'] },
+            { id: 7005, label: 'Journal d\'activité', link: '/scolar/activity-log', parentId: 7, rolesAllowed: ['super-admin'] }
         ]
     },
 

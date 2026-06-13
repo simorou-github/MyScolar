@@ -55,11 +55,23 @@ class AuthController extends Controller
 
 
             if (!$token = auth('api')->attempt($validator->validated())) {
+                activity('authentification')
+                    ->event('failed')
+                    ->withProperties(['email' => $request->email, 'ip' => $request->ip()])
+                    ->log('Tentative de connexion échouée : ' . $request->email);
+
                 return response()->json([
                     'message' => 'Vos paramètres de connexion sont incorrects.',
                     'status' => 500
                 ]);
             }
+
+            activity('authentification')
+                ->causedBy($user)
+                ->event('login')
+                ->withProperties(['email' => $user->email, 'ip' => $request->ip()])
+                ->log('Connexion : ' . $user->email);
+
             return $this->createNewToken($token, $user->is_true_password);
         } catch (Exception $e) {
             Log::info($e);
@@ -84,6 +96,14 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        $user = auth('api')->user();
+        if ($user) {
+            activity('authentification')
+                ->causedBy($user)
+                ->event('logout')
+                ->withProperties(['email' => $user->email])
+                ->log('Déconnexion : ' . $user->email);
+        }
         auth('api')->logout();
         return response()->json([
             'message' => 'Utilisateur déconnecté avec succès',

@@ -204,6 +204,22 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <label for="rank" class="form-label">Rang <span class="required_color">*</span></label>
+                <input type="number" id="rank" class="form-control" formControlName="rank"
+                    min="1" placeholder="Ex : 1, 2, 3…"
+                    [ngClass]="{ 'is-invalid': classeForm.get('rank')?.touched && !classeForm.get('rank')?.valid }" />
+                <div class="space-between-validator"
+                    *ngIf="classeForm.get('rank')?.touched && classeForm.get('rank').hasError('required')">
+                    <span class="required_color">Le rang est obligatoire.</span>
+                </div>
+                <div class="space-between-validator"
+                    *ngIf="classeForm.get('rank')?.touched && classeForm.get('rank').hasError('min')">
+                    <span class="required_color">Le rang doit être supérieur à 0.</span>
+                </div>
+                <small class="text-muted">Détermine l'ordre d'affichage des classes (1 = première).</small>
+            </div>
+
         </div>
         <div class="modal-footer">
             <div class="hstack gap-2 justify-content-end">

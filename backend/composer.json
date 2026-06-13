@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "3.1.55",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-activitylog": "^4.12",
         "spatie/laravel-permission": "^6.18",
         "tymon/jwt-auth": "^2.2",
         "v1p3r75/moov-money-api-sdk": "^3.6"

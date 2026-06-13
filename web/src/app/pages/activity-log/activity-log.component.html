@@ -1,0 +1,231 @@
+<div class="container-fluid">
+  <app-page-title title="Journal d'activité" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+  <div class="al-card">
+
+    <!-- ── En-tête ─────────────────────────────────────── -->
+    <div class="al-card-header">
+      <div class="al-card-header-left">
+        <div class="al-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="al-card-title">Journal d'activité</h2>
+          <p class="al-card-sub">
+            {{ logs?.length ?? 0 }} action(s) enregistrée(s)
+          </p>
+        </div>
+      </div>
+
+      <div class="al-card-actions">
+        <button *ngIf="!isSearchForm"
+                class="al-btn al-btn--search"
+                (click)="displaySearchForm(true)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtrer
+        </button>
+        <button *ngIf="isSearchForm"
+                class="al-btn al-btn--close"
+                (click)="displaySearchForm(false)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Fermer
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Panneau de filtre ─────────────────────────── -->
+    <div *ngIf="isSearchForm" class="al-search-panel">
+      <div class="al-search-panel-inner">
+        <p class="al-search-label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtres avancés
+        </p>
+        <form class="al-search-form" [formGroup]="searchForm"
+              (ngSubmit)="search()">
+
+          <div class="al-ff">
+            <label class="al-field-label">Date début</label>
+            <input type="date" class="al-input" formControlName="date_from">
+          </div>
+
+          <div class="al-ff">
+            <label class="al-field-label">Date fin</label>
+            <input type="date" class="al-input" formControlName="date_to">
+          </div>
+
+          <div class="al-ff">
+            <label class="al-field-label">Catégorie</label>
+            <select class="al-select" formControlName="log_name">
+              <option value="">Toutes</option>
+              <option *ngFor="let name of logNames" [value]="name">
+                {{ getCategoryLabel(name) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="al-ff">
+            <label class="al-field-label">Utilisateur</label>
+            <input type="text" class="al-input" formControlName="causer_name"
+                   placeholder="Nom ou email…">
+          </div>
+
+          <div class="al-ff">
+            <label class="al-field-label">Recherche</label>
+            <input type="text" class="al-input" formControlName="search"
+                   placeholder="Mot-clé…">
+          </div>
+
+          <div class="al-ff al-ff--action">
+            <label class="al-field-label">Action</label>
+            <button type="submit" class="al-search-submit" [disabled]="isSearching">
+              <ng-container *ngIf="!isSearching">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                Lancer
+              </ng-container>
+              <span *ngIf="isSearching" class="al-spinner"></span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Tableau ───────────────────────────────────── -->
+    <div class="al-table-wrap">
+      <table class="al-table">
+        <thead>
+          <tr>
+            <th class="al-th-num">#</th>
+            <th>Date / Heure</th>
+            <th>Utilisateur</th>
+            <th>Catégorie</th>
+            <th>Description</th>
+            <th>Entité</th>
+            <th>Événement</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Skeleton chargement -->
+          <ng-container *ngIf="isProcessing">
+            <tr class="al-skeleton-row" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+              <td class="al-td-num"><div class="sk sk--xs sk--center"></div></td>
+              <td><div class="sk sk--md"></div></td>
+              <td>
+                <div class="sk-user">
+                  <div class="sk sk--avatar"></div>
+                  <div class="sk sk--sm"></div>
+                </div>
+              </td>
+              <td><div class="sk sk--pill"></div></td>
+              <td><div class="sk sk--lg"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--pill"></div></td>
+            </tr>
+          </ng-container>
+
+          <!-- Aucune donnée -->
+          <tr *ngIf="!isProcessing && logs?.length === 0">
+            <td colspan="7" class="al-td-empty">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="#CBD5E1" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <span>Aucune activité enregistrée pour ces critères</span>
+            </td>
+          </tr>
+
+          <!-- Données -->
+          <ng-container *ngIf="!isProcessing">
+            <tr *ngFor="let log of logs
+                        | paginate: { itemsPerPage: 20, currentPage: p };
+                        let i = index;">
+
+              <td class="al-td-num">{{ i + 1 }}</td>
+
+              <!-- Date -->
+              <td class="al-td-date">
+                <span class="al-date">{{ log.created_at | date:'dd/MM/yyyy' }}</span>
+                <span class="al-time">{{ log.created_at | date:'HH:mm:ss' }}</span>
+              </td>
+
+              <!-- Utilisateur -->
+              <td>
+                <div class="al-user-cell">
+                  <div class="al-user-avatar">{{ getCauserInitial(log) }}</div>
+                  <div class="al-user-info">
+                    <span class="al-user-name">{{ getCauserDisplay(log).name }}</span>
+                    <span class="al-user-email">{{ getCauserDisplay(log).email }}</span>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Catégorie -->
+              <td>
+                <span class="al-category-pill">{{ getCategoryLabel(log.log_name) }}</span>
+              </td>
+
+              <!-- Description -->
+              <td class="al-td-desc">{{ log.description }}</td>
+
+              <!-- Entité -->
+              <td>
+                <span class="al-entity-tag" *ngIf="log.subject_type">
+                  {{ getEntityLabel(log.subject_type) }}
+                </span>
+                <span *ngIf="!log.subject_type" class="al-text-muted">—</span>
+              </td>
+
+              <!-- Événement -->
+              <td>
+                <span class="al-event-badge" [ngClass]="getEventClass(log.event)">
+                  <span class="al-event-dot"></span>
+                  {{ getEventLabel(log.event) }}
+                </span>
+              </td>
+
+            </tr>
+          </ng-container>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Pagination ─────────────────────────────────── -->
+    <div class="al-pagination">
+      <pagination-controls
+        previousLabel="←"
+        nextLabel="→"
+        (pageChange)="p = $event">
+      </pagination-controls>
+    </div>
+
+  </div>
+</div>
+
+<ngx-ui-loader overlayColor="rgba(40,40,40,0.8)" blur="0"
+               [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+               [loaderId]="'loader-spin'" [fgsPosition]="'top-center'">
+</ngx-ui-loader>

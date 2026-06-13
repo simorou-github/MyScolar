@@ -23,6 +23,7 @@ import { SchoolUserManagementComponent } from './school-user-management/school-u
 import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
 import { CashPaymentComponent } from './fees-management/cash-payment/cash-payment.component';
 import { ProfileComponent } from './contacts/profile/profile.component';
+import { ActivityLogComponent } from './activity-log/activity-log.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: 'dashboard' },
@@ -55,6 +56,7 @@ const routes: Routes = [
   { path: 'scolar/fees-balance-followup', component: FeesBalanceFollowupComponent },
   { path: 'scolar/fees-cash-payment', component: CashPaymentComponent },
   { path: 'scolar/profile', component: ProfileComponent },
+  { path: 'scolar/activity-log', component: ActivityLogComponent },
 
 
   ];

@@ -4,10 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Groupe extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['code', 'description', 'status'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $e) => match($e) {
+                'created' => 'Groupe créé',
+                'updated' => 'Groupe mis à jour',
+                'deleted' => 'Groupe supprimé',
+                default   => "Groupe : $e",
+            })
+            ->useLogName('groupe');
+    }
     public $incrementing = false;
     public $keyType = 'string';
 

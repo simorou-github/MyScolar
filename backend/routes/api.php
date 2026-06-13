@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminSpace\ActivityLogController;
 use App\Http\Controllers\AdminSpace\MTNPaymentController;
 use App\Http\Controllers\SchoolSpace\CityController;
 use App\Http\Controllers\SchoolSpace\FeesManageController;
@@ -261,4 +262,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('manage-user/list', [UserContoller::class, 'userList']);
     Route::post('manage-user/add-by-admin', [UserContoller::class, 'addUserByAdmin']);
     Route::apiResource('roles', RoleController::class);
+
+    // Journal d'activité
+    Route::prefix('activity-log')->group(function () {
+        Route::post('list', [ActivityLogController::class, 'index']);
+        Route::get('log-names', [ActivityLogController::class, 'logNames']);
+    });
 });
