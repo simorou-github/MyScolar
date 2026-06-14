@@ -1,267 +1,256 @@
 <div class="container-fluid mt-2" #screen>
-    <app-page-title title="SUIVI DES SOLDES A COLLECTER" [breadcrumbItems]="breadCrumbItems"></app-page-title>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <img src="assets/images/logo-scolarplus2.png" alt=""
-                                        class="avatar-md rounded-circle img-thumbnail">
-                                </div>
-                                <div class="flex-grow-1 align-self-center">
-                                    <div class="text-muted">
-                                        <p class="mb-2 h5">Point des Paiements</p>
-                                        <h6 class="mb-1">{{feesBalanceDatas?.length}} Frais</h6>
-                                        <!--p class="mb-0">Scolar Plus</p-->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  <app-page-title title="Suivi des Soldes à Collecter" [breadcrumbItems]="breadCrumbItems"></app-page-title>
 
-                        <div class="col-lg-7 align-self-center">
-                            <div class="text-lg-center mt-4 mt-lg-0">
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div>
-                                            <p class="text-muted text-truncate mb-2">Total à Collecter</p>
-                                            <h6 class="mb-0">{{sum_fees | currency:'XOF'}}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div>
-                                            <p class="text-muted text-truncate mb-2">Total Collecté</p>
-                                            <h6 class="mb-0">{{(sum_fees-sum_balance) | currency:'XOF'}}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div>
-                                            <p class="text-muted text-truncate mb-2">Total Solde</p>
-                                            <h6 class="mb-0">{{sum_balance | currency:'XOF'}}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div>
-                                            <p class="text-muted text-truncate mb-2">Efficacité</p>
-                                            <h6 class="mb-0">
-                                                <span class="{{((sum_fees-sum_balance)/sum_fees)<=0.8 ? 'text-danger' : 'text-success'}}">{{(((sum_fees-sum_balance)/sum_fees)*100) | number: '1.0-0' }}%</span></h6>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2 d-none d-lg-block">
-                            <div class="clearfix  mt-4 mt-lg-0">
-                                <div class="dropdown float-end" dropdown>
-                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false" dropdownToggle>
-                                        <i class="bx bxs-cog align-middle me-1"></i> Exporter
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-                                        <a class="dropdown-item" href="javascript: void(0);" (click)="exportJournal()"> <i class="fa fa-file-excel text-success"></i> En Excel</a>
-                                        <a class="dropdown-item" href="javascript: void(0);" (click)="downloadJournal()"> <i class="fa fa-file-pdf text-danger"></i> En PDF</a>
-                                        <a class="dropdown-item" href="javascript: void(0);" (click)="getCapture()"> <i class="fa fa-camera text-secondary"></i> En Capture Ecran</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end row -->
-                </div>
-            </div>
+  <!-- KPI Header -->
+  <div class="iv-card mb-4">
+    <div class="iv-card-header">
+      <div class="iv-card-header-left">
+        <div class="iv-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="16"/>
+          </svg>
         </div>
-    </div>
-    <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-        [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
-        
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row" *ngIf="!isFilter">
-                        <div class="col-lg-2">
-                            <button class="btn btn-primary mt-1" type="button" (click)="displayFilter()"> <i
-                                    class="fa fa-filter"></i>
-                                Filtre Avancé</button>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="isFilter">
-                        <div class="col-lg-2">
-                            <button class="btn btn-danger mt-1" type="button" (click)="displayFilter(); resetForm();">
-                                <i class="fa fa-times"></i>
-                                Fermer</button>
-                        </div>
-                    </div>
-                    <form #filterForm="ngForm" *ngIf="isFilter"
-                        (ngSubmit)="getFeesBalanceFollowupData()">
-
-                        <div class="row mt-1">
-
-                            <div class="col-lg-3">
-                                <label for="academicyear">Année Acatémique</label>
-                                <select class="form-control form-select" name="academicyear" ngModel
-                                    [(ngModel)]="searchFeesBalanceParam.academic_year"
-                                    (change)="getFeesBalanceFollowupData()">
-                                    <option value="">Selection l'année</option>
-                                    <option value="{{academicyear.academic_year}}"
-                                        *ngFor="let academicyear of academicyears">
-                                        {{academicyear.academic_year}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-lg-3">
-                                <label for="type_fees_id">Type Frais</label>
-                                <select class="form-control  form-select" name="type_fees_id" ngModel
-                                    [(ngModel)]="searchFeesBalanceParam.type_fees_id"
-                                    (change)="getFeesBalanceFollowupData()">
-                                    <option value="">Tous</option>
-                                    <option value="{{type_frais.id}}" *ngFor="let type_frais of types_frais">
-                                        {{type_frais.label}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-lg-3" *ngIf="isSchoolsList">
-                                <label for="school_id">Ecoles</label>
-                                <select class="form-control form-select" name="school_id" ngModel
-                                    [(ngModel)]="searchFeesBalanceParam.school_id"
-                                    (change)="getFeesBalanceFollowupData()">
-                                    <option value="">Tous</option>
-                                    <option value="{{school.id}}" *ngFor="let school of schools">
-                                        {{school.social_reason}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-lg-3" *ngIf="!isSchoolsList">
-                                <label for="school_id">Ecoles</label>
-                                <select class="form-control form-select" name="school_id" ngModel
-                                    [(ngModel)]="searchFeesBalanceParam.school_id"
-                                    (change)="getFeesBalanceFollowupData()">
-                                    <option value="">Tous</option>
-                                    <option value="{{schools.id}}">
-                                        {{schools.social_reason}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-lg-3">
-                                <label for="date_debut">Classe</label>
-                                <select class="form-control" name="classe_id" ngModel
-                                    [(ngModel)]="searchFeesBalanceParam.classe_id"
-                                    (change)="getFeesBalanceFollowupData()">
-                                    <option value="">Tous</option>
-                                    <option value="{{classe.id}}" *ngFor="let classe of classes">
-                                        {{classe.classe.code}}-{{classe.groupe.code}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <label for="fees_label">Répartition</label>
-                                <input class="form-control" type="text" name="fees_label" ngModel
-                                    [(ngModel)]="searchFeesBalanceParam.fees_label"
-                                    placeholder="Exp: Transche 1, Unique, Mois, etc."
-                                    (keyup.enter)="getFeesBalanceFollowupData()">
-                            </div>
-                            <br>
-                            <div class="col-lg-2 text-right">
-                                <button class="btn btn-primary " type="submit"> <i class="fa fa-search"></i>
-                                    Rechercher</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div>
-            <div class="row ht-2">
-                <div class="col-md-4 h5">
-                    Liste des Soldes de Frais 
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table
-                    class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
-                    id="projectList-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Matricule</th>
-                            <th scope="col">Nom & Prénoms</th>
-                            <th scope="col">Classe</th>
-                            <th scope="col">Année</th>
-                            <th scope="col">Frais</th>
-                            <th scope="col">Montant</th>
-                            <th scope="col">Solde</th>
-                            <th scope="col">Téléphone</th>
-                            <th scope="col" lass="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Skeleton -->
-                        <ng-container *ngIf="isProcessing">
-                            <tr class="sk-row" *ngFor="let i of [1,2,3,4,5,6,7,8]">
-                                <td><div class="sk sk--xs sk--center"></div></td>
-                                <td><div class="sk sk--sm"></div></td>
-                                <td><div class="sk sk--lg"></div></td>
-                                <td><div class="sk sk--sm"></div></td>
-                                <td><div class="sk sk--sm"></div></td>
-                                <td><div class="sk sk--md"></div></td>
-                                <td><div class="sk sk--sm"></div></td>
-                                <td><div class="sk sk--pill"></div></td>
-                                <td><div class="sk sk--sm"></div></td>
-                                <td class="text-center"><div class="sk sk--btn" style="margin:0 auto"></div></td>
-                            </tr>
-                        </ng-container>
-                        <tr *ngIf="!isProcessing && feesBalanceDatas?.length == 0" class="text-center">
-                            <td colspan="10" class="sk-empty-cell">Aucune donnée trouvée !</td>
-                        </tr>
-                        <ng-container *ngIf="!isProcessing && feesBalanceDatas?.length > 0">
-                            <tr
-                                *ngFor="let balance of feesBalanceDatas | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-                                <td>{{i+1}}</td>
-                                <td>{{balance.code_scolar}}</td>
-                                <td title="Naissance : {{balance.student_birthday}} | Sexe : {{balance.student_sex=='F'?'Féminin':'Masculin'}} | Email : {{balance.student_email}}">{{balance.student_last_name }} {{balance.student_first_name}}</td>
-                                <td>{{balance.classe_code}}-{{balance.groupe_code}}</td>
-                                <td>{{balance.academic_year}}</td>
-                                <td>{{balance.fees_label}}</td>
-                                <td>{{balance.fees_amount | currency:'XOF'}}</td>
-                                <td>
-                                    <span *ngIf="balance.balance==0" class="badge bg-success blog-badge p-2"><i class="fa fa-check-circle"></i> Soldé</span>
-                                    <span *ngIf="balance.balance>0 && balance.balance<balance.fees_amount" class="badge bg-warning blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
-                                    <span *ngIf="balance.balance>0 && balance.balance==balance.fees_amount" class="badge bg-danger blog-badge p-2">{{balance.balance | currency:'XOF'}}</span>
-                                </td>
-                                <td>{{balance.student_phone}}</td>
-
-                                <td class="text-center">
-                                    <div class="d-flex gap-3 text-center">
-                                        <ul class="list-unstyled hstack gap-1 mb-0">
-                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="Détails">
-                                                <a class="btn btn-sm btn-soft-info"
-                                                    (click)="getFeesBalanceFollowupData(balance)"><i
-                                                        class="mdi mdi-eye-outline"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </tbody>
-
-                </table>
-                <div class="pagination-style">
-                    <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
-                        (pageChange)="p = $event"></pagination-controls>
-                </div>
-
-            </div>
+          <h2 class="iv-card-title">Point des Paiements</h2>
+          <p class="iv-card-sub">{{ feesBalanceDatas?.length ?? 0 }} frais suivis</p>
         </div>
+      </div>
+      <div class="iv-card-actions">
+        <button *ngIf="!isFilter" class="iv-btn iv-btn--filter" type="button" (click)="displayFilter()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtre Avancé
+        </button>
+        <button *ngIf="isFilter" class="iv-btn iv-btn--close" type="button" (click)="displayFilter(); resetForm()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Fermer
+        </button>
+        <div class="dropdown" dropdown>
+          <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" dropdownToggle>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Exporter
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="exportJournal()">
+              <i class="fa fa-file-excel text-success me-2"></i> En Excel
+            </a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="downloadJournal()">
+              <i class="fa fa-file-pdf text-danger me-2"></i> En PDF
+            </a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="getCapture()">
+              <i class="fa fa-camera text-secondary me-2"></i> En Capture Écran
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- KPIs -->
+    <div class="iv-kpi-row">
+      <div class="iv-kpi-item">
+        <span class="iv-kpi-label">Total à Collecter</span>
+        <span class="iv-kpi-value">{{sum_fees | currency:'XOF'}}</span>
+      </div>
+      <div class="iv-kpi-item">
+        <span class="iv-kpi-label">Total Collecté</span>
+        <span class="iv-kpi-value" style="color:#059669">{{(sum_fees - sum_balance) | currency:'XOF'}}</span>
+      </div>
+      <div class="iv-kpi-item">
+        <span class="iv-kpi-label">Total Solde</span>
+        <span class="iv-kpi-value" style="color:#DC2626">{{sum_balance | currency:'XOF'}}</span>
+      </div>
+      <div class="iv-kpi-item">
+        <span class="iv-kpi-label">Efficacité</span>
+        <span class="iv-kpi-value"
+          [ngStyle]="{'color': ((sum_fees - sum_balance) / sum_fees) <= 0.8 ? '#DC2626' : '#059669'}">
+          {{(((sum_fees - sum_balance) / sum_fees) * 100) | number:'1.0-0'}}%
+        </span>
+      </div>
+    </div>
+
+    <!-- Filter form -->
+    <div *ngIf="isFilter" class="iv-filter-body">
+      <form #filterForm="ngForm" (ngSubmit)="getFeesBalanceFollowupData()">
+        <div class="row g-2">
+          <div class="col-lg-3 col-md-6">
+            <label class="form-label fw-semibold" style="font-size:11px">Année Académique</label>
+            <select class="form-select form-select-sm" name="academicyear" ngModel
+              [(ngModel)]="searchFeesBalanceParam.academic_year"
+              (change)="getFeesBalanceFollowupData()">
+              <option value="">Sélectionner l'année</option>
+              <option value="{{academicyear.academic_year}}" *ngFor="let academicyear of academicyears">
+                {{academicyear.academic_year}}
+              </option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <label class="form-label fw-semibold" style="font-size:11px">Type Frais</label>
+            <select class="form-select form-select-sm" name="type_fees_id" ngModel
+              [(ngModel)]="searchFeesBalanceParam.type_fees_id"
+              (change)="getFeesBalanceFollowupData()">
+              <option value="">Tous</option>
+              <option value="{{type_frais.id}}" *ngFor="let type_frais of types_frais">{{type_frais.label}}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-6" *ngIf="isSchoolsList">
+            <label class="form-label fw-semibold" style="font-size:11px">École</label>
+            <select class="form-select form-select-sm" name="school_id" ngModel
+              [(ngModel)]="searchFeesBalanceParam.school_id"
+              (change)="getFeesBalanceFollowupData()">
+              <option value="">Tous</option>
+              <option value="{{school.id}}" *ngFor="let school of schools">{{school.social_reason}}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-6" *ngIf="!isSchoolsList">
+            <label class="form-label fw-semibold" style="font-size:11px">École</label>
+            <select class="form-select form-select-sm" name="school_id" ngModel
+              [(ngModel)]="searchFeesBalanceParam.school_id"
+              (change)="getFeesBalanceFollowupData()">
+              <option value="">Tous</option>
+              <option value="{{schools.id}}">{{schools.social_reason}}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <label class="form-label fw-semibold" style="font-size:11px">Classe</label>
+            <select class="form-select form-select-sm" name="classe_id" ngModel
+              [(ngModel)]="searchFeesBalanceParam.classe_id"
+              (change)="getFeesBalanceFollowupData()">
+              <option value="">Tous</option>
+              <option value="{{classe.id}}" *ngFor="let classe of classes">
+                {{classe.classe.code}}-{{classe.groupe.code}}
+              </option>
+            </select>
+          </div>
+          <div class="col-lg-6 col-md-8">
+            <label class="form-label fw-semibold" style="font-size:11px">Répartition</label>
+            <input class="form-control form-control-sm" type="text" name="fees_label" ngModel
+              [(ngModel)]="searchFeesBalanceParam.fees_label"
+              placeholder="Ex: Tranche 1, Unique, Mois…"
+              (keyup.enter)="getFeesBalanceFollowupData()" />
+          </div>
+          <div class="col-lg-2 col-md-4 d-flex align-items-end">
+            <button class="btn btn-primary btn-sm w-100" type="submit">
+              <i class="fa fa-search me-1"></i> Rechercher
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
+    [loaderId]="'loader-spin'" [fgsPosition]="'top-center'"></ngx-ui-loader>
+
+  <!-- Data table -->
+  <div class="iv-card">
+    <div class="iv-card-header">
+      <div class="iv-card-header-left">
+        <div class="iv-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="iv-card-title">Liste des Soldes de Frais</h2>
+          <p class="iv-card-sub">{{ feesBalanceDatas?.length ?? 0 }} entrée(s)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="iv-table-wrap">
+      <table class="iv-table">
+        <thead>
+          <tr>
+            <th class="iv-th-num">#</th>
+            <th>Matricule</th>
+            <th>Nom &amp; Prénoms</th>
+            <th>Classe</th>
+            <th>Année</th>
+            <th>Frais</th>
+            <th>Montant</th>
+            <th>Solde</th>
+            <th>Téléphone</th>
+            <th class="iv-th-actions">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="isProcessing">
+            <tr class="iv-skeleton-row" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+              <td class="iv-td-num"><div class="sk sk--xs sk--center"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--lg"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--md"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--pill"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--btn" style="margin:0 auto"></div></td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="!isProcessing && feesBalanceDatas?.length == 0">
+            <td colspan="10" class="iv-td-empty">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 15s1.5-2 4-2 4 2 4 2"/>
+                <line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+              </svg>
+              <span>Aucune donnée trouvée</span>
+            </td>
+          </tr>
+          <ng-container *ngIf="!isProcessing && feesBalanceDatas?.length > 0">
+            <tr *ngFor="let balance of feesBalanceDatas | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+              <td class="iv-td-num">{{i+1}}</td>
+              <td class="iv-td-mono">{{balance.code_scolar}}</td>
+              <td class="iv-school-name"
+                title="Naissance : {{balance.student_birthday}} | Sexe : {{balance.student_sex=='F'?'Féminin':'Masculin'}} | Email : {{balance.student_email}}">
+                {{balance.student_last_name}} {{balance.student_first_name}}
+              </td>
+              <td class="iv-td-mono">{{balance.classe_code}}-{{balance.groupe_code}}</td>
+              <td class="iv-td-mono">{{balance.academic_year}}</td>
+              <td>{{balance.fees_label}}</td>
+              <td class="iv-td-amount">{{balance.fees_amount | currency:'XOF'}}</td>
+              <td>
+                <span *ngIf="balance.balance == 0" class="iv-badge iv-badge--green">
+                  <span class="iv-badge-dot"></span>Soldé
+                </span>
+                <span *ngIf="balance.balance > 0 && balance.balance < balance.fees_amount" class="iv-badge iv-badge--amber">
+                  <span class="iv-badge-dot"></span>{{balance.balance | currency:'XOF'}}
+                </span>
+                <span *ngIf="balance.balance > 0 && balance.balance == balance.fees_amount" class="iv-badge iv-badge--red">
+                  <span class="iv-badge-dot"></span>{{balance.balance | currency:'XOF'}}
+                </span>
+              </td>
+              <td class="iv-td-mono">{{balance.student_phone}}</td>
+              <td>
+                <div class="iv-action-group">
+                  <button type="button" class="iv-action-btn iv-action-btn--neutral"
+                    (click)="getFeesBalanceFollowupData(balance)">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    Détails
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-end">
+      <pagination-controls previousLabel="←" nextLabel="→" (pageChange)="p = $event"></pagination-controls>
+    </div>
+  </div>
 </div>

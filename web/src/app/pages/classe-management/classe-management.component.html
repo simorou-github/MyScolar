@@ -1,120 +1,115 @@
 <div class="container-fluid">
   <app-page-title title="Liste des classes | {{schoolName}}" [breadcrumbItems]="breadCrumbItems"></app-page-title>
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-2">
-            <div class="col-sm">
-              <div class="d-inline-block">
-                <div class="position-relative">
-                  <!-- <a *ngIf="!isSearchForm" class="btn btn-primary" id="addProject-btn"
-                    (click)="displaySearchForm(true);"><i class="fa fa-search me-1"></i> Rechercher
-                  </a> -->
-                  <a *ngIf="isSearchForm" class="btn btn-danger" id="addProject-btn"
-                    (click)="displaySearchForm(false);"><i class="fa fa-times me-1"></i> Fermer
+
+  <div class="iv-card">
+
+    <!-- Header -->
+    <div class="iv-card-header">
+      <div class="iv-card-header-left">
+        <div class="iv-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="iv-card-title">Classes de l'école</h2>
+          <p class="iv-card-sub">{{ schoolClasses?.length ?? 0 }} classe(s) enregistrée(s)</p>
+        </div>
+      </div>
+      <div class="iv-card-actions">
+        <button class="iv-btn iv-btn--info" (click)="downloadTemplate(); infoOnModelUpload.show()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Télécharger un Modèle
+        </button>
+        <button class="iv-btn iv-btn--add" (click)="displayAddClasseModal(addModal)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Ajouter une Classe
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="iv-table-wrap">
+      <table class="iv-table">
+        <thead>
+          <tr>
+            <th class="iv-th-num">#</th>
+            <th>Code</th>
+            <th>Libellé</th>
+            <th>Groupe</th>
+            <th class="iv-th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="isProcessing">
+            <tr class="iv-skeleton-row" *ngFor="let i of [1,2,3,4,5,6]">
+              <td class="iv-td-num"><div class="sk sk--xs sk--center"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--lg"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk-actions"><div class="sk sk--btn"></div><div class="sk sk--btn"></div><div class="sk sk--btn"></div></div></td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="!isProcessing && schoolClasses?.length == 0">
+            <td colspan="5" class="iv-td-empty">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 15s1.5-2 4-2 4 2 4 2"/>
+                <line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+              </svg>
+              <span>Aucune donnée trouvée</span>
+            </td>
+          </tr>
+          <ng-container *ngIf="!isProcessing">
+            <tr *ngFor="let schoolClasse of schoolClasses | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+              <td class="iv-td-num">{{i+1}}</td>
+              <td class="iv-school-name">{{schoolClasse.classe?.code}}</td>
+              <td>{{schoolClasse.classe?.label}}</td>
+              <td>
+                <span class="iv-country-pill" *ngIf="schoolClasse.groupe?.code">{{schoolClasse.groupe?.code}}</span>
+              </td>
+              <td>
+                <div class="iv-action-group">
+                  <a class="iv-action-btn iv-action-btn--neutral"
+                    [routerLink]="['/espace/gestion-classe/list-apprenant', schoolClasse?.id]">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    Élèves
                   </a>
+                  <button type="button" class="iv-action-btn iv-action-btn--warning"
+                    (click)="openViewUploadModal(schoolClasse, modalUploadStudent)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    Charger
+                  </button>
+                  <button type="button" class="iv-action-btn iv-action-btn--deactivate"
+                    (click)="ConfirmClasseDelete(DeleteModalSchoolClasse, schoolClasse.classe)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Retirer
+                  </button>
                 </div>
-              </div>
-            </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
 
-            <div class="col-sm-auto">
-              <div>
-                <a class="btn btn-info" (click)="downloadTemplate(); infoOnModelUpload.show()"
-                  target="_self"><i class="fas fa-file-download me-1"></i> Télécharger un Modèle</a>
-              </div>
-            </div>
-
-            <div class="col-sm-auto">
-              <div class="text-sm-end">
-                <a class="btn btn-success" id="addClasse" (click)="displayAddClasseModal(addModal)"><i
-                    class="fa fa-plus me-1"></i> Ajouter une Classe
-                </a>
-              </div>
-            </div>
-            <!-- end col -->
-          </div>
-          <!-- end row -->
-
-          <div>
-            <div class="row ht-2">
-              <div class="col-md-12 h5">Liste des classes : ({{schoolClasses?.length}}) </div>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead class="table-light">
-                  <tr>
-                    <th scope="col" style="width: 8%">#</th>
-                    <th scope="col" style="width: 15%">Code</th>
-                    <th scope="col" style="width: 40%">Libellé</th>
-                    <th scope="col" style="width: 15%">Groupe</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Skeleton -->
-                  <ng-container *ngIf="isProcessing">
-                    <tr class="sk-row" *ngFor="let i of [1,2,3,4,5,6]">
-                      <td><div class="sk sk--xs sk--center"></div></td>
-                      <td><div class="sk sk--sm"></div></td>
-                      <td><div class="sk sk--lg"></div></td>
-                      <td><div class="sk sk--sm"></div></td>
-                      <td>
-                        <div class="sk-actions">
-                          <div class="sk sk--btn"></div>
-                          <div class="sk sk--btn"></div>
-                          <div class="sk sk--btn"></div>
-                        </div>
-                      </td>
-                    </tr>
-                  </ng-container>
-                  <tr *ngIf="!isProcessing && schoolClasses?.length == 0" class="text-center">
-                    <td colspan="5" class="sk-empty-cell">Aucune donnée trouvée !</td>
-                  </tr>
-                  <ng-container *ngIf="!isProcessing">
-                    <tr class="hover-item"
-                      *ngFor="let schoolClasse of schoolClasses | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-                      <td style="width: 8%">{{i+1}}</td>
-                      <td style="width: 20%">{{schoolClasse.classe?.code}}</td>
-                      <td style="width: 40%">{{schoolClasse.classe?.label}}</td>
-                      <td style="width: 15%">{{schoolClasse.groupe?.code}}</td>
-                      <td>
-                        <div class="d-flex gap-3">
-                          <a href="javascript:void(0);" tooltip="Liste élèves" class="text-primary"
-                            [routerLink]="['/espace/gestion-classe/list-apprenant', schoolClasse?.id]"><i
-                              class="mdi mdi-account-group font-size-18"></i></a>
-
-                          <a href="javascript:void(0);" tooltip="Charger une liste" class="text-warning"
-                            (click)="openViewUploadModal(schoolClasse, modalUploadStudent)"><i
-                              class="mdi mdi-file-upload-outline font-size-18 text-warning align-middle me-2"></i></a>
-
-                          <a href="javascript:void(0);" tooltip="Retirer" class="text-danger"
-                            (click)="ConfirmClasseDelete(DeleteModalSchoolClasse, schoolClasse.classe)"><i
-                              class="mdi mdi-close text-danger font-size-18 align-middle me-2"></i></a>
-                        </div>
-                      </td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-
-              </table>
-
-              <div class="pagination-style">
-                <pagination-controls previousLabel="Précédent" nextLabel="Suivant"
-                  (pageChange)="p = $event"></pagination-controls>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end row -->
-      <div class="row">
-        <div class="col-lg-12">
-
-        </div>
-      </div>
-      <!-- end row -->
+    <div class="text-end">
+      <pagination-controls previousLabel="←" nextLabel="→" (pageChange)="p = $event"></pagination-controls>
     </div>
   </div>
 </div>
@@ -128,10 +123,8 @@
     <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
       <span class="sr-only pull-right">Loading...</span>
     </div>
-    <h5 class="modal-title" id="myMiddleModalLabel"> <i class="fas fa-plus-circle text-success"></i> Nouvelle Classe
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-      (click)="closeAddClasseModal()"></button>
+    <h5 class="modal-title" id="myMiddleModalLabel"> <i class="fas fa-plus-circle text-success"></i> Nouvelle Classe</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeAddClasseModal()"></button>
   </div>
   <div class="modal-body">
     <form novalidate [formGroup]="schoolClasseForm" (ngSubmit)="addSchoolClasse()">
@@ -142,43 +135,31 @@
             <select class="form-select mb-2" formControlName="classe_id" id="classe_id"
               [ngClass]="{ 'is-invalid': schoolClasseForm.get('classe_id')?.touched && !schoolClasseForm.get('classe_id')?.valid }">
               <option disabled value="" selected>Selectionnez</option>
-              <option *ngFor="let classe of classes" value="{{ classe?.id }}">{{
-                classe?.code
-                }} - {{
-                classe?.label }}</option>
+              <option *ngFor="let classe of classes" value="{{ classe?.id }}">{{ classe?.code }} - {{ classe?.label }}</option>
             </select>
             <div class="space-between-validator"
               *ngIf="schoolClasseForm.get('classe_id')?.touched && schoolClasseForm.get('classe_id').hasError('required')">
               <span class="required_color">Sélectionner une classe.</span>
             </div>
           </div>
-
           <div class="mb-3">
             <label for="">Sélectionner un groupe</label>
             <select class="form-select mb-2" formControlName="groupe_id" id="groupe_id">
               <option disabled value="" selected>Selectionnez</option>
-              <option *ngFor="let groupe of groupes" value="{{ groupe?.id }}">{{
-                groupe?.code
-                }} </option>
+              <option *ngFor="let groupe of groupes" value="{{ groupe?.id }}">{{ groupe?.code }}</option>
             </select>
           </div>
-
         </div>
       </div>
       <div class="modal-footer">
         <div class="hstack gap-2 justify-content-end">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-            (click)="closeAddClasseModal()">Fermer</button>
-          <button type="submit" class="btn btn-success" [disabled]="!schoolClasseForm.valid || isProcessing"
-            id="add-btn">Ajouter</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeAddClasseModal()">Fermer</button>
+          <button type="submit" class="btn btn-success" [disabled]="!schoolClasseForm.valid || isProcessing" id="add-btn">Ajouter</button>
         </div>
       </div>
-
     </form>
-
   </div>
 </ng-template>
-
 
 <!--Start modal to add list students -->
 <ng-template #modalUploadStudent role="document" let-modal>
@@ -186,13 +167,11 @@
     <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
       <span class="sr-only pull-right">Loading...</span>
     </div>
-    <h5 class="modal-title mt-0" id="uploadStudentForm">Ajouter liste d'apprenants - Classe : <span
-        style="color: blue;">{{currentClasseCode}}</span></h5>
+    <h5 class="modal-title mt-0" id="uploadStudentForm">Ajouter liste d'apprenants - Classe : <span style="color: blue;">{{currentClasseCode}}</span></h5>
     <button type="button" class="btn-close" (click)="closeUploadModal()" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true"></span>
     </button>
   </div>
-
   <form (ngSubmit)="addStudentListToClasse()" [formGroup]="uploadForm">
     <div class="modal-body">
       <div class="row">
@@ -208,19 +187,15 @@
           </div>
         </div>
       </div>
-
     </div>
     <div class="modal-footer">
       <div class="hstack gap-2 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-          (click)="closeUploadModal()">Fermer</button>
-        <button type="submit" class="btn btn-success" id="add-btn"
-          [disabled]="!uploadForm.valid || isProcessing">Ajouter</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeUploadModal()">Fermer</button>
+        <button type="submit" class="btn btn-success" id="add-btn" [disabled]="!uploadForm.valid || isProcessing">Ajouter</button>
       </div>
     </div>
   </form>
 </ng-template>
-<!--Start modal to add one class to school space -->
 
 <div>
   <div bsModal #infoOnModelUpload="bs-modal" class="modal fade" tabindex="-1">
@@ -228,24 +203,16 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Informations sur le modèle téléchargé (fichier Excel)</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-            (click)="infoOnModelUpload?.hide()"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="infoOnModelUpload?.hide()"></button>
         </div>
         <div class="modal-body">
-          <p>Veuillez renommer le fichier pour une identification des données qu'il contiendra
-            suivant la classe. De même, renseigner le nom de la classe une fois le fichier ouvert
-            pour votre propre suivi.
-          </p>
+          <p>Veuillez renommer le fichier pour une identification des données qu'il contiendra suivant la classe. De même, renseigner le nom de la classe une fois le fichier ouvert pour votre propre suivi.</p>
           <p>Remplir les champs en insérant les informations des apprenants dans la colonne adéquate.</p>
-          <p>Suivre le format de date (jour/mois/année) et insérer dans le champ sexe, M ou F pour respectivement
-            Masculin ou Féminin.
-          </p>
-          <p class="mb-0">Laisser vide l'email et le numéro de téléphone si l'apprenant n'en disposent pas.
-          </p>
-          <p><span style="font-weight: bold;">NB: </span><span style="color: red;">Ne pas laisser des lignes vides dans
-              le remplissage des informations.</span></p>
+          <p>Suivre le format de date (jour/mois/année) et insérer dans le champ sexe, M ou F pour respectivement Masculin ou Féminin.</p>
+          <p class="mb-0">Laisser vide l'email et le numéro de téléphone si l'apprenant n'en disposent pas.</p>
+          <p><span style="font-weight: bold;">NB: </span><span style="color: red;">Ne pas laisser des lignes vides dans le remplissage des informations.</span></p>
         </div>
-      </div><!-- /.modal -->
+      </div>
     </div>
   </div>
 </div>
@@ -253,11 +220,8 @@
 <!-- Delete Confirmation Modal -->
 <ng-template #DeleteModalSchoolClasse let-modal>
   <div class="modal-header">
-    <h5 class="modal-title"><i class="fa fa-info-circleg text-warning fa-1x"></i>
-      Confirmation
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-      (click)="modalRef?.hide()"></button>
+    <h5 class="modal-title"><i class="fa fa-info-circleg text-warning fa-1x"></i> Confirmation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modalRef?.hide()"></button>
   </div>
   <div class="modal-body text-center">
     <p class="h5 text-danger">Voulez-vous vraiment retirer la classe : {{ currentClasseCode }} ?</p>
@@ -268,39 +232,31 @@
   </div>
 </ng-template>
 
-
 <!-- View Students Existed When List Uploaded Modal -->
 <ng-template #modalExistedStudent role="document" let-modal>
   <div class="modal-header">
     <div *ngIf="isProcessing" class="position-relative spinner-border text-primary m-1 pull-right">
       <span class="sr-only pull-right">Loading...</span>
     </div>
-    <h5 class="modal-title mt-0" id="uploadStudentForm">Rapport Du Chargement - Classe : <span
-        style="color: blue;">{{currentClasseCode}}</span></h5>
-    <button type="button" class="btn-close" (click)="closeExistedStudentModal()" data-dismiss="modal"
-      aria-label="Close">
+    <h5 class="modal-title mt-0" id="uploadStudentForm">Rapport Du Chargement - Classe : <span style="color: blue;">{{currentClasseCode}}</span></h5>
+    <button type="button" class="btn-close" (click)="closeExistedStudentModal()" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true"></span>
     </button>
   </div>
-
   <div class="modal-body">
     <div class="row">
       <div class="col-sm-12">
         <p>Le chargement du fichier s'est terminé avec succès. <br>
           Les apprenants ci-dessous existaient déjà dans le système. Il s'agit de : </p>
         <ul>
-          <li *ngFor="let student of existed_students"><b>{{ student.student }}</b> (ligne {{student.line}} du fichier
-            excel)</li>
+          <li *ngFor="let student of existed_students"><b>{{ student.student }}</b> (ligne {{student.line}} du fichier excel)</li>
         </ul>
       </div>
     </div>
-
   </div>
   <div class="modal-footer">
     <div class="hstack gap-2 justify-content-end">
-      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-        (click)="closeExistedStudentModal()">Fermer</button>
+      <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeExistedStudentModal()">Fermer</button>
     </div>
   </div>
 </ng-template>
-<!-- View Students Existed When List Uploaded Modal -->

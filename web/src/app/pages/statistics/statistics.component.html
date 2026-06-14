@@ -1,172 +1,192 @@
 <div class="container-fluid mt-2">
-    <app-page-title title="STATISTIQUE DES TRANSACTIONS" [breadcrumbItems]="breadCrumbItems"></app-page-title>
-    <div class="row">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row" *ngIf="!isFilter">
-                            <div class="col-lg-2">
-                                <button class="btn btn-primary mt-1" type="button" (click)="displayFilter()"> <i
-                                        class="fa fa-filter"></i>
-                                    Filtrer</button>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="isFilter">
-                            <div class="col-lg-2">
-                                <button class="btn btn-danger mt-1" type="button" (click)="displayFilter()"> <i
-                                        class="fa fa-times"></i>
-                                    Fermer</button>
-                            </div>
-                        </div>
-                        <form #seachPaymentForm="ngForm" *ngIf="isFilter"
-                            (ngSubmit)="getHistoryOfPayment(seachPaymentForm)">
+  <app-page-title title="Statistiques des Transactions" [breadcrumbItems]="breadCrumbItems"></app-page-title>
 
-                            <div class="row mt-2">
-                                <div class="col-lg-2">
-                                    <label for="date_debut">Début</label>
-                                    <input class="form-control" type="date" name="date_debut" ngModel
-                                        (keyup.enter)="getHistoryOfPayment(seachPaymentForm)">
-                                </div>
-                                <div class="col-lg-2">
-                                    <label for="date_fin">Fin</label>
-                                    <input class="form-control" type="date" name="date_fin" ngModel
-                                        (keyup.enter)="getHistoryOfPayment(seachPaymentForm)">
-                                </div>
-                                <div class="col-lg-2">
-                                    <label for="operators">Operateur Mobile</label>
-                                    <select class="form-control" name="operateur_id" ngModel
-                                        (change)="getHistoryOfPayment(seachPaymentForm)">
-                                        <option value="" selected>Selection opérateur</option>
-                                        <option value="{{operator.id}}" *ngFor="let operator of operators">
-                                            {{operator.name}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-2">
-                                    <label for="academic_year">Année</label>
-                                    <select class="form-control" name="academic_year" ngModel
-                                        (change)="getHistoryOfPayment(seachPaymentForm)">
-                                        <option value="" selected>Selection l'année</option>
-                                        <option value="{{academicyser.id}}" *ngFor="let academicyser of academicyears">
-                                            {{academicyser.academic_year}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3">
-                                    <label for="date_debut">Ecole</label>
-                                    <select class="form-control" name="school_id" ngModel
-                                        (change)="getHistoryOfPayment(seachPaymentForm)">
-                                        <option value="" selected>Selection école</option>
-                                        <option value="{{school.id}}" *ngFor="let school of schools">
-                                            {{school.social_reason}}</option>
-                                    </select>
-                                </div>
-                                <!--div class="col-lg-3">
-                                    <label for="date_debut">Type Frais</label>
-                                    <select class="form-control" name="type_fees_id" ngModel>
-                                        <option value="" selected>Selection type frais</option>
-                                        <option value="{{type_frais.id}}" *ngFor="let type_frais of types_frais">
-                                            {{type_frais.libelle}}
-                                        </option>
-                                    </select>
-                                </div-->
-                                <div class="col-lg-1 text-right mt-3">
-                                    <button class="btn btn-primary mt-3" type="submit"> <i
-                                            class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+  <!-- Filtre -->
+  <div class="iv-card mb-4">
+    <div class="iv-card-header">
+      <div class="iv-card-header-left">
+        <div class="iv-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
         </div>
-
-        <div class="row" *ngIf="isProcessing">
-            <div class="col-lg-12">
-                <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-            </div>
+        <div>
+          <h2 class="iv-card-title">Filtres</h2>
+          <p class="iv-card-sub">Affinez les données par période, opérateur ou école</p>
         </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Total des Paiement Reçus &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b
-                                class="text-left text-primary">{{totalOfPaymentAggregationByTypeFeesData |
-                                currency:'XOF'}}</b></h4>
-                        <div class="table-responsive mt-3">
-                            <table
-                                class="table table-striped align-middle table-nowrap dt-responsive nowrap w-100 table-borderless"
-                                id="projectList-table">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col" style="width: 50px">#</th>
-                                        <th scope="col">Type de Frais Reçu</th>
-                                        <th scope="col">Montant</th>
-                                        <th scope="col">Commission</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-striped">
-                                    <tr *ngIf="isProcessing" class="text-center">
-                                        <td colspan="4">Chargement en cours. Veuillez patienter !!!</td>
-                                    </tr>
-                                    <tr *ngIf="paymentAggregationByTypeFeesData?.length == 0" class="text-center">
-                                        <td colspan="4">Aucune donnée trouvée !</td>
-                                    </tr>
-                                    <tr
-                                        *ngFor="let aggregat of paymentAggregationByTypeFeesData | paginate: {id:'table1', itemsPerPage: 5, currentPage: p1 }; let i = index;">
-                                        <td>{{i+1}}</td>
-                                        <td><b>{{aggregat.type_fees?.label}}</b></td>
-                                        <td><b>{{aggregat.sum | currency:'XOF'}}</b></td>
-                                        <td><b>{{aggregat.scolar_com | currency:'XOF'}}</b></td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                            <div class="pagination-style">
-                                <pagination-controls id="table1" previousLabel="Précédent" nextLabel="Suivant"
-                                    (pageChange)="p1 = $event"></pagination-controls>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Evolution des transactions par type de frais -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Graphique des Paiements reçus</h4>
-                        <apx-chart class="apex-charts" dir="ltr" [series]="simplePieChart?.series"
-                            [chart]="simplePieChart?.chart" [labels]="simplePieChart?.labels"
-                            [legend]="simplePieChart?.legend" [colors]="simplePieChart?.colors"
-                            [responsive]="simplePieChart?.responsive">
-                        </apx-chart>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Evolution des transactions par type de frais</h4>
-                        <apx-chart class="apex-charts" dir="ltr" [series]="linewithDataChart.series"
-                            [chart]="linewithDataChart.chart" [colors]="linewithDataChart.colors"
-                            [stroke]="linewithDataChart.stroke" [dataLabels]="linewithDataChart.dataLabels"
-                            [responsive]="linewithDataChart.responsive" [legend]="linewithDataChart.legend"
-                            [xaxis]="linewithDataChart.xaxis" [yaxis]="linewithDataChart.yaxis"
-                            [stroke]="linewithDataChart.stroke" [markers]="linewithDataChart.markers">
-                        </apx-chart>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="iv-card-actions">
+        <button *ngIf="!isFilter" class="iv-btn iv-btn--search" type="button" (click)="displayFilter()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtrer
+        </button>
+        <button *ngIf="isFilter" class="iv-btn iv-btn--close" type="button" (click)="displayFilter()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Fermer
+        </button>
+      </div>
     </div>
+
+    <div *ngIf="isFilter" class="iv-search-panel">
+      <form #seachPaymentForm="ngForm" (ngSubmit)="getHistoryOfPayment(seachPaymentForm)">
+        <div class="iv-search-form" style="flex-wrap:wrap">
+          <div class="iv-ff iv-ff--sm">
+            <label class="iv-field-label">Début</label>
+            <input class="iv-input" type="date" name="date_debut" ngModel
+              (keyup.enter)="getHistoryOfPayment(seachPaymentForm)" />
+          </div>
+          <div class="iv-ff iv-ff--sm">
+            <label class="iv-field-label">Fin</label>
+            <input class="iv-input" type="date" name="date_fin" ngModel
+              (keyup.enter)="getHistoryOfPayment(seachPaymentForm)" />
+          </div>
+          <div class="iv-ff">
+            <label class="iv-field-label">Opérateur Mobile</label>
+            <select class="iv-select" name="operateur_id" ngModel
+              (change)="getHistoryOfPayment(seachPaymentForm)">
+              <option value="" selected>Sélectionner opérateur</option>
+              <option value="{{operator.id}}" *ngFor="let operator of operators">{{operator.name}}</option>
+            </select>
+          </div>
+          <div class="iv-ff iv-ff--sm">
+            <label class="iv-field-label">Année académique</label>
+            <select class="iv-select" name="academic_year" ngModel
+              (change)="getHistoryOfPayment(seachPaymentForm)">
+              <option value="" selected>Sélectionner l'année</option>
+              <option value="{{academicyser.id}}" *ngFor="let academicyser of academicyears">
+                {{academicyser.academic_year}}
+              </option>
+            </select>
+          </div>
+          <div class="iv-ff">
+            <label class="iv-field-label">École</label>
+            <select class="iv-select" name="school_id" ngModel
+              (change)="getHistoryOfPayment(seachPaymentForm)">
+              <option value="" selected>Sélectionner école</option>
+              <option value="{{school.id}}" *ngFor="let school of schools">{{school.social_reason}}</option>
+            </select>
+          </div>
+          <div class="iv-ff iv-ff--action">
+            <button class="iv-search-submit" type="submit">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              Chercher
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tableau agrégation -->
+  <div class="iv-card mb-4">
+    <div class="iv-card-header">
+      <div class="iv-card-header-left">
+        <div class="iv-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="16"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="iv-card-title">Total des Paiements Reçus</h2>
+          <p class="iv-card-sub">
+            <b class="text-primary">{{totalOfPaymentAggregationByTypeFeesData | currency:'XOF'}}</b>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="iv-table-wrap">
+      <table class="iv-table">
+        <thead>
+          <tr>
+            <th class="iv-th-num">#</th>
+            <th>Type de Frais Reçu</th>
+            <th>Montant</th>
+            <th>Commission</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="isProcessing">
+            <tr class="iv-skeleton-row" *ngFor="let i of [1,2,3,4,5]">
+              <td class="iv-td-num"><div class="sk sk--xs sk--center"></div></td>
+              <td><div class="sk sk--lg"></div></td>
+              <td><div class="sk sk--md"></div></td>
+              <td><div class="sk sk--md"></div></td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="!isProcessing && paymentAggregationByTypeFeesData?.length == 0">
+            <td colspan="4" class="iv-td-empty">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 15s1.5-2 4-2 4 2 4 2"/>
+                <line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+              </svg>
+              <span>Aucune donnée trouvée</span>
+            </td>
+          </tr>
+          <ng-container *ngIf="!isProcessing">
+            <tr *ngFor="let aggregat of paymentAggregationByTypeFeesData | paginate: {id:'table1', itemsPerPage: 5, currentPage: p1 }; let i = index;">
+              <td class="iv-td-num">{{i+1}}</td>
+              <td class="iv-school-name">{{aggregat.type_fees?.label}}</td>
+              <td class="iv-td-mono">{{aggregat.sum | currency:'XOF'}}</td>
+              <td class="iv-td-mono">{{aggregat.scolar_com | currency:'XOF'}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-end">
+      <pagination-controls id="table1" previousLabel="←" nextLabel="→" (pageChange)="p1 = $event"></pagination-controls>
+    </div>
+  </div>
+
+  <!-- Graphique camembert -->
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Graphique des Paiements reçus</h4>
+          <apx-chart class="apex-charts" dir="ltr"
+            [series]="simplePieChart?.series"
+            [chart]="simplePieChart?.chart"
+            [labels]="simplePieChart?.labels"
+            [legend]="simplePieChart?.legend"
+            [colors]="simplePieChart?.colors"
+            [responsive]="simplePieChart?.responsive">
+          </apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphique courbe -->
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Évolution des transactions par type de frais</h4>
+          <apx-chart class="apex-charts" dir="ltr"
+            [series]="linewithDataChart.series"
+            [chart]="linewithDataChart.chart"
+            [colors]="linewithDataChart.colors"
+            [stroke]="linewithDataChart.stroke"
+            [dataLabels]="linewithDataChart.dataLabels"
+            [responsive]="linewithDataChart.responsive"
+            [legend]="linewithDataChart.legend"
+            [xaxis]="linewithDataChart.xaxis"
+            [yaxis]="linewithDataChart.yaxis"
+            [markers]="linewithDataChart.markers">
+          </apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
