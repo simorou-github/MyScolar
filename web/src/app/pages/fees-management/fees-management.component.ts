@@ -50,7 +50,7 @@ export class FeesManagementComponent {
     }
 
     typeFeesList(param: any = this.feesTypeForm.value) {
-        //this.isProcessing = true;
+        this.isProcessing = true;
         this.ngxLoader.startLoader('loader-fees');
         this.feesTypeForm = this.fb.group({
             id: [],
@@ -62,9 +62,14 @@ export class FeesManagementComponent {
         this.parameterService.listTypeFees(param).subscribe({
             next: (v: any) => {
                 this.typeFees = v.data;
-                //this.isProcessing = false;
+                this.isProcessing = false;
                 this.ngxLoader.stopLoader('loader-fees');
 
+            },
+            error: (e) => {
+                console.error(e);
+                this.isProcessing = false;
+                this.ngxLoader.stopLoader('loader-fees');
             }
         });
     }

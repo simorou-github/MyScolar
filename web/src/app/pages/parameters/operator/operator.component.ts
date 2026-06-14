@@ -143,6 +143,7 @@ export class OperatorComponent implements OnInit {
   }
 
   getAllOperators() {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.parameterService.listOperator(this.searchForm.value).subscribe({
       next: (v: any) => {
@@ -153,12 +154,14 @@ export class OperatorComponent implements OnInit {
         } else {
           this.ngxLoader.stopLoader('loader-spin');
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.error(e);
         this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
+        this.isProcessing = false;
       },
 
       complete: () => {

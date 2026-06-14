@@ -112,6 +112,7 @@ export class InscriptionValidatedComponent implements OnInit {
 
   getListInscriptionValidated() {
     this.isSearching = true;
+    this.isProcessing = true;
     this.inscriptionService.listInscriptionsValidated(this.searchForm.value).subscribe(
       {
         next: (v: any) => {
@@ -120,12 +121,14 @@ export class InscriptionValidatedComponent implements OnInit {
             this.inscriptionsValidated = v.data;
           }
           this.isSearching = false;
+          this.isProcessing = false;
         },
 
         error: (e) => {
           console.error(e);
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
           this.isSearching = false;
+          this.isProcessing = false;
         },
 
         complete: () => { }

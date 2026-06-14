@@ -64,14 +64,14 @@
 
 input{
   height: 38px;
-  font-size: larger !important;
+  font-size: 15px !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
   margin-bottom: 25px !important;
 }
 
 select{
   height: 38px !important;
-  font-size: larger !important;
+  font-size: 15px !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
   margin-bottom: 25px !important;
 }
@@ -83,7 +83,7 @@ select{
 // }
 
 label{
-  font-size: larger !important;
+  font-size: 15px !important;
   font-weight: 400 !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif  !important;
 }
@@ -141,4 +141,72 @@ td{
 
 .custom-table-sp:hover {
   background-color: #F1F3F3;
+}
+
+// =============================================
+// Skeleton loader (uniformisé pour tous les blocs)
+// =============================================
+@keyframes skShimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%);  }
+}
+
+.sk {
+  display      : block;
+  position     : relative;
+  overflow     : hidden;
+  border-radius: 5px;
+  background   : #E8EFF6;
+
+  &::after {
+    content   : '';
+    position  : absolute;
+    inset     : 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 100%
+    );
+    animation: skShimmer 1.3s ease-in-out infinite;
+  }
+
+  &--xs  { height: 10px; width: 28px;  }
+  &--sm  { height: 10px; width: 80px;  }
+  &--md  { height: 10px; width: 130px; }
+  &--lg  { height: 10px; width: 170px; }
+  &--full { height: 10px; width: 100%; }
+
+  &--center { margin: 0 auto; }
+
+  &--avatar {
+    width        : 30px;
+    height       : 30px;
+    border-radius: 8px;
+    flex-shrink  : 0;
+  }
+
+  &--pill {
+    height       : 22px;
+    width        : 74px;
+    border-radius: 20px;
+  }
+
+  &--btn {
+    height       : 26px;
+    width        : 76px;
+    border-radius: 7px;
+  }
+}
+
+// Ligne de tableau en squelette, avec décalage de phase en cascade
+.sk-row {
+  td {
+    padding: 13px 14px;
+    vertical-align: middle;
+  }
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) .sk::after { animation-delay: #{($i - 1) * 0.1}s; }
+  }
 }

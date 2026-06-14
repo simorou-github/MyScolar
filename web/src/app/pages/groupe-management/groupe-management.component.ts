@@ -142,6 +142,7 @@ export class GroupeManagementComponent implements OnInit{
 
   // Fonction de récupération des groupes 
   groupeList() {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.schoolService.listGroupe({ school_id: this.schoolId, searchForm: this.searchForm.value }).subscribe({
       next: (v: any) => {
@@ -153,12 +154,14 @@ export class GroupeManagementComponent implements OnInit{
           this.showError(this.message);
           this.ngxLoader.stopLoader('loader-spin');
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.error(e);
         this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
+        this.isProcessing = false;
       },
 
       complete: () => {

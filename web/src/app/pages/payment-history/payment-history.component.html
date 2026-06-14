@@ -1,223 +1,238 @@
 <div class="container-fluid">
     <app-page-title title="Liste des Transactions"
         [breadcrumbItems]="breadCrumbItems"></app-page-title>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-sm">
-                            <div class="d-inline-block">
-                                <div class="position-relative">
-                                    <a *ngIf="!isSearchForm"
-                                        class="btn btn-primary"
-                                        id="addProject-btn"
-                                        (click)="displaySearchForm(true);"><i
-                                            class="fa fa-search me-1"></i>
-                                        Rechercher
-                                    </a>
-                                    <a *ngIf="isSearchForm"
-                                        class="btn btn-danger"
-                                        id="addProject-btn"
-                                        (click)="displaySearchForm(false);"><i
-                                            class="fa fa-times me-1"></i> Fermer
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end col -->
-                        <div class="col-sm-auto">
-                            <div class="text-sm-end">
-                                <a class="btn btn-light"
-                                    style="margin-right: 20px !important;"
-                                    id="btnEXCEL" (click)="exportExcel()"><i
-                                        class="fas fa-file-excel"></i> EXCEL
-                                </a>
 
-                                <a class="btn btn-light" (click)="generatePdf()"
-                                    id="btnPDF"><i
-                                        class="fas fa-file-pdf"></i> PDF
-                                </a>
-                            </div>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
+    <div class="iv-card">
 
-                    <div *ngIf="isSearchForm" class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-4">Recherche
-                                    avancée</h5>
-
-                                <form class="row gy-2 gx-3 align-items-center"
-                                    (ngSubmit)="getHistoryOfPayment()"
-                                    [formGroup]="searchForm">
-
-                                    <div class="col-sm-3">
-                                        <label class="visually-hidden"
-                                            for="autoSizingSelect">Classe</label>
-                                        <select class="form-select"
-                                            id="autoSizingSelect"
-                                            formControlName="classe_id">
-                                            <option selected
-                                                value>Classe</option>
-                                            <option
-                                                *ngFor="let schoolClasse of schoolClasses"
-                                                value="{{schoolClasse.id}}">{{schoolClasse.classe?.code}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <label class="visually-hidden"
-                                            for="autoSizingSelect">Apprenant</label>
-                                        <select class="form-select"
-                                            id="autoSizingSelect"
-                                            formControlName="student_id">
-                                            <option selected
-                                                value>Apprenant</option>
-                                            <option
-                                                *ngFor="let student of schoolStudents"
-                                                value="{{student.id}}">
-                                                {{student.last_name + ' ' +
-                                                student.first_name}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <label class="visually-hidden"
-                                            for="autoSizingSelect">Année
-                                            académique</label>
-                                        <select class="form-select"
-                                            id="autoSizingSelect"
-                                            formControlName="academic_year">
-                                            <option selected value>Année
-                                                académique</option>
-                                            <option
-                                                *ngFor="let year of listAcademicYear"
-                                                value="{{year.academic_year}}">{{year.academic_year}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <label class="visually-hidden"
-                                            for="autoSizingSelect">Opérateur</label>
-                                        <select class="form-select"
-                                            id="autoSizingSelect"
-                                            formControlName="operator">
-                                            <option selected
-                                                value>Opérateur</option>
-                                            <option
-                                                *ngFor="let operator of operatorsList"
-                                                value="{{operator.name}}">
-                                                {{operator.name}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-1"
-                                        style="margin-top: -2%;">
-                                        <button type="submit"
-                                            class="btn btn-primary">
-                                            <i
-                                                class="bx bx-search-alt-2 font-size-16 align-middle me-2"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-                    <div>
-                        <div class="row ht-2">
-                            <div class="col-md-8 h5">Liste des transactions :
-                                ({{payments?.length}}) </div>
-                            <div
-                                class="col-md-4 h5 text-center text-primary"><b>
-                                    Total : {{totalAmount |
-                                    currency:'XOF'}} </b></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table 
-                                class="table table-striped"
-                                id="projectList-table">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col"
-                                            style="width: 50px">#</th>
-                                        <th scope="col">Opérateur</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Apprenant</th>
-                                        <th scope="col">Classe</th>
-                                        <th scope="col">Année</th>
-                                        <th scope="col">Montant</th>
-                                        <th scope="col">Téléphone</th>
-                                        <th scope="col"
-                                            class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngIf="payments?.length == 0"
-                                        class="text-center">
-                                        <td colspan="10">Aucune donnée trouvée
-                                            !</td>
-                                    </tr>
-                                    <tr
-                                        *ngFor="let payment of payments | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-                                        <td>{{i+1}}</td>
-                                        <td>{{payment.operator?.name}}</td>
-                                        <td>{{payment.created_at | date :
-                                            'dd/MM/yyyy HH:MM:ss'}}</td>
-                                        <td>{{payment.student?.last_name + ' ' +
-                                            payment.student?.first_name}}</td>
-                                        <td>{{payment.classe?.classe?.code}} -
-                                            {{payment.classe?.groupe?.code}}</td>
-                                        <td>{{payment.academic_year}}</td>
-                                        <td>{{payment.amount | currency:
-                                            'XOF'}}</td>
-                                        <td>{{payment.phone}}</td>
-
-                                        <td class="text-center">
-                                            <div
-                                                class="d-flex gap-3 text-center">
-                                                <ul
-                                                    class="list-unstyled hstack gap-1 mb-0">
-                                                    <li data-bs-toggle="tooltip"
-                                                        data-bs-placement="top"
-                                                        title="Détails">
-                                                        <a
-                                                            class="btn btn-sm btn-soft-info"
-                                                            (click)="displayDetailsModal(detailsModal, payment)"><i
-                                                                class="mdi mdi-eye-outline"></i></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                            <div class="pagination-style">
-                                <pagination-controls previousLabel="Précédent"
-                                    nextLabel="Suivant"
-                                    (pageChange)="p = $event"></pagination-controls>
-                            </div>
-                            <!-- <ngx-ui-loader overlayColor="#ECF0F1"
-                                [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"
-                                [loaderId]="'loader-spin'"></ngx-ui-loader> -->
-
-                        </div>
-                    </div>
+        <!-- ── En-tête : titre + actions ───────────────── -->
+        <div class="iv-card-header">
+            <div class="iv-card-header-left">
+                <div class="iv-card-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="iv-card-title">Historique des transactions</h2>
+                    <p class="iv-card-sub">
+                        {{ payments?.length ?? 0 }} transaction(s) •
+                        <span class="iv-card-total">Total : <b>{{totalAmount | currency:'XOF'}}</b></span>
+                    </p>
                 </div>
             </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-lg-12">
 
-                </div>
+            <div class="iv-card-actions">
+                <button *ngIf="!isSearchForm"
+                        class="iv-btn iv-btn--search"
+                        (click)="displaySearchForm(true)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Rechercher
+                </button>
+                <button *ngIf="isSearchForm"
+                        class="iv-btn iv-btn--close"
+                        (click)="displaySearchForm(false)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Fermer
+                </button>
+                <button class="iv-btn iv-btn--excel" (click)="exportExcel()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    Excel
+                </button>
+                <button class="iv-btn iv-btn--pdf" (click)="generatePdf()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    Exporter PDF
+                </button>
             </div>
-            <!-- end row -->
         </div>
+
+        <!-- ── Panneau de recherche avancée ────────────── -->
+        <div *ngIf="isSearchForm" class="iv-search-panel">
+            <div class="iv-search-panel-inner">
+                <p class="iv-search-label">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Recherche avancée
+                </p>
+                <form class="iv-search-form" [formGroup]="searchForm"
+                    (ngSubmit)="getHistoryOfPayment()">
+
+                    <div class="iv-ff">
+                        <label class="iv-field-label">Classe</label>
+                        <select class="iv-select" formControlName="classe_id">
+                            <option selected value>Toutes les classes</option>
+                            <option *ngFor="let schoolClasse of schoolClasses"
+                                value="{{schoolClasse.id}}">{{schoolClasse.classe?.code}}</option>
+                        </select>
+                    </div>
+
+                    <div class="iv-ff">
+                        <label class="iv-field-label">Apprenant</label>
+                        <select class="iv-select" formControlName="student_id">
+                            <option selected value>Tous les apprenants</option>
+                            <option *ngFor="let student of schoolStudents"
+                                value="{{student.id}}">
+                                {{student.last_name + ' ' + student.first_name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="iv-ff">
+                        <label class="iv-field-label">Année académique</label>
+                        <select class="iv-select" formControlName="academic_year">
+                            <option selected value>Toutes les années</option>
+                            <option *ngFor="let year of listAcademicYear"
+                                value="{{year.academic_year}}">{{year.academic_year}}</option>
+                        </select>
+                    </div>
+
+                    <div class="iv-ff">
+                        <label class="iv-field-label">Opérateur</label>
+                        <select class="iv-select" formControlName="operator">
+                            <option selected value>Tous les opérateurs</option>
+                            <option *ngFor="let operator of operatorsList"
+                                value="{{operator.name}}">
+                                {{operator.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="iv-ff iv-ff--action">
+                        <label class="iv-field-label"></label>
+                        <button type="submit" class="iv-search-submit">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            Lancer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ── Tableau ──────────────────────────────────── -->
+        <div class="iv-table-wrap">
+            <table class="iv-table">
+                <thead>
+                    <tr>
+                        <th class="iv-th-num">#</th>
+                        <th>Opérateur</th>
+                        <th>Date</th>
+                        <th>Apprenant</th>
+                        <th>Classe</th>
+                        <th>Année</th>
+                        <th>Montant</th>
+                        <th>Téléphone</th>
+                        <th class="iv-th-actions">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Skeleton chargement -->
+                    <ng-container *ngIf="isProcessing">
+                        <tr class="iv-skeleton-row" *ngFor="let i of [1,2,3,4,5,6,7]">
+                            <td class="iv-td-num"><div class="sk sk--xs sk--center"></div></td>
+                            <td><div class="sk sk--pill"></div></td>
+                            <td><div class="sk sk--sm"></div></td>
+                            <td>
+                                <div class="sk-school">
+                                    <div class="sk sk--avatar"></div>
+                                    <div class="sk sk--md"></div>
+                                </div>
+                            </td>
+                            <td><div class="sk sk--sm"></div></td>
+                            <td><div class="sk sk--xs"></div></td>
+                            <td><div class="sk sk--sm"></div></td>
+                            <td><div class="sk sk--sm"></div></td>
+                            <td>
+                                <div class="sk-actions">
+                                    <div class="sk sk--btn"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <!-- Aucune donnée -->
+                    <tr *ngIf="!isProcessing && payments?.length == 0">
+                        <td colspan="9" class="iv-td-empty">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                                 stroke="#CBD5E1" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M8 15s1.5-2 4-2 4 2 4 2"/>
+                                <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                <line x1="15" y1="9" x2="15.01" y2="9"/>
+                            </svg>
+                            <span>Aucune transaction trouvée</span>
+                        </td>
+                    </tr>
+
+                    <!-- Lignes de données -->
+                    <ng-container *ngIf="!isProcessing">
+                        <tr *ngFor="let payment of payments | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+                            <td class="iv-td-num">{{i+1}}</td>
+                            <td><span class="iv-country-pill">{{payment.operator?.name}}</span></td>
+                            <td class="iv-td-mono">{{payment.created_at | date : 'dd/MM/yyyy HH:MM:ss'}}</td>
+                            <td class="iv-td-school">
+                                <div class="iv-school-cell">
+                                    <div class="iv-school-avatar">
+                                        {{ payment.student?.last_name?.charAt(0)?.toUpperCase() }}
+                                    </div>
+                                    <span class="iv-school-name">{{payment.student?.last_name}} {{payment.student?.first_name}}</span>
+                                </div>
+                            </td>
+                            <td>{{payment.classe?.classe?.code}} - {{payment.classe?.groupe?.code}}</td>
+                            <td class="iv-td-mono">{{payment.academic_year}}</td>
+                            <td class="iv-td-amount">{{payment.amount | currency: 'XOF'}}</td>
+                            <td class="iv-td-mono">{{payment.phone}}</td>
+
+                            <td>
+                                <div class="iv-action-group">
+                                    <button type="button" class="iv-action-btn iv-action-btn--neutral"
+                                        title="Détails"
+                                        (click)="displayDetailsModal(detailsModal, payment)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2.5">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        Détails
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── Pagination ───────────────────────────────── -->
+        <div class="iv-pagination">
+            <pagination-controls previousLabel="←" nextLabel="→"
+                (pageChange)="p = $event"></pagination-controls>
+        </div>
+
     </div>
 </div>
 <ngx-ui-loader overlayColor="rgba(40, 40, 40, 0.8)" blur="0" [bgsOpacity]="3" [fgsType]="'rectangle-bounce'"

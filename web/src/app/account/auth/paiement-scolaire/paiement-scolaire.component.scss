@@ -674,7 +674,76 @@ $white          : #ffffff;
   }
 }
 
+// Vue mobile : liste de cartes de frais
+.pfp-fee-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.pfp-fee-item {
+  padding: 14px;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.pfp-fee-item-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pfp-fee-item-info {
+  flex: 1;
+}
+
+.pfp-fee-item-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: $text-dark;
+}
+
+.pfp-fee-item-due {
+  font-size: 12px;
+  color: $text-muted;
+  margin-top: 2px;
+}
+
+.pfp-fee-item-amounts {
+  display: flex;
+  gap: 24px;
+}
+
+.pfp-fee-item-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pfp-fee-item-amount-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: $text-muted;
+}
+
+.pfp-btn-pay--block {
+  width: 100%;
+  justify-content: center;
+}
+
 // Tableau
+.pfp-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .pfp-table {
   margin: 0;
 
@@ -716,7 +785,7 @@ $white          : #ffffff;
 .pfp-td-check {
   text-align: center;
   vertical-align: middle !important;
-  padding: 0 24px !important;
+  padding: 0 !important;
 }
 
 .pfp-checkbox {
@@ -832,7 +901,7 @@ $white          : #ffffff;
 // ---- Header gradient modal ----
 .pfp-mhdr {
   position: relative;
-  background: linear-gradient(135deg, #0D1B2E 0%, #122744 60%, #1A3F6F 100%);
+  background: linear-gradient(135deg, $brand-blue, $brand-blue-dark);
   padding: 22px 24px;
   display: flex;
   align-items: center;
@@ -942,16 +1011,22 @@ $white          : #ffffff;
 .pfp-modal-summary {
   display: flex;
   align-items: stretch;
-  background: linear-gradient(135deg, $brand-blue, $brand-blue-dark);
+  background: rgba(74,144,217,0.06);
+  border: 1px solid rgba(74,144,217,0.15);
   border-radius: 14px;
   padding: 0;
   margin-bottom: 24px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(74,144,217,0.25);
 
   &--orange {
     background: linear-gradient(135deg, $brand-orange, darken($brand-orange, 12%));
     box-shadow: 0 4px 20px rgba(244,121,32,0.25);
+    border: none;
+
+    .pfp-sum-item span { color: rgba(255,255,255,0.6); }
+    .pfp-sum-item strong { color: $white; }
+    .pfp-sum-type { color: rgba(255,255,255,0.85) !important; }
+    .pfp-sum-sep { background: rgba(255,255,255,0.15); }
   }
 }
 
@@ -965,7 +1040,7 @@ $white          : #ffffff;
   span {
     font-size: 11px;
     font-weight: 600;
-    color: rgba(255,255,255,0.6);
+    color: $text-muted;
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
@@ -973,12 +1048,12 @@ $white          : #ffffff;
   strong {
     font-size: 16px;
     font-weight: 800;
-    color: $white;
+    color: $brand-blue-dark;
     font-family: 'Sora', 'Segoe UI', sans-serif;
   }
 
   &--highlight strong {
-    color: #6EE7B7;
+    color: #16A34A;
     font-size: 17px;
   }
 }
@@ -986,12 +1061,12 @@ $white          : #ffffff;
 .pfp-sum-type {
   font-size: 13px !important;
   font-weight: 600 !important;
-  color: rgba(255,255,255,0.85) !important;
+  color: $brand-blue-dark !important;
 }
 
 .pfp-sum-sep {
   width: 1px;
-  background: rgba(255,255,255,0.15);
+  background: rgba(74,144,217,0.15);
   flex-shrink: 0;
   margin: 12px 0;
 }

@@ -70,23 +70,21 @@ export class StudentManagementComponent implements OnInit {
   }
 
   getListStudents() {
-    this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.schoolService.listStudents({ school_id: this.schoolId, academic_year: this.academicYear, search_form: this.searchForm.value }).subscribe(
       {
         next: (v: any) => {
           this.message = v.message;
           if (v.status == 200) {
             this.students = v.data;
-            this.ngxLoader.stopLoader('loader-spin');
-          } else {
-            this.ngxLoader.stopLoader('loader-spin');
           }
+          this.isProcessing = false;
         },
 
         error: (e) => {
           console.error(e);
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
-          this.ngxLoader.stopLoader('loader-spin');
+          this.isProcessing = false;
         },
 
         complete: () => {

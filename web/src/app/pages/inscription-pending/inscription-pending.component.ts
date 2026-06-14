@@ -25,6 +25,7 @@ export class InscriptionPendingComponent implements OnInit{
   academicYear: string; schoolId: string; schoolName: string; isSearchForm: boolean = false; modalRef?: BsModalRef; rejectModalRef?: BsModalRef; fileUrl: any; currentSchoolName: string = "";
   countries: any;
   schools: any;
+  processingId: any = null;       // id de la ligne dont le bouton tourne
   
   constructor(private schoolService: SchoolService, private fb: FormBuilder, private ngxLoader: NgxUiLoaderService, public toastr: ToastrService, private router: Router, private inscriptionService: SchoolInscriptionService,
     private modalService: BsModalService, private school_inscription_service: SchoolInscriptionService,) {
@@ -104,27 +105,30 @@ export class InscriptionPendingComponent implements OnInit{
       confirmButtonText: 'Oui'
     }).then(result => {
       if (result.value) {
-        this.ngxLoader.startLoader('loader-spin');
+        this.processingId = school_id;
+        if (status === 'REJETE') {
+          this.isProcessing = true;
+        }
         this.inscriptionService.changeStatusOfInscription({ 'id': school_id, 'status': status, 'reject_reason': reject_reason }).subscribe(
           {
             next: (v: any) => {
+              this.processingId = null;
+              this.isProcessing = false;
               if (v.status == 200) {
-                this.ngxLoader.stopLoader('loader-spin');
                 this.showSuccess(v.message);
-                this.isProcessing = false;
-                if(status === 'REJETE'){
+                if (status === 'REJETE') {
                   this.rejectModalRef.hide();
                 }
-                window.location.reload();
+                this.getListInscriptionPending();
               } else {
-                this.isProcessing = false;
-                this.ngxLoader.stopLoader('loader-spin');
                 this.showError(v.message);
               }
             },
 
             error: (e) => {
               console.error(e);
+              this.processingId = null;
+              this.isProcessing = false;
             },
 
             complete: () => {
@@ -174,23 +178,21 @@ export class InscriptionPendingComponent implements OnInit{
   }
 
   getListInscriptionPending() {
-    this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.inscriptionService.listInscriptionsPending(this.searchForm.value).subscribe(
       {
         next: (v: any) => {
           this.message = v.message;
           if (v.status == 200) {
             this.inscriptionsPending = v.data;
-            this.ngxLoader.stopLoader('loader-spin');
-          } else {
-            this.ngxLoader.stopLoader('loader-spin');
           }
+          this.isProcessing = false;
         },
 
         error: (e) => {
           console.error(e);
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
-          this.ngxLoader.stopLoader('loader-spin');
+          this.isProcessing = false;
         },
 
         complete: () => {

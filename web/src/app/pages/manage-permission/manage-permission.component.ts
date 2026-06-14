@@ -45,6 +45,7 @@ export class ManagePermissionComponent {
   }
 
   getRoles(param: any) {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.manageRolePermission.getRoles().subscribe({
       next: (v: any) => {
@@ -55,12 +56,14 @@ export class ManagePermissionComponent {
         } else {
           this.ngxLoader.stopLoader('loader-spin');
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.log(e);
         this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
+        this.isProcessing = false;
       },
       complete: () => {
       }

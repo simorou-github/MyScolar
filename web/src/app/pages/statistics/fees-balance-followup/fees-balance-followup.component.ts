@@ -44,6 +44,7 @@ export class FeesBalanceFollowupComponent {
   //Get Data for Graphique des Paiements reçus
   getFeesBalanceFollowupData() {
     console.log(this.searchFeesBalanceParam);
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.scolarService.getFeesBalanceFollowupData(this.searchFeesBalanceParam).subscribe(
       {
@@ -51,10 +52,12 @@ export class FeesBalanceFollowupComponent {
           this.feesBalanceDatas = v.data;
           this.sum_balance = v.sum_balance;
           this.sum_fees = v.sum_fees;
+          this.isProcessing = false;
           this.ngxLoader.stopLoader('loader-spin');
           this.showSuccess(v.message);
         },
         error: (error) => {
+          this.isProcessing = false;
           this.ngxLoader.stopLoader('loader-spin');
           this.showError(error);
           console.log(error)

@@ -85,6 +85,7 @@ export class ManageUserComponent implements OnInit {
   }
 
   userList() {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.manageUserService.userList({}).subscribe({
       next: (v: any) => {
@@ -98,12 +99,14 @@ export class ManageUserComponent implements OnInit {
           this.ngxLoader.stopLoader('loader-spin')
           this.isUserForm = true;
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.error(e);
         this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
+        this.isProcessing = false;
       },
 
       complete: () => {

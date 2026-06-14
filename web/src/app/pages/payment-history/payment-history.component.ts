@@ -59,6 +59,7 @@ export class PaymentHistoryComponent implements OnInit {
 
   getHistoryOfPayment() {
     this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.schoolService.getHistoryOfPayment(this.searchForm.value).subscribe(
       {
         next: (v: any) => {
@@ -71,12 +72,14 @@ export class PaymentHistoryComponent implements OnInit {
           } else {
             this.ngxLoader.stopLoader('loader-spin');
           }
+          this.isProcessing = false;
         },
 
         error: (e) => {
           console.error(e);
           this.message = 'Une erreur interne est survenue. Veuillez contacter le Service Support de ScolarPlus.';
           this.ngxLoader.stopLoader('loader-spin');
+          this.isProcessing = false;
         },
         complete: () => {
         }

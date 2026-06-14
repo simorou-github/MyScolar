@@ -113,6 +113,7 @@ export class ClasseComponent implements OnInit {
   }
 
   getAllClasses() {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.classeService.list().subscribe({
       next: (v: any) => {
@@ -123,6 +124,7 @@ export class ClasseComponent implements OnInit {
         } else {
           this.ngxLoader.stopLoader('loader-spin');
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.error(e);
@@ -147,6 +149,7 @@ export class ClasseComponent implements OnInit {
   }
 
   research() {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.classeService.searchClasse(this.searchForm.value).subscribe({
       next: (v: any) => {
@@ -156,6 +159,7 @@ export class ClasseComponent implements OnInit {
         } else {
           this.ngxLoader.stopLoader('loader-spin');
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.error(e);

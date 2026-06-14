@@ -117,10 +117,20 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngIf="isProcessing" class="text-center">
-                    <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
-                  </tr>
-                  <tr *ngIf="students?.length == 0" class="text-center">
+                  <ng-container *ngIf="isProcessing">
+                    <tr class="sk-row" *ngFor="let i of [1,2,3,4,5]">
+                      <td><span class="sk sk--xs"></span></td>
+                      <td><span class="sk sk--sm"></span></td>
+                      <td><span class="sk sk--sm"></span></td>
+                      <td><span class="sk sk--sm"></span></td>
+                      <td><span class="sk sk--sm"></span></td>
+                      <td><span class="sk sk--md"></span></td>
+                      <td><span class="sk sk--xs"></span></td>
+                      <td><span class="sk sk--sm"></span></td>
+                      <td class="text-center"><span class="sk sk--btn sk--center"></span></td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="!isProcessing && students?.length == 0" class="text-center">
                     <td colspan="10">Aucune donnée trouvée !</td>
                   </tr>
                   <tr *ngFor="let student of students | paginate: {id:'table1', itemsPerPage: 10, currentPage: p }; let i = index;"
@@ -220,22 +230,55 @@
 
             <div class="col-xl-7 col-md-7 mt-2">
               <div class="card jobs-categories">
-                <div class="card-body">
-                  <h5>Frais à Collecter</h5>
-                  <label class="text-info" *ngIf="isProcessing">Chargement en cours ...</label>
-                  <ng-container *ngIf="!isProcessing">
-                    <a *ngFor="let balance of studentBalances | paginate: {id:'table2',  itemsPerPage: 5, currentPage: p2 }; let i = index;"
-                      href="javascript:void(0);"
-                      class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2">{{balance.type_fees?.label}}
-                      {{balance.fees_label}}
-                      <span *ngIf="balance.balance == 0" class="badge text-bg-success float-end bg-opacity-100 p-1 m-1"
-                        title="Reste">{{balance.balance | currency:'XOF'}}</span>
-                      <span *ngIf="balance.balance > 0" class="badge text-bg-danger float-end bg-opacity-100 p-1 m-1"
-                        title="Reste">{{balance.balance | currency:'XOF'}}</span>
-                      <span class="badge text-bg-info float-end bg-opacity-100 p-1 m-1"
-                        title="Montant à payer">{{balance.fees_amount | currency:'XOF'}}</span>
-                    </a>
-                  </ng-container>
+                <div class="card-body p-0">
+                  <h5 class="px-3 pt-3">Frais à Collecter</h5>
+                  <div class="table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                      <thead>
+                        <tr class="text-muted">
+                          <th>Libellé</th>
+                          <th class="text-end">Montant</th>
+                          <th class="text-end">Solde</th>
+                          <th class="text-center">Statut</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="isProcessing">
+                          <tr class="sk-row" *ngFor="let i of [1,2,3]">
+                            <td>
+                              <span class="sk sk--md mb-1"></span>
+                              <span class="sk sk--sm"></span>
+                            </td>
+                            <td class="text-end"><span class="sk sk--sm" style="margin-left:auto;"></span></td>
+                            <td class="text-end"><span class="sk sk--sm" style="margin-left:auto;"></span></td>
+                            <td class="text-center"><span class="sk sk--pill sk--center"></span></td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="!isProcessing">
+                          <tr *ngFor="let balance of studentBalances | paginate: {id:'table2',  itemsPerPage: 3, currentPage: p2 }; let i = index;">
+                            <td>
+                              <div class="fw-semibold">{{balance.type_fees?.label}}</div>
+                              <div class="text-muted small">{{balance.fees_label}}</div>
+                            </td>
+                            <td class="text-end fw-semibold">{{balance.fees_amount | currency:'XOF'}}</td>
+                            <td class="text-end">
+                              <span [class.text-success]="balance.balance == 0" [class.text-danger]="balance.balance > 0">
+                                {{balance.balance | currency:'XOF'}}
+                              </span>
+                            </td>
+                            <td class="text-center">
+                              <span *ngIf="balance.balance == 0" class="badge text-bg-success bg-opacity-100">Soldé</span>
+                              <span *ngIf="balance.balance > 0 && balance.balance < balance.fees_amount" class="badge text-bg-warning bg-opacity-100">Partiel</span>
+                              <span *ngIf="balance.balance == balance.fees_amount" class="badge text-bg-danger bg-opacity-100">Impayé</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="studentBalances?.length === 0">
+                            <td colspan="4" class="text-center text-muted py-3">Aucun frais à collecter</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <div class="pagination-style">
                   <pagination-controls id="table2" previousLabel="Précédent" nextLabel="Suivant"
@@ -250,31 +293,47 @@
             <div class="col-xl-12 col-md-12">
 
               <div class="card">
-                <div class="card-body" *ngIf="!isProcessing">
-                  <h5 class="mb-3">Transactions reçues</h5>
-                  <p class="text-muted"> </p>
-                  <ul class="verti-timeline list-unstyled"
-                    *ngFor="let transaction of details_transactions  | paginate: {id:'table3', itemsPerPage: 5, currentPage: p3 }; let i = index;">
-                    <li class="event-list">
-                      <div class="event-timeline-dot">
-                        <i class="bx bx-right-arrow-circle"></i>
-                      </div>
-                      <div class="d-flex">
-                        <div class="flex-grow-1">
-                          <div>
-                            <h6 class="font-size-14 mb-1"><span class="text-warning">N°
-                                {{transaction.payment?.transaction_id }} du {{transaction.payment?.created_at |
-                                date:'dd/MM/yyyy HH:MM:ss'}}</span></h6>
-                            <p class="text-muted">
-                              {{transaction.type_fees?.label}} - {{transaction.balance_fees?.fees_label}}
-                              <b>({{transaction.academic_year}})</b>
-                              &nbsp; Montant payé : <b> {{transaction.fees_amount | currency:'XOF'}}</b>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
+                <div class="card-body p-0">
+                  <h5 class="px-3 pt-3">Transactions reçues</h5>
+                  <div class="table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                      <thead>
+                        <tr class="text-muted">
+                          <th>N° Transaction</th>
+                          <th>Date</th>
+                          <th>Frais</th>
+                          <th class="text-end">Montant payé</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="isProcessing">
+                          <tr class="sk-row" *ngFor="let i of [1,2,3]">
+                            <td><span class="sk sk--sm"></span></td>
+                            <td><span class="sk sk--sm"></span></td>
+                            <td>
+                              <span class="sk sk--md mb-1"></span>
+                              <span class="sk sk--sm"></span>
+                            </td>
+                            <td class="text-end"><span class="sk sk--sm" style="margin-left:auto;"></span></td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="!isProcessing">
+                          <tr *ngFor="let transaction of details_transactions | paginate: {id:'table3', itemsPerPage: 3, currentPage: p3 }; let i = index;">
+                            <td><span class="text-warning fw-semibold">{{transaction.payment?.transaction_id}}</span></td>
+                            <td>{{transaction.payment?.created_at | date:'dd/MM/yyyy HH:mm'}}</td>
+                            <td>
+                              <div class="fw-semibold">{{transaction.type_fees?.label}}</div>
+                              <div class="text-muted small">{{transaction.balance_fees?.fees_label}} ({{transaction.academic_year}})</div>
+                            </td>
+                            <td class="text-end fw-semibold text-success">{{transaction.fees_amount | currency:'XOF'}}</td>
+                          </tr>
+                          <tr *ngIf="details_transactions?.length === 0">
+                            <td colspan="4" class="text-center text-muted py-3">Aucune transaction reçue</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
               <div class="pagination-style">
@@ -305,7 +364,7 @@
     </button>
 </div>
 
- 
+
   <form [formGroup]="studentForm" (ngSubmit)="addStudentForm()">
     <div class="modal-body">
       <div class="row mt-3">
@@ -370,17 +429,17 @@
         <div class="col-md-4">
           <div class="mb-3">
             <label for="phone">Télphone</label>
-            <input type="number" formControlName="phone" placeholder="Ex: +22960000000" class="form-control"
+            <input type="text" formControlName="phone" placeholder="Ex: +22960000000" class="form-control"
               id="phone" />
           </div>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="mb-3">
-            <label for="classe_id">Classe <span class="text-danger">*</span> <button type="button"
-                class="btn btn-soft-info btn-rounded" style="margin-left: 20px !important;">Nouveau</button></label>
+            <label for="classe_id">Classe <span class="text-danger">*</span> <!--button type="button"
+                class="btn btn-soft-info btn-rounded" style="margin-left: 20px !important;">Nouveau</button--></label>
             <select class="form-select" id="classe_id" formControlName="classe_id"
               [ngClass]="{ 'is-invalid': studentForm.get('classe_id')?.touched && !studentForm.get('classe_id')?.valid }">
               <option selected value="">Sélectionner</option>
@@ -392,10 +451,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="mb-3 mt-2">
+        <div class="col-md-8">
+          <div class="mb-3">
             <label for="email">Adresse mail</label>
-            <input type="email" formControlName="email" placeholder="Ex: monemail@gmail.com" class="form-control mt-1"
+            <input type="email" formControlName="email" placeholder="Ex: monemail@gmail.com" class="form-control"
               id="email" />
           </div>
         </div>

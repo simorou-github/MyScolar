@@ -40,15 +40,18 @@ export class SystemParameterComponent implements OnInit {
 
   // Get countries list
   paramsList(param: any) {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.parameterService.paramsList(param).subscribe(
       {
         next: (v: any) => {
           this.params = v.data;
+          this.isProcessing = false;
           this.ngxLoader.stopLoader('loader-spin');
         },
         error: (e) => {
           console.error(e);
+          this.isProcessing = false;
           this.ngxLoader.stopLoader('loader-spin');
         }
       }

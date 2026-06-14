@@ -133,6 +133,7 @@ export class ClasseManagementComponent {
   }
 
   classeList() {
+    this.isProcessing = true;
     this.ngxLoader.startLoader('loader-spin');
     this.schoolService.listSchoolClasse({ school_id: this.schoolId }).subscribe({
       next: (v: any) => {
@@ -144,12 +145,14 @@ export class ClasseManagementComponent {
           this.showError(this.message);
           this.ngxLoader.stopLoader('loader-spin');
         }
+        this.isProcessing = false;
       },
       error: (e) => {
         console.error(e);
         this.message = 'Une erreur interne est survenue. Veuillez contacter le Groupe Scolar Plus.';
         this.showError(this.message);
         this.ngxLoader.stopLoader('loader-spin');
+        this.isProcessing = false;
       },
 
       complete: () => {

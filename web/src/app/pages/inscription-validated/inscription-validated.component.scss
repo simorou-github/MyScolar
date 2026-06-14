@@ -653,3 +653,48 @@ $font-mono       : 'JetBrains Mono', 'Fira Code', monospace;
     }
   }
 }
+
+// =============================================
+// Action "more" dropdown (...)
+// =============================================
+.iv-action-more {
+  position: relative;
+
+  .iv-action-btn--more {
+    background  : rgba(107, 114, 128, 0.08);
+    border-color: rgba(107, 114, 128, 0.22);
+    color       : $text-muted;
+    width       : 28px;
+    padding     : 0;
+    justify-content: center;
+
+    &:hover, &.active {
+      background  : $text-muted;
+      border-color: $text-muted;
+      color       : $white;
+    }
+  }
+
+}
+
+::ng-deep .dropdown-menu {
+  &:has(.iv-action-btn) {
+    display    : flex;
+    flex-direction: column;
+    gap        : 8px;
+    margin-top : 6px;
+    width      : max-content;
+    min-width  : 0;
+    padding    : 8px;
+    border     : 1px solid $border-color;
+    border-radius: 10px;
+    box-shadow : 0 8px 24px rgba(15, 23, 42, 0.10);
+    font-family: $font-body;
+  }
+
+  .iv-action-btn {
+    width        : 100%;
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+}

@@ -1,5 +1,663 @@
+// =============================================
+// ScolarPlus – Paiement en Caisse
+// (aligné sur inscription-validated)
+// =============================================
+$brand-blue      : #4A90D9;
+$brand-blue-dark : #2B6BAA;
+$brand-orange    : #F47920;
+$brand-green     : #10B981;
+$brand-red       : #EF4444;
+$brand-amber     : #F59E0B;
+$brand-navy      : #0D1B2E;
+$sidebar-soft    : #EDF4FB;
+
+$text-dark       : #0A0F1E;
+$text-body       : #374151;
+$text-muted      : #6B7280;
+$text-light      : #9CA3AF;
+$border-color    : #E8EFF6;
+$surface         : #F8FAFC;
+$white           : #ffffff;
+
+$font-brand      : 'Sora', 'Segoe UI', sans-serif;
+$font-body       : 'Inter', 'Segoe UI', system-ui, sans-serif;
+$font-mono       : 'JetBrains Mono', 'Fira Code', monospace;
+
 #bg {
     background-image: url('./pay3.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+// =============================================
+// Card container
+// =============================================
+.iv-card {
+  background   : $white;
+  border       : 1.5px solid $border-color;
+  border-radius: 16px;
+  overflow     : hidden;
+  font-family  : $font-body;
+}
+
+// =============================================
+// Card header
+// =============================================
+.iv-card-header {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  padding        : 18px 22px 16px;
+  border-bottom  : 1.5px solid $border-color;
+  flex-wrap      : wrap;
+  gap            : 12px;
+}
+
+.iv-card-header-left {
+  display    : flex;
+  align-items: center;
+  gap        : 12px;
+}
+
+.iv-card-icon {
+  width           : 38px;
+  height          : 38px;
+  border-radius   : 10px;
+  background      : rgba(245, 158, 11, 0.10);
+  color           : $brand-amber;
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  flex-shrink     : 0;
+}
+
+.iv-card-title {
+  font-family : $font-brand;
+  font-size   : 15px;
+  font-weight : 700;
+  color       : $text-dark;
+  margin      : 0 0 2px;
+}
+
+.iv-card-sub {
+  font-size: 12px;
+  color    : $text-muted;
+  margin   : 0;
+}
+
+// =============================================
+// Action buttons (header)
+// =============================================
+.iv-card-actions {
+  display: flex;
+  gap    : 8px;
+  flex-wrap: wrap;
+}
+
+.iv-btn {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : 6px;
+  height       : 34px;
+  padding      : 0 14px;
+  border-radius: 8px;
+  font-size    : 12.5px;
+  font-weight  : 600;
+  border       : 1.5px solid transparent;
+  cursor       : pointer;
+  transition   : all 0.18s;
+  font-family  : $font-body;
+  text-decoration: none;
+
+  &--search {
+    background  : rgba(74, 144, 217, 0.08);
+    border-color: rgba(74, 144, 217, 0.25);
+    color       : $brand-blue-dark;
+
+    &:hover {
+      background  : rgba(74, 144, 217, 0.15);
+      border-color: $brand-blue;
+      color       : $brand-blue-dark;
+    }
+  }
+
+  &--close {
+    background  : rgba(239, 68, 68, 0.07);
+    border-color: rgba(239, 68, 68, 0.20);
+    color       : #B91C1C;
+
+    &:hover {
+      background  : rgba(239, 68, 68, 0.12);
+      border-color: $brand-red;
+    }
+  }
+
+  &--pdf {
+    background  : rgba(244, 121, 32, 0.08);
+    border-color: rgba(244, 121, 32, 0.25);
+    color       : darken($brand-orange, 12%);
+
+    &:hover {
+      background  : rgba(244, 121, 32, 0.15);
+      border-color: $brand-orange;
+    }
+  }
+}
+
+// =============================================
+// Search panel
+// =============================================
+.iv-search-panel {
+  background  : $sidebar-soft;
+  border-bottom: 1.5px solid $border-color;
+  padding     : 16px 22px;
+}
+
+.iv-search-panel-inner {
+  max-width: 1100px;
+}
+
+.iv-search-label {
+  display    : flex;
+  align-items: center;
+  gap        : 6px;
+  font-size  : 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color      : rgba(74, 144, 217, 0.7);
+  margin     : 0 0 12px;
+
+  svg { flex-shrink: 0; }
+}
+
+.iv-search-form {
+  display    : flex;
+  align-items: flex-end;
+  gap        : 10px;
+  flex-wrap  : wrap;
+}
+
+.iv-ff {
+  display       : flex;
+  flex-direction: column;
+  gap           : 4px;
+  flex          : 1;
+  min-width     : 160px;
+
+  > * { margin: 0 !important; }
+
+  &--sm     { flex: 0 0 130px; }
+  &--action { flex: 0 0 auto;  }
+}
+
+.iv-field-label {
+  font-size  : 11px;
+  font-weight: 600;
+  color      : $text-muted;
+  margin     : 0;
+}
+
+.iv-select {
+  height       : 36px;
+  padding      : 0 10px;
+  border       : 1.5px solid rgba(74, 144, 217, 0.25);
+  border-radius: 8px;
+  background   : $white;
+  font-size    : 13px;
+  color        : $text-body;
+  font-family  : $font-body;
+  outline      : none;
+  transition   : border-color 0.18s;
+  appearance   : auto;
+  width        : 100%;
+
+  &:focus {
+    border-color: $brand-blue;
+    box-shadow  : 0 0 0 3px rgba(74, 144, 217, 0.12);
+  }
+}
+
+.iv-search-submit {
+  display    : inline-flex;
+  align-items: center;
+  gap        : 6px;
+  height     : 36px;
+  padding    : 0 16px;
+  background : $brand-amber;
+  color      : $white;
+  border     : none;
+  border-radius: 8px;
+  font-size  : 13px;
+  font-weight: 600;
+  cursor     : pointer;
+  transition : all 0.18s;
+  font-family: $font-body;
+  flex-shrink: 0;
+
+  &:hover {
+    background: darken($brand-amber, 8%);
+    transform : translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// =============================================
+// Student infos
+// =============================================
+.iv-student-card {
+  display      : flex;
+  align-items  : center;
+  gap          : 14px;
+  padding      : 14px 22px;
+  border-bottom: 1.5px solid $border-color;
+  flex-wrap    : wrap;
+  background   : $surface;
+}
+
+.iv-student-avatar {
+  width           : 44px;
+  height          : 44px;
+  border-radius   : 10px;
+  background      : rgba(74, 144, 217, 0.12);
+  color           : $brand-blue-dark;
+  font-family     : $font-brand;
+  font-size       : 16px;
+  font-weight     : 800;
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  flex-shrink     : 0;
+}
+
+.iv-student-name {
+  font-weight: 700;
+  color      : $text-dark;
+  font-size  : 14px;
+}
+
+.iv-student-meta {
+  font-size: 12px;
+  color    : $text-muted;
+}
+
+.iv-student-pill {
+  display      : inline-flex;
+  align-items  : center;
+  padding      : 4px 10px;
+  background   : $white;
+  border       : 1px solid $border-color;
+  border-radius: 20px;
+  font-size    : 12px;
+  color        : $text-body;
+  font-weight  : 600;
+}
+
+// =============================================
+// Batch payment bar
+// =============================================
+.iv-batch-bar {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  padding        : 14px 22px;
+  border-bottom  : 1.5px solid $border-color;
+  background     : rgba(239, 68, 68, 0.04);
+  flex-wrap      : wrap;
+  gap            : 10px;
+}
+
+.iv-batch-total {
+  font-size  : 13px;
+  color      : $text-body;
+
+  b { color: $text-dark; font-size: 15px; }
+}
+
+// =============================================
+// Table
+// =============================================
+.iv-table-wrap {
+  overflow-x: auto;
+}
+
+.iv-table {
+  width           : 100%;
+  border-collapse : collapse;
+  font-size       : 13px;
+
+  thead tr {
+    background   : $surface;
+    border-bottom: 1.5px solid $border-color;
+  }
+
+  th {
+    padding       : 11px 14px;
+    font-family   : $font-body;
+    font-size     : 10.5px;
+    font-weight   : 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color         : $text-light;
+    text-align    : left;
+    white-space   : nowrap;
+  }
+
+  td {
+    padding        : 12px 14px;
+    color          : $text-body;
+    border-bottom  : 1px solid $border-color;
+    vertical-align : middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover td {
+    background: rgba(74, 144, 217, 0.025);
+  }
+}
+
+.iv-th-num,
+.iv-td-num {
+  width     : 44px;
+  color     : $text-light;
+  font-size : 12px;
+  text-align: center;
+}
+
+.iv-th-actions { width: 140px; }
+
+.iv-td-mono {
+  font-family: $font-mono, $font-body;
+  font-size  : 12.5px;
+  color      : $text-muted;
+}
+
+// =============================================
+// Status badges
+// =============================================
+.iv-badge {
+  display     : inline-flex;
+  align-items : center;
+  gap         : 5px;
+  padding     : 3px 9px;
+  border-radius: 20px;
+  font-size   : 11.5px;
+  font-weight : 600;
+  white-space : nowrap;
+
+  &--impaye {
+    background: rgba(239, 68, 68, 0.08);
+    color     : #B91C1C;
+    .iv-badge-dot { background: $brand-red; }
+  }
+
+  &--partiel {
+    background: rgba(74, 144, 217, 0.10);
+    color     : $brand-blue-dark;
+    .iv-badge-dot { background: $brand-blue; }
+  }
+
+  &--solde {
+    background: rgba(16, 185, 129, 0.10);
+    color     : darken($brand-green, 10%);
+    .iv-badge-dot { background: $brand-green; }
+  }
+}
+
+.iv-badge-dot {
+  width        : 5px;
+  height       : 5px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+}
+
+// =============================================
+// Action buttons (table cells)
+// =============================================
+.iv-action-group {
+  display  : flex;
+  gap      : 6px;
+  flex-wrap: wrap;
+}
+
+.iv-action-btn {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : 5px;
+  height       : 28px;
+  padding      : 0 10px;
+  border-radius: 7px;
+  font-size    : 11.5px;
+  font-weight  : 600;
+  border       : 1.5px solid transparent;
+  cursor       : pointer;
+  transition   : all 0.18s;
+  font-family  : $font-body;
+  white-space  : nowrap;
+
+  &--pay {
+    background  : rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.25);
+    color       : darken($brand-amber, 12%);
+
+    &:hover {
+      background  : $brand-amber;
+      border-color: $brand-amber;
+      color       : $white;
+      transform   : translateY(-1px);
+    }
+  }
+
+  &--batch {
+    background  : rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.20);
+    color       : #B91C1C;
+
+    &:hover {
+      background  : $brand-red;
+      border-color: $brand-red;
+      color       : $white;
+      transform   : translateY(-1px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor : not-allowed;
+    transform: none !important;
+  }
+}
+
+// =============================================
+// Empty / loading rows
+// =============================================
+.iv-td-empty {
+  text-align    : center !important;
+  padding       : 44px 16px !important;
+  color         : $text-muted;
+  font-size     : 13px;
+
+  svg   { display: block; margin: 0 auto 10px; }
+  span  { display: block; margin-top: 2px; }
+}
+
+// =============================================
+// Skeleton loader
+// =============================================
+@keyframes ivShimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%);  }
+}
+
+.sk {
+  display      : block;
+  position     : relative;
+  overflow     : hidden;
+  border-radius: 5px;
+  background   : #E8EFF6;
+
+  &::after {
+    content   : '';
+    position  : absolute;
+    inset     : 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 100%
+    );
+    animation: ivShimmer 1.3s ease-in-out infinite;
+  }
+
+  &--xs  { height: 10px; width: 28px;  }
+  &--sm  { height: 10px; width: 80px;  }
+  &--md  { height: 10px; width: 130px; }
+  &--lg  { height: 10px; width: 170px; }
+
+  &--center { margin: 0 auto; }
+
+  &--avatar {
+    width        : 30px;
+    height       : 30px;
+    border-radius: 8px;
+    flex-shrink  : 0;
+  }
+
+  &--pill {
+    height       : 22px;
+    width        : 74px;
+    border-radius: 20px;
+  }
+
+  &--btn {
+    height       : 26px;
+    width        : 76px;
+    border-radius: 7px;
+  }
+}
+
+.iv-skeleton-row {
+  td {
+    padding       : 13px 14px;
+    border-bottom : 1px solid $border-color;
+    vertical-align: middle;
+  }
+
+  &:nth-child(1) .sk::after { animation-delay: 0s;     }
+  &:nth-child(2) .sk::after { animation-delay: 0.1s;   }
+  &:nth-child(3) .sk::after { animation-delay: 0.2s;   }
+  &:nth-child(4) .sk::after { animation-delay: 0.3s;   }
+  &:nth-child(5) .sk::after { animation-delay: 0.4s;   }
+  &:nth-child(6) .sk::after { animation-delay: 0.5s;   }
+  &:nth-child(7) .sk::after { animation-delay: 0.6s;   }
+}
+
+.sk-school {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+}
+
+.sk-actions {
+  display: flex;
+  gap    : 6px;
+}
+
+// =============================================
+// Spinners inline (boutons)
+// =============================================
+.iv-spinner {
+  display     : inline-block;
+  width       : 14px;
+  height      : 14px;
+  border      : 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: $white;
+  border-radius: 50%;
+  animation   : ivSpin 0.7s linear infinite;
+  flex-shrink : 0;
+
+  &--xs {
+    width : 11px;
+    height: 11px;
+    border-width: 1.5px;
+    border-color    : rgba(74, 144, 217, 0.30);
+    border-top-color: $brand-blue-dark;
+  }
+}
+
+@keyframes ivSpin {
+  to { transform: rotate(360deg); }
+}
+
+.iv-action-btn:disabled,
+.iv-search-submit:disabled {
+  opacity: 0.7;
+  cursor : not-allowed;
+}
+
+// =============================================
+// Pagination — petite taille
+// =============================================
+.iv-pagination {
+  padding      : 12px 22px;
+  border-top   : 1.5px solid $border-color;
+  display      : flex;
+  justify-content: flex-end;
+  background   : $surface;
+
+  ::ng-deep .ngx-pagination {
+    margin    : 0;
+    padding   : 0;
+    display   : flex;
+    align-items: center;
+    gap       : 3px;
+    font-size : 12px;
+    list-style: none;
+
+    li a,
+    li span {
+      display        : flex !important;
+      align-items    : center !important;
+      justify-content: center !important;
+      width          : 28px !important;
+      height         : 28px !important;
+      min-width      : 28px !important;
+      max-width      : 28px !important;
+      padding        : 0 !important;
+      border-radius  : 7px !important;
+      border         : 1.5px solid $border-color !important;
+      background     : $white !important;
+      color          : $text-muted !important;
+      font-size      : 12px !important;
+      font-weight    : 500 !important;
+      line-height    : 1 !important;
+      transition     : all 0.15s !important;
+      text-decoration: none !important;
+      box-sizing     : border-box !important;
+
+      &:hover {
+        border-color: $brand-blue !important;
+        color       : $brand-blue !important;
+        background  : rgba(74, 144, 217, 0.06) !important;
+      }
+    }
+
+    li.current span {
+      border-color: $brand-blue !important;
+      background  : $brand-blue !important;
+      color       : $white !important;
+      font-weight : 700 !important;
+    }
+
+    li.disabled a {
+      opacity       : 0.35 !important;
+      cursor        : not-allowed !important;
+      pointer-events: none !important;
+    }
+  }
 }
