@@ -75,7 +75,6 @@
                     <!-- Fin Formulaire recherche avancée -->
 
                     <div>
-                        <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
                         <div class="row ht-2">
                             <div class="col-md-12 h5">Liste des groupes : ({{groupes?.length}}) </div>
                         </div>
@@ -94,11 +93,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngIf="isProcessing" class="text-center">
-                                        <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
-                                    </tr>
-                                    <tr *ngIf="groupes?.length == 0" class="text-center">
-                                        <td colspan="5">Aucune donnée trouvée !</td>
+                                    <!-- Skeleton -->
+                                    <ng-container *ngIf="isProcessing">
+                                        <tr class="sk-row" *ngFor="let i of [1,2,3,4,5,6]">
+                                            <td><div class="sk sk--xs sk--center"></div></td>
+                                            <td><div class="sk sk--sm"></div></td>
+                                            <td><div class="sk sk--lg"></div></td>
+                                            <td><div class="sk sk--pill"></div></td>
+                                            <td class="text-center"><div class="sk sk--btn" style="margin:0 auto"></div></td>
+                                        </tr>
+                                    </ng-container>
+                                    <tr *ngIf="!isProcessing && groupes?.length == 0" class="text-center">
+                                        <td colspan="5" class="sk-empty-cell">Aucune donnée trouvée !</td>
                                     </tr>
                                     <ng-container *ngIf="!isProcessing">
                                         <tr class="hover-item"

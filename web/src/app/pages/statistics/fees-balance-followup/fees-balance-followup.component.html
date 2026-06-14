@@ -205,10 +205,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngIf="feesBalanceDatas?.length == 0" class="text-center">
-                            <td colspan="10">Aucune donnée trouvée !</td>
+                        <!-- Skeleton -->
+                        <ng-container *ngIf="isProcessing">
+                            <tr class="sk-row" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+                                <td><div class="sk sk--xs sk--center"></div></td>
+                                <td><div class="sk sk--sm"></div></td>
+                                <td><div class="sk sk--lg"></div></td>
+                                <td><div class="sk sk--sm"></div></td>
+                                <td><div class="sk sk--sm"></div></td>
+                                <td><div class="sk sk--md"></div></td>
+                                <td><div class="sk sk--sm"></div></td>
+                                <td><div class="sk sk--pill"></div></td>
+                                <td><div class="sk sk--sm"></div></td>
+                                <td class="text-center"><div class="sk sk--btn" style="margin:0 auto"></div></td>
+                            </tr>
+                        </ng-container>
+                        <tr *ngIf="!isProcessing && feesBalanceDatas?.length == 0" class="text-center">
+                            <td colspan="10" class="sk-empty-cell">Aucune donnée trouvée !</td>
                         </tr>
-                        <ng-container *ngIf="feesBalanceDatas?.length > 0">
+                        <ng-container *ngIf="!isProcessing && feesBalanceDatas?.length > 0">
                             <tr
                                 *ngFor="let balance of feesBalanceDatas | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
                                 <td>{{i+1}}</td>

@@ -29,8 +29,6 @@
           </div>
           <!-- end row -->
 
-          <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
-
           <div *ngIf="isSearchForm" class="col-lg-12">
             <div class="card">
               <div class="card-body">
@@ -70,11 +68,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngIf="isProcessing" class="text-center">
-                    <td colspan="10">Chargement en cours. Veuillez patienter !!!</td>
-                  </tr>
-                  <tr *ngIf="typeFees?.length == 0" class="text-center">
-                    <td colspan="5">Aucune donnée trouvée !</td>
+                  <!-- Skeleton -->
+                  <ng-container *ngIf="isProcessing">
+                    <tr class="sk-row" *ngFor="let i of [1,2,3,4,5,6]">
+                      <td><div class="sk sk--xs sk--center"></div></td>
+                      <td><div class="sk sk--lg"></div></td>
+                      <td><div class="sk sk--md"></div></td>
+                      <td><div class="sk sk--pill"></div></td>
+                      <td>
+                        <div class="sk-actions">
+                          <div class="sk sk--btn"></div>
+                          <div class="sk sk--btn"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="!isProcessing && typeFees?.length == 0" class="text-center">
+                    <td colspan="5" class="sk-empty-cell">Aucune donnée trouvée !</td>
                   </tr>
                   <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;"
                   class="hover-item">

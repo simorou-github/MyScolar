@@ -210,3 +210,15 @@ td{
     &:nth-child(#{$i}) .sk::after { animation-delay: #{($i - 1) * 0.1}s; }
   }
 }
+
+// Cellule flex (avatar + texte, actions groupées…)
+.sk-flex    { display: flex; align-items: center; gap: 10px; }
+.sk-actions { display: flex; gap: 6px; }
+
+// Ligne "aucune donnée" centrée
+.sk-empty-cell {
+  text-align  : center !important;
+  padding     : 40px 16px !important;
+  color       : #6B7280;
+  font-size   : 13px;
+}
