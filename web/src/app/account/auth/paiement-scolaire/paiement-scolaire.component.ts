@@ -17,7 +17,7 @@ export class PaiementScolaireComponent {
   curr_fees: any; academic_years: any; currentAcademicYaer: any; academic_year = ''; balanceFees: any; student: any; student_classe: any;
   operators: any; selectedBalancesRows: Array<{ id: string, balance: number, montant: number, type_fees_id: string }> = [];
   totalFees: number; student_param: any; selected_fees: any[]; totalBalances: number; paymentForm!: FormGroup; batchPaymentForm!: FormGroup;
-  p: number = 1; path_part = environment.domainUrl+'/storage/';
+  p: number = 1; path_part = environment.domainUrl+'/storage/app/public/';
   constructor(private authService: AuthService, private modalService: BsModalService, private paiementScolaireService: PaiementScolaireService,
     private toastr: ToastrService, private managerFeesService: ManageFeesService, private fb: FormBuilder,) {
 

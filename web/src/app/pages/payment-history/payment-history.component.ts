@@ -94,7 +94,7 @@ export class PaymentHistoryComponent implements OnInit {
   displayDetailsModal(DetailDetailModal: any, payment: any) {
     this.formatedCurrTransactionDate
     this.getPaymentDetails(payment.id);
-    this.modalRef = this.modalService.show(DetailDetailModal, { class: 'modal-lg' });
+    this.modalRef = this.modalService.show(DetailDetailModal, { class: 'modal-xl' });
     this.curr_payment = payment;
   }
 
