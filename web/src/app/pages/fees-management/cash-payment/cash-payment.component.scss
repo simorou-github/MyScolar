@@ -53,6 +53,16 @@ $font-mono       : 'JetBrains Mono', 'Fira Code', monospace;
   gap            : 12px;
 }
 
+.pfp-spinner {
+  width: 15px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: pfpSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
 .iv-card-header-left {
   display    : flex;
   align-items: center;

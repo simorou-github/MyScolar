@@ -309,17 +309,19 @@
                                     </td>
                                     <td>{{ balance.due_date | date:'dd/MM/yyyy' }}</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn pfp-btn-pay"
-                                            [class.pfp-btn-pay--partial]="balance.balance > 0 && balance.balance < balance.fees_amount"
-                                            *ngIf="balance.balance > 0"
-                                            (click)="openPayementModal(student, balance, paiement)">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                                            Payer
-                                        </button>
-                                        <span class="pfp-paid-label" *ngIf="balance.balance == 0">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                            Payé
-                                        </span>
+                                        <div class="pfp-action-group">
+                                            <button type="button" class="pfp-action-btn pfp-action-btn--pay"
+                                                [class.pfp-action-btn--partial]="balance.balance > 0 && balance.balance < balance.fees_amount"
+                                                *ngIf="balance.balance > 0"
+                                                (click)="openPayementModal(student, balance, paiement)">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                                                Payer
+                                            </button>
+                                            <span class="pfp-action-btn pfp-action-btn--paid" *ngIf="balance.balance == 0">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                                Payé
+                                            </span>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

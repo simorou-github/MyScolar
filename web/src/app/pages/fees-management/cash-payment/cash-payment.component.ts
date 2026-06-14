@@ -82,12 +82,14 @@ export class CashPaymentComponent {
   getDataForPayment(data: any) {
     this.student_param = data;
     this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.selectedBalancesRows = [];
     this.totalBalances = 0;
     this.managerFeesService.searchStudentFeesBalanceForCaissePayment(data.value).subscribe({
       next: (v: any) => {
         this.message = v.message;
         if (v.status == 200) {
+          this.isProcessing = false;
           this.balanceFees = v.balanceFees;
           this.student_classe = v.student_classe;
           this.operators = v.operators;
@@ -104,6 +106,7 @@ export class CashPaymentComponent {
             details: [],
           });
         } else {
+          this.isProcessing = false;
           this.ngxLoader.stopLoader('loader-spin');
           this.showError(this.message);
         }
@@ -111,12 +114,13 @@ export class CashPaymentComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.isProcessing = false;
+        this.showError(e.error.message);
         this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
-
+        this.isProcessing = false;
       }
     });
   }
@@ -138,7 +142,7 @@ export class CashPaymentComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.showError(e.error.message);
         this.ngxLoader.stopLoader('loader-spin');
       },
 
@@ -151,10 +155,12 @@ export class CashPaymentComponent {
   //Get all Apprenant Of Selected School
   getAllApprenantOfSlectedClasse(data) {
     this.ngxLoader.startLoader('loader-spin');
+    this.isProcessing = true;
     this.apprenants = [];
     this.schoolService.listStudents(data).subscribe({
       next: (v: any) => {
         this.message = v.message;
+        this.isProcessing = false;
         if (v.status == 200) {
           this.ngxLoader.stopLoader('loader-spin');
           this.apprenants = v.data;
@@ -164,12 +170,14 @@ export class CashPaymentComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.isProcessing = false;
+        this.showError(e.error.message);
         this.ngxLoader.stopLoader('loader-spin');
       },
 
       complete: () => {
-
+        this.isProcessing = false;
+        this.ngxLoader.stopLoader('loader-spin');
       }
     });
   }
@@ -190,7 +198,7 @@ export class CashPaymentComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.showError(e.error.message);
         this.ngxLoader.stopLoader('loader-spin');
       },
 
@@ -249,7 +257,7 @@ export class CashPaymentComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.showError(e.error.message);
         this.isProcessing = false;
       },
 
@@ -293,7 +301,7 @@ export class CashPaymentComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.showError(e.error.message);
         this.ngxLoader.stopLoader('loader-spin');
         this.isProcessing = false;
       },

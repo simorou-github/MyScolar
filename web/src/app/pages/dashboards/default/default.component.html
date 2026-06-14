@@ -1,4 +1,3 @@
-<app-loader></app-loader>
 <div class="db-wrapper">
 
   <!-- ── Page title ────────────────────────────── -->
@@ -24,7 +23,8 @@
       </div>
       <div class="db-stat-body">
         <span class="db-stat-label">Classes</span>
-        <strong class="db-stat-value">{{ schoolClasses?.length ?? '—' }}</strong>
+        <div class="sk sk--stat" *ngIf="isProcessing"></div>
+        <strong class="db-stat-value" *ngIf="!isProcessing">{{ schoolClasses?.length ?? '—' }}</strong>
         <span class="db-stat-hint">Classes enregistrées</span>
       </div>
     </div>
@@ -35,7 +35,8 @@
       </div>
       <div class="db-stat-body">
         <span class="db-stat-label">Types de frais</span>
-        <strong class="db-stat-value">{{ typeFees?.length ?? '—' }}</strong>
+        <div class="sk sk--stat" *ngIf="isProcessing"></div>
+        <strong class="db-stat-value" *ngIf="!isProcessing">{{ typeFees?.length ?? '—' }}</strong>
         <span class="db-stat-hint">Frais à collecter</span>
       </div>
     </div>
@@ -46,7 +47,8 @@
       </div>
       <div class="db-stat-body">
         <span class="db-stat-label">Apprenants</span>
-        <strong class="db-stat-value">{{ students?.length ?? '—' }}</strong>
+        <div class="sk sk--stat" *ngIf="isProcessing"></div>
+        <strong class="db-stat-value" *ngIf="!isProcessing">{{ students?.length ?? '—' }}</strong>
         <span class="db-stat-hint">Élèves inscrits</span>
       </div>
     </div>
@@ -57,15 +59,13 @@
       </div>
       <div class="db-stat-body">
         <span class="db-stat-label">Transactions</span>
-        <strong class="db-stat-value">{{ payments?.length ?? '—' }}</strong>
+        <div class="sk sk--stat" *ngIf="isProcessing"></div>
+        <strong class="db-stat-value" *ngIf="!isProcessing">{{ payments?.length ?? '—' }}</strong>
         <span class="db-stat-hint">Paiements effectués</span>
       </div>
     </div>
 
   </div>
-
-  <!-- ── Loader ─────────────────────────────────── -->
-  <app-my-own-loader *ngIf="isProcessing"></app-my-own-loader>
 
   <!-- ── Fees table ─────────────────────────────── -->
   <div class="db-card">
@@ -92,31 +92,33 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="isProcessing">
-            <td colspan="4" class="db-td-empty">
-              <span class="db-loading-dots">
-                <span></span><span></span><span></span>
-              </span>
-              Chargement en cours…
-            </td>
-          </tr>
+          <ng-container *ngIf="isProcessing">
+            <tr class="db-skeleton-row" *ngFor="let i of [1,2,3,4,5]">
+              <td class="db-td-num"><div class="sk sk--xs sk--center"></div></td>
+              <td><div class="sk sk--lg"></div></td>
+              <td><div class="sk sk--sm"></div></td>
+              <td><div class="sk sk--pill"></div></td>
+            </tr>
+          </ng-container>
           <tr *ngIf="!isProcessing && typeFees?.length == 0">
             <td colspan="4" class="db-td-empty">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
               <span>Aucune donnée trouvée</span>
             </td>
           </tr>
-          <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-            <td class="db-td-num">{{ i + 1 }}</td>
-            <td class="db-td-label">{{ typefee.label }}</td>
-            <td class="db-td-date">{{ typefee.created_at | date : 'dd/MM/yyyy · HH:mm' }}</td>
-            <td>
-              <span class="db-badge" [ngClass]="typefee?.status == '1' ? 'db-badge--active' : 'db-badge--inactive'">
-                <span class="db-badge-dot"></span>
-                {{ typefee.status ? 'Activé' : 'Désactivé' }}
-              </span>
-            </td>
-          </tr>
+          <ng-container *ngIf="!isProcessing">
+            <tr *ngFor="let typefee of typeFees | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+              <td class="db-td-num">{{ i + 1 }}</td>
+              <td class="db-td-label">{{ typefee.label }}</td>
+              <td class="db-td-date">{{ typefee.created_at | date : 'dd/MM/yyyy · HH:mm' }}</td>
+              <td>
+                <span class="db-badge" [ngClass]="typefee?.status == '1' ? 'db-badge--active' : 'db-badge--inactive'">
+                  <span class="db-badge-dot"></span>
+                  {{ typefee.status ? 'Activé' : 'Désactivé' }}
+                </span>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>

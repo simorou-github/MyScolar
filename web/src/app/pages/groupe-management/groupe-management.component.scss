@@ -252,6 +252,7 @@ $font-mono       : 'JetBrains Mono', 'Fira Code', monospace;
 // =============================================
 .iv-table-wrap {
   overflow-x: auto;
+  overflow-y: visible;
 }
 
 .iv-table {

@@ -100,6 +100,12 @@ $font-mono       : 'JetBrains Mono', 'Fira Code', monospace;
   border-radius: 8px;
   background   : $white;
   color        : $text-muted;
+  flex         : 0 1 200px;
+  overflow     : hidden;
+
+  svg {
+    flex-shrink: 0;
+  }
 
   input {
     border : none;
@@ -107,7 +113,8 @@ $font-mono       : 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 12.5px;
     font-family: $font-body;
     color: $text-body;
-    width: 160px;
+    width: 100%;
+    min-width: 0;
     background: transparent;
   }
 }

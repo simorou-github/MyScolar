@@ -93,7 +93,8 @@ export class PaiementScolaireComponent {
           this.student_classe = v.student_classe;
           this.operators = v.operators;
           this.isProcessing = false;
-          this.showSuccess(this.message);
+          this.showSuccess(v.message);
+          console.log(v);
           this.paymentForm = this.fb.group({
             id: [],
             operator: ['', [Validators.required]],
@@ -112,11 +113,12 @@ export class PaiementScolaireComponent {
 
       error: (e) => {
         console.error(e);
-        this.showError(this.message);
+        this.isProcessing = false;
+        this.showError(e.error.message);
       },
 
       complete: () => {
-
+        this.isProcessing = false;
       }
     });
   }

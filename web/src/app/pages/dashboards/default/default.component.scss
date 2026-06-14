@@ -265,6 +265,51 @@ $font-body       : 'Inter', 'Segoe UI', system-ui, sans-serif;
   span { display: block; margin-top: 4px; }
 }
 
+// =============================================
+// Skeleton loader
+// =============================================
+@keyframes dbShimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%);  }
+}
+
+.sk {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #E8EFF6;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 50%, transparent 100%);
+    animation: dbShimmer 1.3s ease-in-out infinite;
+  }
+
+  &--xs   { height: 10px; width: 28px;  }
+  &--sm   { height: 10px; width: 80px;  }
+  &--lg   { height: 10px; width: 200px; }
+  &--pill { height: 22px; width: 74px; border-radius: 20px; }
+  &--stat { height: 26px; width: 60px; margin-bottom: 5px; }
+  &--center { margin: 0 auto; }
+}
+
+.db-skeleton-row {
+  td {
+    padding: 13px 16px;
+    border-bottom: 1px solid $border-color;
+    vertical-align: middle;
+  }
+
+  &:nth-child(1) .sk::after { animation-delay: 0s;   }
+  &:nth-child(2) .sk::after { animation-delay: 0.1s; }
+  &:nth-child(3) .sk::after { animation-delay: 0.2s; }
+  &:nth-child(4) .sk::after { animation-delay: 0.3s; }
+  &:nth-child(5) .sk::after { animation-delay: 0.4s; }
+}
+
 // Loading dots
 .db-loading-dots {
   display: inline-flex;
