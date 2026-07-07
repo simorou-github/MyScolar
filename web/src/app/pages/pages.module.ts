@@ -72,10 +72,14 @@ import { NgxCaptureModule } from 'ngx-capture';
 import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup/fees-balance-followup.component';
 import { CashPaymentComponent } from './fees-management/cash-payment/cash-payment.component';
 import { ActivityLogComponent } from './activity-log/activity-log.component';
+import { ParentInscriptionPendingComponent } from './parent-inscription-pending/parent-inscription-pending.component';
+import { ParentInscriptionValidatedComponent } from './parent-inscription-validated/parent-inscription-validated.component';
+import { ParentLinkRequestsComponent } from './parent-link-requests/parent-link-requests.component';
+import { ParentLinkActiveComponent } from './parent-link-active/parent-link-active.component';
 
 @NgModule({
   declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,
-    StatisticsComponent, UrlPipe, InscriptionPendingComponent, ClasseComponent, InscriptionValidatedComponent, AddClasseSchoolComponent, FeesManagementComponent, ClasseManagementComponent, PaymentHistoryComponent, SchoolStatisticsComponent, StudentManagementComponent, AssignFeesToClasseComponent, StudentListByClasseComponent, OperatorComponent, GroupeManagementComponent, SystemParameterComponent, ManageUserComponent, ManagePermissionComponent, SchoolUserManagementComponent, FeesBalanceFollowupComponent, CashPaymentComponent, ActivityLogComponent],
+    StatisticsComponent, UrlPipe, InscriptionPendingComponent, ClasseComponent, InscriptionValidatedComponent, AddClasseSchoolComponent, FeesManagementComponent, ClasseManagementComponent, PaymentHistoryComponent, SchoolStatisticsComponent, StudentManagementComponent, AssignFeesToClasseComponent, StudentListByClasseComponent, OperatorComponent, GroupeManagementComponent, SystemParameterComponent, ManageUserComponent, ManagePermissionComponent, SchoolUserManagementComponent, FeesBalanceFollowupComponent, CashPaymentComponent, ActivityLogComponent, ParentInscriptionPendingComponent, ParentInscriptionValidatedComponent, ParentLinkRequestsComponent, ParentLinkActiveComponent],
   imports: [
     CommonModule,
     FormsModule,

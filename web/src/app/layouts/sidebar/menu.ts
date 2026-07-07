@@ -44,6 +44,45 @@ export const MENU: MenuItem[] = [
     },
 
     {
+        id: 30,
+        label: 'Espace Parent',
+        icon: 'bx bxs-user-detail',
+        isOpen: false,
+        isActive: false,
+        rolesAllowed: ['admin', 'super-admin'],
+        subItems: [
+            {
+                id: 30001,
+                label: 'Inscriptions en attente',
+                link: '/parent-inscription-en-attente',
+                parentId: 30,
+                rolesAllowed: ['admin', 'super-admin']
+            },
+            {
+                id: 30002,
+                label: 'Inscriptions validées',
+                link: '/parent-inscription-validee',
+                parentId: 30,
+                rolesAllowed: ['admin', 'super-admin']
+            },
+            {
+                id: 30003,
+                label: 'Demandes de liaison',
+                link: '/espace/demandes-association-parents',
+                parentId: 30,
+                rolesAllowed: ['admin', 'super-admin']
+            },
+            {
+                id: 30004,
+                label: 'Liaisons en place',
+                link: '/parent-liaisons-actives',
+                parentId: 30,
+                rolesAllowed: ['admin', 'super-admin']
+            }
+        ]
+    },
+
+    {
         id: 4,
         label: 'Espace Ecole',
         icon: 'bx bxs-school',
@@ -53,6 +92,8 @@ export const MENU: MenuItem[] = [
         subItems: [
             { id: 4001, label: 'Gestion Groupes', link: '/espace/gestion-groupe', parentId: 4, rolesAllowed: ['school-admin'] },
             { id: 4002, label: 'Gestion Frais', link: '/espace/gestion-frais', parentId: 4, rolesAllowed: ['school-admin', 'accountant'] },
+            { id: 4010, label: 'Demandes de liaison', link: '/espace/demandes-association-parents', parentId: 4, rolesAllowed: ['school-admin'] },
+            { id: 4011, label: 'Liaisons actives', link: '/espace/liaisons-actives', parentId: 4, rolesAllowed: ['school-admin'] },
             { id: 4003, label: 'Gestion Classes', link: '/espace/gestion-classe', parentId: 4, rolesAllowed: ['school-admin'] },
             { id: 4004, label: 'Gestion Apprenants', link: '/espace/gestion-apprenant', parentId: 4, rolesAllowed: ['school-admin', 'accountant'] },
             { id: 4005, label: 'Paiements', link: '/espace/historiques-paiements', parentId: 4, rolesAllowed: ['school-admin', 'accountant', 'treasurer'] },

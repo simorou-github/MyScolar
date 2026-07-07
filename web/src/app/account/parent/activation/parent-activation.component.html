@@ -1,0 +1,46 @@
+<div class="pa-wrapper">
+  <div class="pa-card">
+
+    <!-- Logo -->
+    <div class="pa-logo">
+      <div class="pa-logo-mark">
+        <span class="pa-lm-s">S</span>
+        <span class="pa-lm-dot"></span>
+      </div>
+      <div class="pa-logo-text">
+        <span>Scolar<strong>Plus</strong></span>
+        <small>ESPACE PARENT</small>
+      </div>
+    </div>
+
+    <!-- Chargement -->
+    <div class="pa-state" *ngIf="status === 'loading'">
+      <div class="pa-spinner-wrap">
+        <span class="pa-spinner"></span>
+      </div>
+      <h2>Activation en cours…</h2>
+      <p>Veuillez patienter pendant que nous activons votre compte.</p>
+    </div>
+
+    <!-- Succès -->
+    <div class="pa-state pa-state--success" *ngIf="status === 'success'">
+      <div class="pa-icon-wrap pa-icon-wrap--green">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Compte activé !</h2>
+      <p>Votre Espace Parent est maintenant actif. Vous allez être redirigé vers la page de connexion dans quelques secondes.</p>
+      <button class="pa-btn" (click)="goToLogin()">Se connecter maintenant</button>
+    </div>
+
+    <!-- Erreur -->
+    <div class="pa-state pa-state--error" *ngIf="status === 'error'">
+      <div class="pa-icon-wrap pa-icon-wrap--red">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <h2>Lien invalide</h2>
+      <p>{{ errorMessage }}</p>
+      <button class="pa-btn pa-btn--outline" (click)="goToLogin()">Retour à la connexion</button>
+    </div>
+
+  </div>
+</div>

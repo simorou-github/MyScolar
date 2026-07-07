@@ -1,0 +1,130 @@
+$brand-blue: #4A90D9;
+$brand-blue-dark: #2B6BAA;
+$brand-orange: #F47920;
+$bg: #F4F7FC;
+
+.psl-wrapper {
+  min-height: 100vh;
+  background: $bg;
+  display: flex;
+  flex-direction: column;
+}
+
+.psl-header {
+  height: 68px;
+  background: linear-gradient(135deg, $brand-blue 0%, $brand-blue-dark 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  box-shadow: 0 2px 12px rgba(43, 107, 170, 0.18);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.psl-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.psl-brand-mark {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #fff;
+  font-size: 18px;
+
+  i {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $brand-orange;
+  }
+}
+
+.psl-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+
+  span {
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    strong { font-weight: 800; }
+  }
+  small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 10px;
+  }
+}
+
+.psl-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.psl-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.psl-user-info {
+  display: none;
+  flex-direction: column;
+  line-height: 1.1;
+
+  strong { color: #fff; font-size: 13px; }
+  span { color: rgba(255, 255, 255, 0.65); font-size: 11px; }
+
+  @media (min-width: 576px) {
+    display: flex;
+  }
+}
+
+.psl-logout-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(244, 121, 32, 0.85);
+  }
+}
+
+.psl-content {
+  flex: 1;
+  padding: 28px 24px 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}

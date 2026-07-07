@@ -1,0 +1,393 @@
+<div class="reg-wrapper">
+
+  <!-- ========== Panneau gauche : illustration ========== -->
+  <div class="reg-visual">
+    <div class="reg-visual-inner">
+      <div class="reg-orb reg-orb-1"></div>
+      <div class="reg-orb reg-orb-2"></div>
+      <div class="reg-grid"></div>
+
+      <a routerLink="/" class="reg-logo">
+        <div class="reg-logo-mark">
+          <span class="reg-lm-s">s</span>
+          <span class="reg-lm-dot"></span>
+        </div>
+        <div class="reg-logo-text">
+          <span>Scolar<strong>Plus</strong></span>
+          <small>Espace Parent</small>
+        </div>
+      </a>
+
+      <div class="reg-scene">
+
+        <!-- SVG : mockup espace parent (famille + carte apprenant) -->
+        <div class="reg-school-wrap">
+          <svg class="reg-school-svg" viewBox="0 0 340 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="parentHdrGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(74,144,217,0.85)"/>
+                <stop offset="100%" stop-color="rgba(43,107,170,0.85)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- ===== Carte principale : dashboard parent ===== -->
+            <!-- Ombre -->
+            <rect x="64" y="30" width="216" height="180" rx="16" fill="rgba(0,0,0,0.28)"/>
+            <!-- Corps de la carte -->
+            <rect x="60" y="26" width="216" height="180" rx="16" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+            <!-- Header de la carte -->
+            <path d="M60 42 Q60 26 76 26 H260 Q276 26 276 42 V74 H60 Z" fill="url(#parentHdrGrad)"/>
+            <!-- 3 dots fenêtre -->
+            <circle cx="76" cy="38" r="4" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="89" cy="38" r="4" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="102" cy="38" r="4" fill="rgba(255,255,255,0.25)"/>
+            <!-- Barre d'adresse -->
+            <rect x="116" y="32" width="144" height="12" rx="6" fill="rgba(255,255,255,0.14)"/>
+            <text x="188" y="41" text-anchor="middle" font-size="6.5" fill="rgba(255,255,255,0.55)" font-family="sans-serif">scolarplus.com/espace-parent</text>
+
+            <!-- Avatar parent -->
+            <circle cx="138" cy="86" r="22" fill="#0D1B2E" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+            <!-- Anneau animé autour de l'avatar -->
+            <circle cx="138" cy="86" r="28" stroke="rgba(74,144,217,0.3)" stroke-width="1.5" fill="none" stroke-dasharray="8 5"/>
+            <path d="M138 78a8 8 0 1 0 0 16 8 8 0 0 0 0-16z" fill="rgba(255,255,255,0.55)"/>
+            <path d="M124 100c2-6 7-9 14-9s12 3 14 9" stroke="rgba(255,255,255,0.55)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+
+            <!-- Lien parent → enfant -->
+            <path d="M157 86h10" stroke="rgba(244,121,32,0.6)" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+            <!-- Avatar enfant (apprenant associé) -->
+            <circle cx="198" cy="86" r="18" fill="#13243A" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+            <path d="M198 79a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13z" fill="rgba(255,255,255,0.55)"/>
+            <path d="M188 99c1.7-5 5.6-7.6 10-7.6s8.3 2.6 10 7.6" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+            <!-- Badge association validée -->
+            <circle cx="211" cy="100" r="9" fill="#10B981" stroke="#0D1B2E" stroke-width="2"/>
+            <polyline points="207,100 210,103 216,97" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+            <!-- Nom parent (barre de texte simulée) -->
+            <rect x="108" y="122" width="120" height="8" rx="4" fill="rgba(255,255,255,0.28)"/>
+            <!-- Sous-titre -->
+            <rect x="128" y="135" width="80" height="5" rx="2.5" fill="rgba(255,255,255,0.13)"/>
+
+            <!-- Séparateur -->
+            <line x1="80" y1="150" x2="256" y2="150" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+            <!-- Stats 3 blocs : enfants / frais / paiements -->
+            <rect x="80" y="158" width="48" height="36" rx="8" fill="rgba(74,144,217,0.18)"/>
+            <text x="104" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="sans-serif">2</text>
+            <text x="104" y="183" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.42)" font-family="sans-serif">Enfants</text>
+
+            <rect x="140" y="158" width="56" height="36" rx="8" fill="rgba(244,121,32,0.18)"/>
+            <text x="168" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="sans-serif">4</text>
+            <text x="168" y="183" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.42)" font-family="sans-serif">Frais</text>
+
+            <rect x="208" y="158" width="48" height="36" rx="8" fill="rgba(16,185,129,0.18)"/>
+            <circle cx="232" cy="170" r="7" fill="rgba(16,185,129,0.7)"/>
+            <polyline points="229,170 232,173 237,167" stroke="white" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <text x="232" y="183" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.42)" font-family="sans-serif">Payés</text>
+
+            <!-- ===== Carte flottante : Email vérifié (haut gauche) ===== -->
+            <rect x="2" y="28" width="96" height="44" rx="10" fill="rgba(255,255,255,0.94)" stroke="rgba(74,144,217,0.15)" stroke-width="1"/>
+            <circle cx="18" cy="50" r="11" fill="rgba(74,144,217,0.1)"/>
+            <rect x="11" y="45" width="14" height="10" rx="1.5" stroke="#4A90D9" stroke-width="1.2" fill="none"/>
+            <polyline points="11,45 18,51 25,45" stroke="#4A90D9" stroke-width="1.2" fill="none"/>
+            <rect x="34" y="40" width="56" height="5" rx="2.5" fill="rgba(10,15,30,0.13)"/>
+            <rect x="34" y="50" width="42" height="4" rx="2" fill="rgba(10,15,30,0.08)"/>
+            <circle cx="88" cy="28" r="10" fill="#10B981" stroke="white" stroke-width="2"/>
+            <polyline points="84,28 87,31 93,25" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="98" y1="50" x2="60" y2="64" stroke="rgba(74,144,217,0.28)" stroke-width="1" stroke-dasharray="4 3"/>
+
+            <!-- ===== Carte flottante : Téléphone vérifié (haut droit) ===== -->
+            <rect x="242" y="28" width="96" height="44" rx="10" fill="rgba(255,255,255,0.94)" stroke="rgba(244,121,32,0.15)" stroke-width="1"/>
+            <circle cx="258" cy="50" r="11" fill="rgba(244,121,32,0.1)"/>
+            <path d="M264 56.5v3a2 2 0 0 1-2.2 2 19.4 19.4 0 0 1-8.4-3 19 19 0 0 1-5.9-5.9 19.4 19.4 0 0 1-3-8.5 2 2 0 0 1 2-2.1h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.7 2.7a2 2 0 0 1-.5 2.1l-1.3 1.3a15.6 15.6 0 0 0 5.9 5.9l1.3-1.3a2 2 0 0 1 2.1-.5c.9.4 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" stroke="#F47920" stroke-width="1.2" fill="none" transform="translate(0 -16) scale(0.62) translate(0 28)"/>
+            <rect x="274" y="40" width="56" height="5" rx="2.5" fill="rgba(10,15,30,0.13)"/>
+            <rect x="274" y="50" width="42" height="4" rx="2" fill="rgba(10,15,30,0.08)"/>
+            <circle cx="252" cy="28" r="10" fill="#F47920" stroke="white" stroke-width="2"/>
+            <polyline points="248,28 251,31 257,25" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="242" y1="50" x2="276" y2="64" stroke="rgba(244,121,32,0.28)" stroke-width="1" stroke-dasharray="4 3"/>
+
+            <!-- ===== Toast bas : Espace parent activé ===== -->
+            <rect x="84" y="216" width="172" height="30" rx="15" fill="rgba(16,185,129,0.85)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+            <circle cx="102" cy="231" r="9" fill="rgba(255,255,255,0.2)"/>
+            <polyline points="99,231 102,234 107,228" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <text x="173" y="235" text-anchor="middle" font-size="9.5" font-weight="700" fill="white" font-family="sans-serif">Espace parent activé !</text>
+            <line x1="170" y1="216" x2="168" y2="208" stroke="rgba(16,185,129,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Avantages clés -->
+      <div class="reg-benefits">
+        <div class="reg-benefit">
+          <div class="reg-benefit-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <strong>5 minutes</strong>
+            <span>Inscription rapide</span>
+          </div>
+        </div>
+        <div class="reg-benefit-div"></div>
+        <div class="reg-benefit">
+          <div class="reg-benefit-icon reg-benefit-icon--orange">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div>
+            <strong>Mobile Money</strong>
+            <span>Paiement instantané</span>
+          </div>
+        </div>
+        <div class="reg-benefit-div"></div>
+        <div class="reg-benefit">
+          <div class="reg-benefit-icon reg-benefit-icon--green">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <strong>100% Sécurisé</strong>
+            <span>Double vérification OTP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-tagline">
+        <h2 style="color:#fff;font-size:14px;">Suivez la scolarité<br>de vos enfants <span style="color:#F47920;">en toute simplicité</span></h2>
+        <p>Consultez les frais, payez en Mobile Money et associez vos enfants à votre espace en quelques clics.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Panneau droit : formulaire ========== -->
+  <div class="reg-form-panel">
+    <div class="reg-form-inner">
+
+      <div class="reg-mobile-logo">
+        <div class="reg-logo-mark">
+          <span class="reg-lm-s">s</span>
+          <span class="reg-lm-dot"></span>
+        </div>
+        <span class="reg-mobile-brand">Scolar<strong>Plus</strong></span>
+      </div>
+
+      <div class="reg-form-header">
+        <h3>Créer mon Espace Parent</h3>
+        <p>Suivez la scolarité et payez les frais de vos enfants en ligne</p>
+      </div>
+
+      <!-- Stepper -->
+      <div class="reg-stepper" *ngIf="!isDone">
+        <div class="reg-stepper-item" [class.active]="!isEmailValid" [class.done]="isEmailValid">
+          <div class="reg-stepper-circle">
+            <svg *ngIf="isEmailValid" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span *ngIf="!isEmailValid">1</span>
+          </div>
+          <span>Email</span>
+        </div>
+        <div class="reg-stepper-line" [class.done]="isEmailValid"></div>
+        <div class="reg-stepper-item" [class.active]="isEmailValid && !isPhoneValid" [class.done]="isPhoneValid">
+          <div class="reg-stepper-circle">
+            <svg *ngIf="isPhoneValid" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span *ngIf="!isPhoneValid">2</span>
+          </div>
+          <span>Téléphone</span>
+        </div>
+        <div class="reg-stepper-line" [class.done]="isPhoneValid"></div>
+        <div class="reg-stepper-item" [class.active]="isPhoneValid">
+          <div class="reg-stepper-circle"><span>3</span></div>
+          <span>Profil</span>
+        </div>
+      </div>
+
+      <form class="reg-form" [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isDone">
+
+        <!-- ÉTAPE 1 : email -->
+        <ng-container *ngIf="!isEmailValid">
+          <div class="reg-step-block">
+            <div class="reg-field">
+              <label class="reg-label">Adresse email <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input type="text" formControlName="email" class="form-control reg-input" placeholder="votre@email.com" [readonly]="isEmailSent">
+              </div>
+            </div>
+
+            <ng-container *ngIf="isEmailSent">
+              <div class="reg-field">
+                <label class="reg-label">Code reçu par email <span class="reg-req">*</span></label>
+                <div class="reg-code-row">
+                  <div class="reg-input-wrap" style="flex:1">
+                    <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="text" class="form-control reg-input" formControlName="email_code" placeholder="------" maxlength="6" (keyup)="verifyEmailOtp()">
+                  </div>
+                  <button type="button" class="reg-btn-resend" (click)="resendEmailOtp()" [disabled]="isProcessing">Renvoyer</button>
+                </div>
+              </div>
+              <button type="button" class="reg-btn-back" (click)="resetProcess()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Modifier mon adresse email
+              </button>
+            </ng-container>
+
+            <button *ngIf="!isEmailSent" type="button" class="btn reg-btn-verify" [disabled]="isProcessing || !f.email.valid" (click)="sendEmailOtp()">
+              <span *ngIf="!isProcessing" class="reg-btn-content">Recevoir mon code par email</span>
+              <span *ngIf="isProcessing" class="reg-btn-content"><span class="reg-spinner"></span> Envoi en cours…</span>
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- ÉTAPE 2 : téléphone -->
+        <ng-container *ngIf="isEmailValid && !isPhoneValid">
+          <div class="reg-step-block">
+            <button type="button" class="reg-btn-back" (click)="backToEmailStep()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              Modifier mon email ({{ f.email.value }})
+            </button>
+            <div class="reg-field">
+              <label class="reg-label">Numéro de téléphone <span class="reg-req">*</span></label>
+              <div class="reg-phone-wrap" [class.reg-phone-wrap--locked]="isPhoneSent" (click)="$event.stopPropagation()">
+                <!-- Sélecteur d'indicatif -->
+                <div class="reg-dial-btn" (click)="!isPhoneSent && (showCountryDropdown = !showCountryDropdown)" tabindex="0">
+                  <span class="reg-dial-flag">{{ getFlagEmoji(selectedPhoneCountry.code) }}</span>
+                  <span class="reg-dial-code">{{ selectedPhoneCountry.dialCode }}</span>
+                  <svg *ngIf="!isPhoneSent" class="reg-dial-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <!-- Input numéro local -->
+                <input style="padding-top: 25px;"  type="tel" class="reg-phone-input" [value]="localPhone" (input)="onPhoneInput($event)"
+                       [placeholder]="phonePlaceholder" [readonly]="isPhoneSent" autocomplete="tel">
+
+                <!-- Dropdown pays -->
+                <div class="reg-country-dropdown" *ngIf="showCountryDropdown">
+                  <div class="reg-country-search-wrap">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" [(ngModel)]="countrySearch" [ngModelOptions]="{standalone:true}"
+                           placeholder="Rechercher un pays…" class="reg-country-search" (click)="$event.stopPropagation()">
+                  </div>
+                  <div class="reg-country-list">
+                    <div class="reg-country-option" *ngFor="let c of filteredPhoneCountries"
+                         (click)="selectPhoneCountry(c)" [class.active]="c.code === selectedPhoneCountry.code">
+                      <span class="reg-co-flag">{{ getFlagEmoji(c.code) }}</span>
+                      <span class="reg-co-dial">{{ c.dialCode }}</span>
+                      <span class="reg-co-name">{{ c.name }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="reg-phone-hint">
+                Numéro complet : <strong>{{ fullPhone }}</strong>
+              </div>
+            </div>
+
+            <ng-container *ngIf="isPhoneSent">
+              <div class="reg-field">
+                <label class="reg-label">Code reçu par SMS <span class="reg-req">*</span></label>
+                <div class="reg-code-row">
+                  <div class="reg-input-wrap" style="flex:1">
+                    <svg class="reg-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="text" class="form-control reg-input" formControlName="phone_code" placeholder="------" maxlength="6" (keyup)="verifyPhoneOtp()">
+                  </div>
+                  <button type="button" class="reg-btn-resend" (click)="sendPhoneOtp()" [disabled]="isProcessing">Renvoyer</button>
+                </div>
+              </div>
+              <button type="button" class="reg-btn-back" (click)="backToPhoneStep()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Modifier mon numéro
+              </button>
+            </ng-container>
+
+            <button *ngIf="!isPhoneSent" type="button" class="btn reg-btn-verify" [disabled]="isProcessing || !isPhoneReady" (click)="sendPhoneOtp()">
+              <span *ngIf="!isProcessing" class="reg-btn-content">Recevoir mon code par SMS</span>
+              <span *ngIf="isProcessing" class="reg-btn-content"><span class="reg-spinner"></span> Envoi en cours…</span>
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- ÉTAPE 3 : profil + anti-robot -->
+        <ng-container *ngIf="isPhoneValid">
+          <button type="button" class="reg-btn-back" style="margin-bottom:8px;" (click)="backToPhoneStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Modifier mon numéro ({{ fullPhone }})
+          </button>
+          <div class="reg-section-title">
+            <div class="reg-section-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span>Vos informations</span>
+          </div>
+
+          <div class="reg-row">
+            <div class="reg-field">
+              <label class="reg-label">Nom <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <input type="text" class="form-control reg-input" formControlName="last_name" placeholder="Votre nom">
+              </div>
+            </div>
+            <div class="reg-field">
+              <label class="reg-label">Prénom <span class="reg-req">*</span></label>
+              <div class="reg-input-wrap">
+                <input type="text" class="form-control reg-input" formControlName="first_name" placeholder="Vos prénoms">
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label">Pays</label>
+            <div class="reg-country-readonly">
+              <span class="reg-country-flag">{{ getFlagEmoji(selectedPhoneCountry.code) }}</span>
+              <span class="reg-country-name">{{ selectedCountryName }}</span>
+              <button type="button" class="reg-btn-back reg-country-change" (click)="backToPhoneStep()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Modifier
+              </button>
+            </div>
+            <!-- hidden pour garder la validation du formulaire -->
+            <select formControlName="country_id" style="display:none">
+              <option *ngFor="let country of countries" [value]="country?.id">{{ country?.name }}</option>
+            </select>
+            <div class="reg-country-hint" *ngIf="!f.country_id.value">
+              Pays non reconnu dans notre système — <button type="button" class="reg-btn-back" style="display:inline;padding:0;" (click)="backToPhoneStep()">revenez à l'étape téléphone</button> pour en choisir un autre.
+            </div>
+          </div>
+
+          <!-- Contrôle anti-robot -->
+          <div class="reg-section-title reg-section-title--mt">
+            <div class="reg-section-icon reg-section-icon--purple">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span>Vérification "Je ne suis pas un robot"</span>
+          </div>
+          <div class="reg-field">
+            <label class="reg-label">Combien font {{ captchaA }} + {{ captchaB }} ? <span class="reg-req">*</span></label>
+            <div class="reg-input-wrap">
+              <input type="number" class="form-control reg-input" [(ngModel)]="captchaAnswer" [ngModelOptions]="{standalone: true}" placeholder="Votre réponse">
+            </div>
+          </div>
+
+          <button type="submit" class="btn reg-btn-submit" style="margin-top:20px;" [disabled]="!form.valid || isProcessing || captchaAnswer === null">
+            <span *ngIf="!isProcessing" class="reg-btn-content">Créer mon Espace Parent</span>
+            <span *ngIf="isProcessing" class="reg-btn-content"><span class="reg-spinner"></span> Inscription en cours…</span>
+          </button>
+        </ng-container>
+
+      </form>
+
+      <!-- Confirmation -->
+      <div class="reg-step-block" *ngIf="isDone" style="text-align:center;padding:24px 0;">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" style="margin-bottom:16px;"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+        <h4 style="font-weight:700;margin-bottom:8px;">Demande envoyée !</h4>
+        <p style="color:#6B7280;">Le Groupe Scolar Plus va examiner votre inscription. Vous recevrez un email avec un lien d'activation dès la validation.</p>
+        <button class="btn reg-btn-submit" style="margin-top:16px;" (click)="goToLogin()">Aller à la connexion</button>
+      </div>
+
+      <div class="reg-footer-link">
+        <span>Vous avez déjà un Espace Parent ?</span>
+        <a routerLink="/parent/login">Se connecter</a>
+      </div>
+
+      <div class="reg-footer">
+        <p>© {{ year }} <strong>Scolar Plus</strong> · <a routerLink="/auth/scolar-faq">FAQ</a> · <a routerLink="/">Site web</a></p>
+      </div>
+
+    </div>
+  </div>
+
+</div>

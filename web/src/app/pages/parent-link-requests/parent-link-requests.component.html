@@ -1,0 +1,77 @@
+<div class="container-fluid">
+  <app-page-title title="Demandes d'association Parents" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+  <div class="iv-card">
+    <div class="iv-card-header">
+      <div class="iv-card-header-left">
+        <div class="iv-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <h2 class="iv-card-title">Demandes d'association Parents</h2>
+          <p class="iv-card-sub">{{ pendingLinks?.length ?? 0 }} demande(s) en attente de validation</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Apprenant</th>
+            <th>Code scolaire</th>
+            <th>École</th>
+            <th>Parent demandeur</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let link of pendingLinks | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+            <td><strong>{{ link.student?.last_name }} {{ link.student?.first_name }}</strong></td>
+            <td>{{ link.student?.code_scolar }}</td>
+            <td>{{ link.school?.name }}</td>
+            <td>{{ link.parent_user?.last_name }} {{ link.parent_user?.first_name }}</td>
+            <td>{{ link.parent_user?.email }}</td>
+            <td>{{ link.parent_user?.phone }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-success me-2" [disabled]="processingId === link.id" (click)="validate(link)">
+                <span *ngIf="processingId !== link.id">Valider</span>
+                <span *ngIf="processingId === link.id">…</span>
+              </button>
+              <button class="btn btn-sm btn-danger" [disabled]="processingId === link.id" (click)="openRejectModal(link, rejectModal)">
+                Rejeter
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="!pendingLinks?.length">
+            <td colspan="7" class="text-center py-4 text-muted">Aucune demande en attente.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="p-3">
+      <pagination-controls previousLabel="Précédent" nextLabel="Suivant" (pageChange)="currentPage = $event"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<ng-template #rejectModal>
+  <div class="modal-header">
+    <h5 class="modal-title">Motif du rejet</h5>
+    <button type="button" class="btn-close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="rejectForm" (ngSubmit)="reject()">
+      <div class="mb-3">
+        <label class="form-label">Motif <span class="text-danger">*</span></label>
+        <textarea class="form-control" rows="4" formControlName="reject_reason" placeholder="Expliquez la raison du rejet (10 à 700 caractères)"></textarea>
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-light me-2" (click)="modalRef?.hide()">Annuler</button>
+        <button type="submit" class="btn btn-danger" [disabled]="rejectForm.invalid || processingId">Confirmer le rejet</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

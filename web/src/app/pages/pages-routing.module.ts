@@ -24,6 +24,10 @@ import { FeesBalanceFollowupComponent } from './statistics/fees-balance-followup
 import { CashPaymentComponent } from './fees-management/cash-payment/cash-payment.component';
 import { ProfileComponent } from './contacts/profile/profile.component';
 import { ActivityLogComponent } from './activity-log/activity-log.component';
+import { ParentInscriptionPendingComponent } from './parent-inscription-pending/parent-inscription-pending.component';
+import { ParentInscriptionValidatedComponent } from './parent-inscription-validated/parent-inscription-validated.component';
+import { ParentLinkRequestsComponent } from './parent-link-requests/parent-link-requests.component';
+import { ParentLinkActiveComponent } from './parent-link-active/parent-link-active.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: 'dashboard' },
@@ -34,6 +38,11 @@ const routes: Routes = [
   { path: 'dashboard', component: DefaultComponent },
   { path: 'inscription-en-attente', component: InscriptionPendingComponent },
   { path: 'inscription-validee', component: InscriptionValidatedComponent },
+  { path: 'parent-inscription-en-attente', component: ParentInscriptionPendingComponent },
+  { path: 'parent-inscription-validee', component: ParentInscriptionValidatedComponent },
+  { path: 'espace/demandes-association-parents', component: ParentLinkRequestsComponent },
+  { path: 'parent-liaisons-actives', component: ParentLinkActiveComponent },
+  { path: 'espace/liaisons-actives', component: ParentLinkActiveComponent },
   { path: 'classes', component: ClasseComponent },
   { path: 'ajout-classe-ecole', component: AddClasseSchoolComponent },
 

@@ -1,0 +1,227 @@
+<div class="pd-wrapper">
+
+  <div class="pd-page-header">
+    <div>
+      <h2>Mes apprenants</h2>
+      <p>Retrouvez les enfants associés à votre Espace Parent et leurs frais scolaires.</p>
+    </div>
+    <div class="pd-header-actions">
+      <button class="btn pd-btn-icon" [class.pd-btn-icon--active]="showDashboard" (click)="toggleDashboard()" title="Tableau de bord financier">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Tableau de bord
+      </button>
+      <button class="btn pd-btn-primary" (click)="toggleSearchPanel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Associer un apprenant
+      </button>
+    </div>
+  </div>
+
+  <!-- Dashboard résumé financier -->
+  <div class="pd-dashboard" *ngIf="showDashboard">
+    <div class="pd-dashboard-loading" *ngIf="dashboardLoading">
+      <span class="pd-spinner"></span> Chargement des données financières…
+    </div>
+
+    <ng-container *ngIf="!dashboardLoading">
+      <!-- KPI globaux -->
+      <div class="pd-kpi-row">
+        <div class="pd-kpi pd-kpi--blue">
+          <div class="pd-kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="pd-kpi-body">
+            <span class="pd-kpi-label">Total frais</span>
+            <strong class="pd-kpi-value">{{ globalSumFees | number:'1.0-0' }} F</strong>
+          </div>
+        </div>
+
+        <div class="pd-kpi pd-kpi--green">
+          <div class="pd-kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="pd-kpi-body">
+            <span class="pd-kpi-label">Payé</span>
+            <strong class="pd-kpi-value">{{ globalPaid | number:'1.0-0' }} F</strong>
+          </div>
+        </div>
+
+        <div class="pd-kpi" [ngClass]="globalBalance > 0 ? 'pd-kpi--orange' : 'pd-kpi--green'">
+          <div class="pd-kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="pd-kpi-body">
+            <span class="pd-kpi-label">Solde restant</span>
+            <strong class="pd-kpi-value">{{ globalBalance | number:'1.0-0' }} F</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Détail par apprenant -->
+      <div class="pd-dash-table-wrap" *ngIf="validatedLinks.length">
+        <table class="pd-dash-table">
+          <thead>
+            <tr>
+              <th>Apprenant</th>
+              <th>École</th>
+              <th>Total frais</th>
+              <th>Payé</th>
+              <th>Solde restant</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let link of validatedLinks">
+              <td data-label="Apprenant"><strong>{{ link.student?.last_name }} {{ link.student?.first_name }}</strong></td>
+              <td data-label="École" class="pd-muted">{{ link.school?.social_reason }}</td>
+              <ng-container *ngIf="dashboardData[link.student?.id] as d; else noData">
+                <td data-label="Total frais">{{ d.sum_fees | number:'1.0-0' }} F</td>
+                <td data-label="Payé" class="pd-text-green">{{ (d.sum_fees - d.sum_balance) | number:'1.0-0' }} F</td>
+                <td data-label="Solde restant" [ngClass]="d.sum_balance > 0 ? 'pd-text-orange' : 'pd-text-green'">
+                  {{ d.sum_balance | number:'1.0-0' }} F
+                </td>
+              </ng-container>
+              <ng-template #noData>
+                <td data-label="Total frais" class="pd-muted">—</td>
+                <td data-label="Payé" class="pd-muted">—</td>
+                <td data-label="Solde restant" class="pd-muted">—</td>
+              </ng-template>
+              <td data-label="">
+                <button class="btn pd-btn-link" (click)="goToFees(link.student?.id)">Détail →</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="pd-muted pd-dash-empty" *ngIf="!validatedLinks.length">
+        Aucun apprenant validé — associez un apprenant pour voir ses frais ici.
+      </p>
+    </ng-container>
+  </div>
+
+  <!-- Panneau de recherche / association -->
+  <div class="pd-card pd-search-card" *ngIf="showSearchPanel">
+    <h4>Associer un apprenant</h4>
+    <p class="pd-muted">Renseignez le triplet : code scolaire, année de naissance et école de l'apprenant.</p>
+
+    <form [formGroup]="searchForm" (ngSubmit)="searchStudent()">
+      <div class="pd-row pd-row-3">
+        <div class="pd-field">
+          <label>Code scolaire</label>
+          <input type="text" class="form-control" formControlName="code_scolar" placeholder="Ex: SC-2024-0001">
+        </div>
+        <div class="pd-field">
+          <label>Date de naissance</label>
+          <input type="date" class="form-control" formControlName="birth_day">
+        </div>
+        <div class="pd-field pd-school-search">
+          <label>École</label>
+          <input type="text" class="form-control" placeholder="Rechercher une école par nom…"
+            [value]="selectedSchoolLabel" (input)="searchSchools($any($event.target).value)">
+          <div class="pd-school-suggestions" *ngIf="schools.length">
+            <div class="pd-school-item" *ngFor="let s of schools" (click)="pickSchool(s)">
+              <strong>{{ s.social_reason }}</strong>
+              <span>{{ s.location }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pd-form-actions">
+        <button type="submit" class="btn pd-btn-primary" [disabled]="searchForm.invalid || isSearching">
+          <span *ngIf="!isSearching">Rechercher l'apprenant</span>
+          <span *ngIf="isSearching">Recherche en cours…</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="pd-alert pd-alert-error" *ngIf="searchError">{{ searchError }}</div>
+
+    <div class="pd-found-student" *ngIf="foundStudent">
+      <div class="pd-fs-info">
+        <div class="pd-fs-avatar">{{ foundStudent.first_name?.[0] }}{{ foundStudent.last_name?.[0] }}</div>
+        <div>
+          <strong>{{ foundStudent.last_name }} {{ foundStudent.first_name }}</strong>
+          <span>{{ foundStudent.school?.social_reason }} · Code {{ foundStudent.code_scolar }}</span>
+        </div>
+      </div>
+      <button class="btn pd-btn-secondary" (click)="requestLink()" [disabled]="isRequesting">
+        <span *ngIf="!isRequesting">Demander l'association</span>
+        <span *ngIf="isRequesting">Envoi…</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Apprenants associés et validés -->
+  <h4 class="pd-section-title">Apprenants validés</h4>
+  <div class="pd-students-grid" *ngIf="validatedLinks.length; else noValidated">
+    <div class="pd-student-card" *ngFor="let link of validatedLinks">
+      <div class="pd-student-top">
+        <div class="pd-student-avatar">{{ link.student?.first_name?.[0] }}{{ link.student?.last_name?.[0] }}</div>
+        <span class="pd-badge pd-badge--green">Validé</span>
+      </div>
+      <strong>{{ link.student?.last_name }} {{ link.student?.first_name }}</strong>
+      <span class="pd-muted">{{ link.school?.social_reason }}</span>
+
+      <div class="pd-card-balance" *ngIf="dashboardData[link.student?.id] as d">
+        <div class="pd-card-balance-row">
+          <span>Total frais</span>
+          <strong>{{ d.sum_fees | number:'1.0-0' }} F</strong>
+        </div>
+        <div class="pd-card-balance-row">
+          <span>Payé</span>
+          <strong class="pd-text-green">{{ (d.sum_fees - d.sum_balance) | number:'1.0-0' }} F</strong>
+        </div>
+        <div class="pd-card-balance-row pd-card-balance-row--solde">
+          <span>Solde à payer</span>
+          <strong [ngClass]="d.sum_balance > 0 ? 'pd-text-orange' : 'pd-text-green'">
+            {{ d.sum_balance | number:'1.0-0' }} F
+          </strong>
+        </div>
+      </div>
+      <div class="pd-card-balance-loading" *ngIf="!dashboardData[link.student?.id] && dashboardLoading">
+        <span class="pd-spinner"></span> Chargement…
+      </div>
+
+      <button class="btn pd-btn-outline" (click)="goToFees(link.student?.id)">
+        Voir les frais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+  <ng-template #noValidated>
+    <div class="pd-empty">Aucun apprenant validé pour le moment.</div>
+  </ng-template>
+
+  <!-- Demandes en attente -->
+  <ng-container *ngIf="pendingLinks.length">
+    <h4 class="pd-section-title">Demandes en attente de validation par l'école</h4>
+    <div class="pd-students-grid">
+      <div class="pd-student-card pd-student-card--pending" *ngFor="let link of pendingLinks">
+        <div class="pd-student-top">
+          <div class="pd-student-avatar">{{ link.student?.first_name?.[0] }}{{ link.student?.last_name?.[0] }}</div>
+          <span class="pd-badge pd-badge--orange">En attente</span>
+        </div>
+        <strong>{{ link.student?.last_name }} {{ link.student?.first_name }}</strong>
+        <span class="pd-muted">{{ link.school?.social_reason }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Demandes rejetées -->
+  <ng-container *ngIf="rejectedLinks.length">
+    <h4 class="pd-section-title">Demandes rejetées</h4>
+    <div class="pd-students-grid">
+      <div class="pd-student-card pd-student-card--rejected" *ngFor="let link of rejectedLinks">
+        <div class="pd-student-top">
+          <div class="pd-student-avatar">{{ link.student?.first_name?.[0] }}{{ link.student?.last_name?.[0] }}</div>
+          <span class="pd-badge pd-badge--red">Rejeté</span>
+        </div>
+        <strong>{{ link.student?.last_name }} {{ link.student?.first_name }}</strong>
+        <span class="pd-muted">{{ link.reject_reason }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
