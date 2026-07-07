@@ -31,4 +31,17 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'fastermessage' => [
+        'base_url'  => env('FASTERMESSAGE_BASE_URL', 'https://api.fastermessage.com'),
+        'username'  => env('FASTERMESSAGE_USERNAME'),
+        'password'  => env('FASTERMESSAGE_PASSWORD'),
+        'sender_id' => env('FASTERMESSAGE_SENDER_ID', 'ScolarPlus'),
+    ],
+
+    'recaptcha' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+        'verify_url' => env('RECAPTCHA_VERIFY_URL', 'https://www.google.com/recaptcha/api/siteverify'),
+    ],
+
 ];

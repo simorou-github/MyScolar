@@ -45,7 +45,12 @@
       "PowerShell(cd C:\\\\laragon\\\\www\\\\MyScolar\\\\backend; php artisan tinker --execute=\"use Spatie\\\\Activitylog\\\\Models\\\\Activity; \\\\$logs = Activity::orderBy\\('created_at','desc'\\)->limit\\(10\\)->get\\(['id','log_name','description','causer_id','causer_type','event','created_at']\\); echo json_encode\\(\\\\$logs->toArray\\(\\), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE\\);\")",
       "Bash(git checkout-index *)",
       "mcp__Claude_in_Chrome__tabs_context_mcp",
-      "Bash(ls /c/laragon/www/ | grep -i scolar)"
+      "Bash(ls /c/laragon/www/ | grep -i scolar)",
+      "Bash(tail -30 /Applications/XAMPP/xamppfiles/var/mysql/*.err 2>&1)",
+      "Bash(xargs cat)",
+      "Bash(which -a node; ls ~/.nvm/versions/node 2>/dev/null; cat .nvmrc 2>/dev/null; node -v)",
+      "Bash(php -l /Applications/XAMPP/xamppfiles/htdocs/Projets/Personnels/MyScolar/backend/app/Services/FasterMessageService.php)",
+      "Bash(php -l /Applications/XAMPP/xamppfiles/htdocs/Projets/Personnels/MyScolar/backend/app/Services/ParentOtpService.php)"
     ]
   }
 }

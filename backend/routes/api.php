@@ -18,6 +18,10 @@ use App\Http\Controllers\SchoolSpace\AcademicYearController;
 use App\Http\Controllers\SchoolSpace\ClasseController;
 use App\Http\Controllers\SchoolSpace\PaymentController;
 use App\Http\Controllers\SchoolSpace\SchoolDashboardController;
+use App\Http\Controllers\ParentSpace\ParentInscriptionController;
+use App\Http\Controllers\ParentSpace\ParentAuthController;
+use App\Http\Controllers\ParentSpace\ParentStudentLinkController;
+use App\Http\Controllers\ParentSpace\ParentFeesController;
 use App\Models\School;
 
 // Authentification
@@ -268,4 +272,53 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('list', [ActivityLogController::class, 'index']);
         Route::get('log-names', [ActivityLogController::class, 'logNames']);
     });
+});
+
+// =========================================================================
+// ESPACE PARENT
+// =========================================================================
+
+// Inscription Parent (publique, avec OTP email + sms et reCAPTCHA)
+Route::prefix('parent/inscription')->group(function () {
+    Route::post('search-school',      [ParentStudentLinkController::class,   'searchSchools']);
+    Route::post('send-email-otp',     [ParentInscriptionController::class,   'sendEmailOtp'])->middleware('throttle:6,10');
+    Route::post('resend-email-otp',   [ParentInscriptionController::class,   'resendEmailOtp'])->middleware('throttle:6,10');
+    Route::post('send-phone-otp',     [ParentInscriptionController::class,   'sendPhoneOtp'])->middleware('throttle:6,10');
+    Route::post('verify-email-otp',   [ParentInscriptionController::class,   'verifyEmailOtp']);
+    Route::post('verify-phone-otp',   [ParentInscriptionController::class,   'verifyPhoneOtp']);
+    Route::post('create',             [ParentInscriptionController::class,   'createInscription']);
+    Route::post('activate',           [ParentInscriptionController::class,   'activateAccount']);
+});
+
+// Connexion Parent par OTP (téléphone uniquement)
+Route::prefix('parent/auth')->group(function () {
+    Route::post('request-otp', [ParentAuthController::class, 'requestLoginOtp'])->middleware('throttle:6,10');
+    Route::post('verify-otp',  [ParentAuthController::class, 'verifyLoginOtp']);
+});
+
+// Validation des inscriptions Parent par ScolarPlus (back-office, auth école/admin)
+Route::prefix('parent/manage-inscription')->middleware(['auth:api'])->group(function () {
+    Route::post('list-pending', [ParentInscriptionController::class, 'listInscriptionsPending']);
+    Route::post('list-validated', [ParentInscriptionController::class, 'listInscriptionsValidated']);
+    Route::post('change-status', [ParentInscriptionController::class, 'changeStatus']);
+});
+
+// Validation des demandes d'association apprenant par l'école (auth école)
+Route::prefix('parent/manage-link')->middleware(['auth:api'])->group(function () {
+    Route::post('list-pending', [ParentStudentLinkController::class, 'listPendingForSchool']);
+    Route::post('list-active', [ParentStudentLinkController::class, 'listActiveForSchool']);
+    Route::post('validate', [ParentStudentLinkController::class, 'validateLink']);
+});
+
+// Espace Parent authentifié (guard parent-api)
+Route::prefix('parent/space')->middleware(['auth:parent-api'])->group(function () {
+    Route::get('me', [ParentAuthController::class, 'me']);
+    Route::post('logout', [ParentAuthController::class, 'logout']);
+
+    Route::post('search-student', [ParentStudentLinkController::class, 'searchStudent']);
+    Route::post('request-link', [ParentStudentLinkController::class, 'requestLink']);
+    Route::get('my-links', [ParentStudentLinkController::class, 'listMyLinks']);
+
+    Route::post('student-balance', [ParentFeesController::class, 'getStudentBalance']);
+    Route::post('student-academic-years', [ParentFeesController::class, 'getStudentAcademicYears']);
 });

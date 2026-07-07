@@ -46,6 +46,10 @@ class Student extends Model
         return $this->belongsTo('App\Models\School', 'school_id');
     }
 
+    public function studentClasses(){
+        return $this->hasMany('App\Models\StudentClasse', 'student_id');
+    }
+
     public function creater(){
         return $this->belongsTo('App\Models\User', 'create_id');
     }
